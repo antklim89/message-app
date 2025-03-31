@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
 
 export function AuthDialog({ children, buttonText }: { children?: ReactNode; buttonText: string }) {
   return (
-    <Dialog.Root motionPreset="slide-in-bottom" placement="center" size="xl">
+    <Dialog.Root motionPreset="slide-in-bottom" placement="center" size="cover">
       <Dialog.Trigger asChild>
         <Button size="sm" variant="outline">
           {buttonText}

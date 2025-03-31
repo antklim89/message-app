@@ -15,49 +15,54 @@ export function Auth({ type: _type }: { type: 'login' | 'register' }) {
 
   return (
     <AuthDialog buttonText={_type === 'login' ? 'Login' : 'Register'}>
-      <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} gap="4">
+      <Box
+        display="flex"
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap="4"
+        alignItems={{base: 'stretch', lg: 'center'}}
+        justifyContent="center"
+      >
         <Box
           as="aside"
-          flex={1}
-          margin="auto 0"
+          flex={{base: '0 1 0', lg: '0 1 320px'}}
+          flexDirection="column"
         >
-          <Heading>Login</Heading>
-          <Text textAlign="center">
-            Thanks for using our app!
-            <br />
-            Please
-            {' '}
-            <Button
-              p={1}
-              variant="ghost"
-              verticalAlign="baseline"
-              onClick={() => setType('login')}
-            >
-              login
-            </Button>
-            {' '}
-            or
-            {' '}
-            <Button
-              p={1}
-              variant="ghost"
-              verticalAlign="baseline"
-              onClick={() => setType('register')}
-            >register
-            </Button>
-            {' '}
-            to continue.
-          </Text>
+            <Heading fontSize="4xl" mb={4}>{type === 'login' ? 'Login' : 'Register'}</Heading>
+            <Text fontSize="xl">
+              Thanks for using our app!
+              <br />
+              Please
+              {' '}
+              <Button
+                p={1}
+                variant="ghost"
+                verticalAlign="baseline"
+                onClick={() => setType('login')}
+              >
+                login
+              </Button>
+              {' '}
+              or
+              {' '}
+              <Button
+                p={1}
+                variant="ghost"
+                verticalAlign="baseline"
+                onClick={() => setType('register')}
+              >register
+              </Button>
+              {' '}
+              to continue.
+            </Text>
         </Box>
         <Box
           as="section"
-          flex={1}
-          margin="auto 0"
+          flex={{base: '0 1 0', lg: '0 1 320px'}}
         >
           {type === 'login'
             ? <LoginForm onSubmit={data => console.log(data)} />
             : <RegisterForm onSubmit={data => console.log(data)} />}
-        </Box>
+          </Box>
       </Box>
     </AuthDialog>
   );
