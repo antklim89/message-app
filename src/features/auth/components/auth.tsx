@@ -1,69 +1,34 @@
-import {
-  Box,
-  Button,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
 import { useState } from 'react';
-import { LoginForm } from './forms/login-form';
-import { RegisterForm } from './forms/register-form';
-import { AuthDialog } from './ui/auth-dialog';
+import { Flex, Heading } from '@chakra-ui/react';
 
+import { AuthForm } from './forms/auth-form.tsx';
+import { AuthDialog } from './ui/auth-dialog.tsx';
+import type { LoginSchema, RegisterSchema } from '../schemas';
+import { createUser, loginWithPassword } from '../services';
 
-export function Auth({ type: _type }: { type: 'login' | 'register' }) {
-  const [type, setType] = useState(_type);
+export function Auth() {
+  const [type, setType] = useState<'login' | 'register' | null>(null);
+
+  const handleRegister = (data: LoginSchema | RegisterSchema) => {
+    return createUser(data as RegisterSchema);
+  };
+  const handleLogin = (data: LoginSchema | RegisterSchema) => {
+    return loginWithPassword(data as LoginSchema);
+  };
 
   return (
-    <AuthDialog buttonText={_type === 'login' ? 'Login' : 'Register'}>
-      <Box
-        display="flex"
-        flexDirection={{ base: 'column', lg: 'row' }}
-        gap="4"
-        alignItems={{base: 'stretch', lg: 'center'}}
-        justifyContent="center"
-      >
-        <Box
-          as="aside"
-          flex={{base: '0 1 0', lg: '0 1 320px'}}
-          flexDirection="column"
-        >
-            <Heading fontSize="4xl" mb={4}>{type === 'login' ? 'Login' : 'Register'}</Heading>
-            <Text fontSize="xl">
-              Thanks for using our app!
-              <br />
-              Please
-              {' '}
-              <Button
-                p={1}
-                variant="ghost"
-                verticalAlign="baseline"
-                onClick={() => setType('login')}
-              >
-                login
-              </Button>
-              {' '}
-              or
-              {' '}
-              <Button
-                p={1}
-                variant="ghost"
-                verticalAlign="baseline"
-                onClick={() => setType('register')}
-              >register
-              </Button>
-              {' '}
-              to continue.
-            </Text>
-        </Box>
-        <Box
-          as="section"
-          flex={{base: '0 1 0', lg: '0 1 320px'}}
-        >
-          {type === 'login'
-            ? <LoginForm onSubmit={data => console.log(data)} />
-            : <RegisterForm onSubmit={data => console.log(data)} />}
-          </Box>
-      </Box>
-    </AuthDialog>
+    <Flex flexDirection="column" gap={2} my={4}>
+      <Heading as="h3">Welcome to the app!</Heading>
+
+      <Flex gap={2}>
+        <AuthDialog onExitComplete={() => setType(null)} type="register" setType={setType}>
+          <AuthForm onSubmit={handleRegister} type={type ?? 'register'} />
+        </AuthDialog>
+
+        <AuthDialog onExitComplete={() => setType(null)} type="login" setType={setType}>
+          <AuthForm onSubmit={handleLogin} type={type ?? 'login'} />
+        </AuthDialog>
+      </Flex>
+    </Flex>
   );
 }
