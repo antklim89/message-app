@@ -11,7 +11,7 @@
     "dev:pocketbase": "./pocketbase_start.sh",
     "dev:typecheck": "yarn typecheck",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "biome check ./src --fix",
     "typecheck": "tsc --noEmit -w --preserveWatchOutput",
     "preview": "vite preview"
   },
@@ -29,24 +29,16 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.11.0",
     "@biomejs/biome": "^2.0.0-beta.1",
-    "@eslint-react/eslint-plugin": "^1.40.3",
     "@tanstack/react-router-devtools": "^1.115.0",
     "@tanstack/router-plugin": "^1.115.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.1",
     "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^9.24.0",
-    "eslint-config-next": "15.2.4",
-    "eslint-plugin-format": "^1.0.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "npm-run-all": "^4.1.5",
     "pocketbase": "^0.25.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.29.0",
     "vite": "^6.2.5",
     "vite-tsconfig-paths": "^5.1.4"
   }
