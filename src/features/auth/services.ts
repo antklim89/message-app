@@ -36,3 +36,7 @@ export async function createUser({ email, password, username }: CreateUserInput)
 
   return result;
 }
+
+export const logout = () => {
+  return pb.authStore.clear();
+};
