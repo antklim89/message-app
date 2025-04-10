@@ -13,7 +13,7 @@
     "build": "tsc -b && vite build",
     "lint": "biome check ./src --fix",
     "typecheck": "tsc --noEmit -w --preserveWatchOutput",
-    "preview": "vite preview"
+    "start": "./pocketbase_start.sh"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.15.0",
