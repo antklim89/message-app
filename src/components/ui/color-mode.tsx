@@ -1,22 +1,14 @@
-import type { IconButtonProps, SpanProps } from '@chakra-ui/react';
-import {
-  ClientOnly,
-  IconButton,
-  Skeleton,
-  Span,
-} from '@chakra-ui/react';
-import { ThemeProvider, useTheme } from 'next-themes';
-import type { ThemeProviderProps } from 'next-themes';
 import type { RefObject } from 'react';
+import type { ThemeProviderProps } from 'next-themes';
+import { ThemeProvider, useTheme } from 'next-themes';
+import type { IconButtonProps, SpanProps } from '@chakra-ui/react';
+import { ClientOnly, IconButton, Skeleton, Span } from '@chakra-ui/react';
 import { LuMoon, LuSun } from 'react-icons/lu';
-
 
 export interface ColorModeProviderProps extends ThemeProviderProps {}
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
-  return (
-    <ThemeProvider disableTransitionOnChange attribute="class" {...props} />
-  );
+  return <ThemeProvider attribute="class" disableTransitionOnChange {...props} />;
 }
 
 export type ColorMode = 'light' | 'dark';
@@ -39,10 +31,10 @@ function useColorMode(): UseColorModeReturn {
   };
 }
 
-// function useColorModeValue<T>(light: T, dark: T) {
-//   const { colorMode } = useColorMode();
-//   return colorMode === 'dark' ? dark : light;
-// }
+export function useColorModeValue<T>(light: T, dark: T) {
+  const { colorMode } = useColorMode();
+  return colorMode === 'dark' ? dark : light;
+}
 
 export function ColorModeIcon() {
   const { colorMode } = useColorMode();
@@ -51,21 +43,24 @@ export function ColorModeIcon() {
 
 interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {}
 
-export function ColorModeButton({ ref, ...props }: ColorModeButtonProps & { ref?: RefObject<HTMLButtonElement | null> }) {
+export function ColorModeButton({
+  ref,
+  ...props
+}: ColorModeButtonProps & { ref?: RefObject<HTMLButtonElement | null> }) {
   const { toggleColorMode } = useColorMode();
   return (
     <ClientOnly fallback={<Skeleton boxSize="8" />}>
       <IconButton
         aria-label="Toggle color mode"
+        onClick={toggleColorMode}
         ref={ref}
         size="sm"
         variant="ghost"
-        onClick={toggleColorMode}
         {...props}
         css={{
           _icon: {
-            width: '5',
             height: '5',
+            width: '5',
           },
         }}
       >

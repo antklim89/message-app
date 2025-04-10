@@ -94,7 +94,7 @@ export function AuthForm({
         </Field.Root>
       )}
 
-      <Button textTransform="uppercase" loading={form.formState.isSubmitting} type="submit">
+      <Button loading={form.formState.isSubmitting} textTransform="uppercase" type="submit">
         {type}
       </Button>
     </Flex>
