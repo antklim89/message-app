@@ -3,8 +3,8 @@ import { type FieldErrors, useForm } from 'react-hook-form';
 import { Alert, Button, Field, Flex, Input } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { LoginSchema, RegisterSchema } from '@/features/auth/schemas';
 import type { PromiseResult } from '@/lib/result';
+import { LoginSchema, RegisterSchema } from '../../schemas';
 
 export function AuthForm({
   onSubmit,

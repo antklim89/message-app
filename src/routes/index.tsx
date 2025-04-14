@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { NewMessage } from '@/features/messages/components/new-message';
+import { NewMessage } from '@/features/messages';
 
 export const Route = createFileRoute('/')({
   component: Index,

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
 
-import { LoginSchema, RegisterSchema } from '@/features/auth/schemas';
+import { LoginSchema, RegisterSchema } from '../schemas';
 
 export function useRegisterForm() {
   return useForm<z.infer<typeof RegisterSchema>>({
