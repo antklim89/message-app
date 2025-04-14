@@ -1,5 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
+import { NewMessage } from '@/features/messages/components/new-message';
+
 export const Route = createFileRoute('/')({
   component: Index,
 });
@@ -7,7 +9,7 @@ export const Route = createFileRoute('/')({
 function Index() {
   return (
     <div className="p-2">
-      <h3>Welcome Home!</h3>
+      <NewMessage />
     </div>
   );
 }
