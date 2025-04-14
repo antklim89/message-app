@@ -3,6 +3,9 @@ export type ErrVariants = { message: string } & (
       type?: null;
     }
   | {
+      type: 'authentication';
+    }
+  | {
       type: 'unexpected';
     }
   | {
@@ -52,6 +55,13 @@ export function errUnexpected(message?: string): Err {
   return err({
     message: message ?? 'Unexpected error. Try again later.',
     type: 'unexpected',
+  });
+}
+
+export function errAuthentication(message?: string): Err {
+  return err({
+    message: message ?? 'You are not authenticated to perform this operation.',
+    type: 'authentication',
   });
 }
 
