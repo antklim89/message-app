@@ -1,11 +1,13 @@
 import { EditMessage } from './form/edit-message';
 import { EditMessageAccordion } from './ui/edit-message-accordion';
+import { useCreateMessage } from '../hooks/mutations/useCreateMessage';
 import type { MessageEditSchema } from '../schemas';
-import { createMessage } from '../services';
 
 export function NewMessage() {
+  const { mutateAsync } = useCreateMessage();
+
   function handleNewMessage(data: MessageEditSchema) {
-    return createMessage(data);
+    return mutateAsync(data);
   }
 
   return (
