@@ -4,6 +4,7 @@ import './index.css';
 
 import { Provider } from '@/components/ui/provider';
 import { App } from './app';
+import ReactQuery from './components/providers/react-query';
 
 const root = document.getElementById('root');
 
@@ -14,7 +15,9 @@ if (!root) {
 createRoot(root).render(
   <StrictMode>
     <Provider>
-      <App />
+      <ReactQuery>
+        <App />
+      </ReactQuery>
     </Provider>
   </StrictMode>,
 );
