@@ -1,10 +1,12 @@
 import { ClientResponseError } from 'pocketbase';
 
-import { flattenPocketbaseErrors, pb } from '@/lib/pocketbase';
+import { createPocketbaseClient, flattenPocketbaseErrors } from '@/lib/pocketbase';
 import { err, resultResolve } from '@/lib/result';
 import type { AuthWithPasswordInput, CreateUserInput } from './types';
 
 export async function loginWithPassword({ email, password }: AuthWithPasswordInput) {
+  const pb = await createPocketbaseClient();
+
   const result = await resultResolve(
     pb.collection('users').authWithPassword(email, password),
     error =>
@@ -18,6 +20,8 @@ export async function loginWithPassword({ email, password }: AuthWithPasswordInp
 }
 
 export async function createUser({ email, password, username }: CreateUserInput) {
+  const pb = await createPocketbaseClient();
+
   const data = {
     email,
     name: username,
@@ -37,6 +41,7 @@ export async function createUser({ email, password, username }: CreateUserInput)
   return result;
 }
 
-export const logout = () => {
+export async function logout() {
+  const pb = await createPocketbaseClient();
   return pb.authStore.clear();
-};
+}
