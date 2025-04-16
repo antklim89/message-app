@@ -17,7 +17,16 @@ export function EditMessage({ onSubmit }: { onSubmit: (data: MessageEditSchema) 
   });
 
   return (
-    <Flex as="form" flexDirection="column" p={8} gap={4} onSubmit={handleSubmit}>
+    <Flex
+      as="form"
+      onKeyDown={e => {
+        e.key === 'Enter' && e.ctrlKey && handleSubmit(e);
+      }}
+      flexDirection="column"
+      p={8}
+      gap={4}
+      onSubmit={handleSubmit}
+    >
       {form.formState.errors.root != null && (
         <Alert.Root status="error">
           <Alert.Indicator />

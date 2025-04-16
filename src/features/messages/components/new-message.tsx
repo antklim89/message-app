@@ -1,18 +1,23 @@
+import { useDisclosure } from '@chakra-ui/react';
+
 import { EditMessage } from './form/edit-message';
-import { EditMessageAccordion } from './ui/edit-message-accordion';
+import { EditMessageCollapsible } from './ui/edit-message-collapsible';
 import { useCreateMessage } from '../hooks/mutations/useCreateMessage';
 import type { MessageEditSchema } from '../schemas';
 
 export function NewMessage() {
   const { mutateAsync } = useCreateMessage();
+  const { onToggle, open, setOpen } = useDisclosure();
 
-  function handleNewMessage(data: MessageEditSchema) {
-    return mutateAsync(data);
+  async function handleNewMessage(data: MessageEditSchema) {
+    const result = await mutateAsync(data);
+    setOpen(false);
+    return result;
   }
 
   return (
-    <EditMessageAccordion>
+    <EditMessageCollapsible onToggle={onToggle} open={open}>
       <EditMessage onSubmit={handleNewMessage} />
-    </EditMessageAccordion>
+    </EditMessageCollapsible>
   );
 }
