@@ -90,3 +90,8 @@ export async function resultResolve<T>(
     return errUnexpected();
   }
 }
+
+export function resultMap<T, U>(result: Result<T>, cb: (args: T) => U) {
+  if (result.type === 'error') return result;
+  return ok(cb(result.result));
+}
