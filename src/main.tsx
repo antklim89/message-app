@@ -2,9 +2,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
-import { Provider } from '@/components/ui/provider';
+import { ChakraProvider } from '@/components/providers/chakra-provider';
 import { App } from './app';
-import ReactQuery from './components/providers/react-query';
+import ReactQueryProvider from './components/providers/react-query';
 
 const root = document.getElementById('root');
 
@@ -14,10 +14,10 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <Provider>
-      <ReactQuery>
+    <ChakraProvider>
+      <ReactQueryProvider>
         <App />
-      </ReactQuery>
-    </Provider>
+      </ReactQueryProvider>
+    </ChakraProvider>
   </StrictMode>,
 );
