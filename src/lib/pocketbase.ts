@@ -6,15 +6,19 @@ import { env } from './env';
 
 const pbPromise = import('pocketbase');
 
+let pb: TypedPocketBase | undefined;
+
 export function usePocketBase() {
+  if (pb != null) return pb;
   const { default: PocketBase } = use(pbPromise);
-  const pb = new PocketBase(env.SERVER_URL) as TypedPocketBase;
+  pb = new PocketBase(env.SERVER_URL) as TypedPocketBase;
   return pb;
 }
 
 export async function createPocketbaseClient() {
+  if (pb != null) return pb;
   const { default: PocketBase } = await pbPromise;
-  const pb = new PocketBase(env.SERVER_URL) as TypedPocketBase;
+  pb = new PocketBase(env.SERVER_URL) as TypedPocketBase;
   return pb;
 }
 
