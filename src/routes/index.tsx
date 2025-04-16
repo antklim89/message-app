@@ -1,7 +1,6 @@
-import { Suspense } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 
-import { ReactQueryErrorBoundary } from '@/components/error/react-query-error-boundary';
+import { QuerySuspenseErrorBoundary } from '@/components/suspense/query-suspense-error-boundary';
 import { Message, MessageList, MessageListFallback, NewMessage, useFetchManyMessages } from '@/features/messages';
 
 export const Route = createFileRoute('/')({
@@ -12,11 +11,9 @@ function Index() {
   return (
     <div className="p-2">
       <NewMessage />
-      <ReactQueryErrorBoundary>
-        <Suspense fallback={<MessageListFallback />}>
-          <MessageListLayout />
-        </Suspense>
-      </ReactQueryErrorBoundary>
+      <QuerySuspenseErrorBoundary fallback={<MessageListFallback />}>
+        <MessageListLayout />
+      </QuerySuspenseErrorBoundary>
     </div>
   );
 }
