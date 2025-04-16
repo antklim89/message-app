@@ -1,5 +1,6 @@
 import { Card, Separator, Span } from '@chakra-ui/react';
 
+import { FromNowDate } from '@/components/ui/from-now-date';
 import type { MessageType } from '../types';
 
 export function Message({ message }: { message: MessageType }) {
@@ -7,7 +8,9 @@ export function Message({ message }: { message: MessageType }) {
     <Card.Root w="full" border="none">
       <Card.Header>
         <Card.Title>{message.title}</Card.Title>
-        <Span>{message.created}</Span>
+        <Span fontSize="xs">
+          Published <FromNowDate date={message.created} />
+        </Span>
       </Card.Header>
       <Card.Body>
         <Card.Description>{message.body}</Card.Description>
