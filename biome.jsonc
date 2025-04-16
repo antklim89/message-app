@@ -43,7 +43,8 @@
         "useAwait": "error"
       },
       "style": {
-        "useImportType": "error"
+        "useImportType": "error",
+        "noDefaultExport": "error"
       }
     }
   },
@@ -80,9 +81,9 @@
     "enabled": true,
     "actions": {
       "source": {
-        "useSortedAttributes": "on",
-        "useSortedKeys": "on",
-        "useSortedProperties": "on",
+        // "useSortedAttributes": "on",
+        // "useSortedKeys": "on",
+        // "useSortedProperties": "on",
         "organizeImports": {
           "level": "on",
           "options": {

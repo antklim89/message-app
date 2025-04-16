@@ -1,6 +1,6 @@
 import { Card, Separator, Skeleton, SkeletonText } from '@chakra-ui/react';
 
-export default function MessageFallback() {
+export function MessageFallback() {
   return (
     <Card.Root w="full" border="none">
       <Card.Header>

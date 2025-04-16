@@ -1,4 +1,4 @@
-import MessageFallback from './message-fallback';
+import { MessageFallback } from './message-fallback';
 import { MessageList } from '../message-list';
 
 export function MessageListFallback() {

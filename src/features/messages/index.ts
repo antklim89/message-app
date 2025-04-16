@@ -4,4 +4,5 @@ export * from './components/message';
 export * from './components/message-list';
 export * from './components/new-message';
 export * from './hooks/queries/useFetchManyMessages';
+export * from './hooks/queries/useFetchOneMessage';
 export * from './types';

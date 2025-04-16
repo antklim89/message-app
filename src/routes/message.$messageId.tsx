@@ -3,9 +3,15 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { QuerySuspenseErrorBoundary } from '@/components/suspense/query-suspense-error-boundary';
 import { SuspenseErrorBoundary } from '@/components/suspense/suspense-error-boundary';
-import { Message, MessageList, MessageListFallback, NewMessage, useFetchManyMessages } from '@/features/messages';
-import MessageFallback from '@/features/messages/components/fallback/message-fallback';
-import { useFetchOneMessage } from '@/features/messages/hooks/queries/useFetchOneMessage';
+import {
+  Message,
+  MessageFallback,
+  MessageList,
+  MessageListFallback,
+  NewMessage,
+  useFetchManyMessages,
+  useFetchOneMessage,
+} from '@/features/messages';
 import { useUser } from '@/hooks/useUser';
 
 export const Route = createFileRoute('/message/$messageId')({

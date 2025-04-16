@@ -2,22 +2,6 @@ import { type ReactNode, Suspense } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { Alert, Center, Spinner } from '@chakra-ui/react';
 
-export function SuspenseErrorBoundary({
-  children,
-  errorFallback,
-  fallback,
-}: {
-  children: ReactNode;
-  fallback?: ReactNode;
-  errorFallback?: (props: FallbackProps) => ReactNode;
-}) {
-  return (
-    <ErrorBoundary fallbackRender={props => errorFallback?.(props) ?? <DefaultErrorFallback />}>
-      <Suspense fallback={fallback ?? <DefaultSuspenseFallback />}>{children}</Suspense>
-    </ErrorBoundary>
-  );
-}
-
 function DefaultErrorFallback() {
   return (
     <Alert.Root status="error">
@@ -34,5 +18,21 @@ function DefaultSuspenseFallback() {
     <Center h={24}>
       <Spinner />
     </Center>
+  );
+}
+
+export function SuspenseErrorBoundary({
+  children,
+  errorFallback,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+  errorFallback?: (props: FallbackProps) => ReactNode;
+}) {
+  return (
+    <ErrorBoundary fallbackRender={props => errorFallback?.(props) ?? <DefaultErrorFallback />}>
+      <Suspense fallback={fallback ?? <DefaultSuspenseFallback />}>{children}</Suspense>
+    </ErrorBoundary>
   );
 }

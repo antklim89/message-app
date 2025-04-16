@@ -4,7 +4,7 @@ import { Flex, Heading } from '@chakra-ui/react';
 import { useUser } from '@/hooks/useUser.ts';
 import { AuthForm } from './forms/auth-form.tsx';
 import { AuthDialog } from './ui/auth-dialog.tsx';
-import LogoutButton from './ui/logout-button.tsx';
+import { LogoutButton } from './ui/logout-button.tsx';
 import type { LoginSchema, RegisterSchema } from '../schemas';
 import { createUser, loginWithPassword } from '../services';
 

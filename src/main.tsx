@@ -4,7 +4,7 @@ import './index.css';
 
 import { ChakraProvider } from '@/components/providers/chakra-provider';
 import { App } from './app';
-import ReactQueryProvider from './components/providers/react-query';
+import { ReactQueryProvider } from './components/providers/react-query';
 
 const root = document.getElementById('root');
 
