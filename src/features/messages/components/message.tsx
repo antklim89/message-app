@@ -12,7 +12,7 @@ export function Message({ message }: { message: MessageType }) {
           <Card.Title>{message.title}</Card.Title>
         </Link>
         <Span fontSize="xs">
-          Published <FromNowDate date={message.created} />
+          Published <FromNowDate date={message.created} /> by {message.author.name}
         </Span>
       </Card.Header>
       <Card.Body>

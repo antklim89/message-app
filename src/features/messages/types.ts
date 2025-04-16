@@ -1,5 +1,7 @@
-import type { MessagesRecord } from '@/pocketbase-types.gen';
+import type { MessagesRecord, UsersRecord } from '@/pocketbase-types.gen';
 
-export type MessageType = MessagesRecord;
+export type MessageType = Pick<MessagesRecord, 'id' | 'title' | 'body' | 'answerTo' | 'created'> & {
+  author: Pick<UsersRecord, 'id' | 'name' | 'avatar'>;
+};
 export type MessageCreateType = Pick<MessageType, 'body' | 'title' | 'answerTo'>;
 export type MessageUpdateType = Pick<MessageType, 'body' | 'title'>;
