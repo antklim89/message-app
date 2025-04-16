@@ -1,8 +1,10 @@
+import type { ListResult } from 'pocketbase';
+
 import { createPocketbaseClient } from '@/lib/pocketbase';
 import { errAuthentication, type PromiseResult, resultResolve } from '@/lib/result';
 import type { MessageCreateType, MessageType } from './types';
 
-export async function createMessage({ body, title }: MessageCreateType): PromiseResult<MessageType> {
+export async function createMessage({ body, title, answerTo }: MessageCreateType): PromiseResult<MessageType> {
   const pb = await createPocketbaseClient();
 
   const user = pb.authStore.record;
@@ -12,19 +14,24 @@ export async function createMessage({ body, title }: MessageCreateType): Promise
     body,
     title,
     author: user.id,
-    // "answerTo": // TODO: add answer to a message
+    answerTo,
   };
 
   const record = await resultResolve(pb.collection('messages').create(data));
   return record;
 }
 
-export async function getManyMessages(): PromiseResult<MessageType[]> {
+export async function getManyMessages({
+  answerTo,
+}: {
+  answerTo?: string;
+} = {}): PromiseResult<ListResult<MessageType>> {
   const pb = await createPocketbaseClient();
 
   const records = await resultResolve(
-    pb.collection('messages').getFullList({
+    pb.collection('messages').getList(1, 10, {
       sort: '-created',
+      filter: `answerTo = '${answerTo ?? ''}'`,
     }),
   );
 

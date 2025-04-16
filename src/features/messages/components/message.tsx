@@ -1,4 +1,5 @@
 import { Card, Separator, Span } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
 
 import { FromNowDate } from '@/components/ui/from-now-date';
 import type { MessageType } from '../types';
@@ -7,7 +8,9 @@ export function Message({ message }: { message: MessageType }) {
   return (
     <Card.Root w="full" border="none">
       <Card.Header>
-        <Card.Title>{message.title}</Card.Title>
+        <Link to="/message/$messageId" params={{ messageId: message.id }}>
+          <Card.Title>{message.title}</Card.Title>
+        </Link>
         <Span fontSize="xs">
           Published <FromNowDate date={message.created} />
         </Span>
