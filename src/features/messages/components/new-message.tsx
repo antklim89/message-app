@@ -11,7 +11,7 @@ export function NewMessage() {
 
   async function handleNewMessage(data: MessageEditSchema) {
     const result = await mutateAsync(data);
-    setOpen(false);
+    if (result.type === 'success') setOpen(false);
     return result;
   }
 
