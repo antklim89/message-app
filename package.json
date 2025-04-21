@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.0-beta.1",
+    "@faker-js/faker": "^9.7.0",
     "@tanstack/react-router-devtools": "^1.115.0",
     "@tanstack/router-plugin": "^1.115.0",
     "@types/react": "^19.1.0",
