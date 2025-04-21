@@ -2,6 +2,7 @@ import { Card, Separator, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { FromNowDate } from '@/components/ui/from-now-date';
+import { Like } from '@/features/likes';
 import type { MessageType } from '../types';
 
 export function Message({ message }: { message: MessageType }) {
@@ -18,6 +19,9 @@ export function Message({ message }: { message: MessageType }) {
       <Card.Body>
         <Card.Description>{message.body}</Card.Description>
       </Card.Body>
+      <Card.Footer>
+        <Like messageId={message.id} />
+      </Card.Footer>
       <Separator />
     </Card.Root>
   );

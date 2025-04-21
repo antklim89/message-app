@@ -11,7 +11,10 @@ export enum Collections {
 	Mfas = "_mfas",
 	Otps = "_otps",
 	Superusers = "_superusers",
+	Likes = "likes",
+	LikesCount = "likesCount",
 	Messages = "messages",
+	MessagesView = "messages_view",
 	Users = "users",
 }
 
@@ -86,14 +89,33 @@ export type SuperusersRecord = {
 	verified?: boolean
 }
 
+export type LikesRecord = {
+	author: RecordIdString
+	id: string
+	message: RecordIdString
+}
+
+export type LikesCountRecord = {
+	count?: number
+	id: string
+	message: RecordIdString
+}
+
 export type MessagesRecord = {
 	answerTo?: RecordIdString
 	author: RecordIdString
 	body: string
 	created?: IsoDateString
 	id: string
+	likes?: RecordIdString[]
 	title: string
 	updated?: IsoDateString
+}
+
+export type MessagesViewRecord = {
+	id: string
+	likesCount?: number
+	title: string
 }
 
 export type UsersRecord = {
@@ -115,7 +137,10 @@ export type ExternalauthsResponse<Texpand = unknown> = Required<ExternalauthsRec
 export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemFields<Texpand>
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
+export type LikesResponse<Texpand = unknown> = Required<LikesRecord> & BaseSystemFields<Texpand>
+export type LikesCountResponse<Texpand = unknown> = Required<LikesCountRecord> & BaseSystemFields<Texpand>
 export type MessagesResponse<Texpand = unknown> = Required<MessagesRecord> & BaseSystemFields<Texpand>
+export type MessagesViewResponse<Texpand = unknown> = Required<MessagesViewRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
@@ -126,7 +151,10 @@ export type CollectionRecords = {
 	_mfas: MfasRecord
 	_otps: OtpsRecord
 	_superusers: SuperusersRecord
+	likes: LikesRecord
+	likesCount: LikesCountRecord
 	messages: MessagesRecord
+	messages_view: MessagesViewRecord
 	users: UsersRecord
 }
 
@@ -136,7 +164,10 @@ export type CollectionResponses = {
 	_mfas: MfasResponse
 	_otps: OtpsResponse
 	_superusers: SuperusersResponse
+	likes: LikesResponse
+	likesCount: LikesCountResponse
 	messages: MessagesResponse
+	messages_view: MessagesViewResponse
 	users: UsersResponse
 }
 
@@ -149,6 +180,9 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: '_mfas'): RecordService<MfasResponse>
 	collection(idOrName: '_otps'): RecordService<OtpsResponse>
 	collection(idOrName: '_superusers'): RecordService<SuperusersResponse>
+	collection(idOrName: 'likes'): RecordService<LikesResponse>
+	collection(idOrName: 'likesCount'): RecordService<LikesCountResponse>
 	collection(idOrName: 'messages'): RecordService<MessagesResponse>
+	collection(idOrName: 'messages_view'): RecordService<MessagesViewResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

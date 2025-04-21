@@ -2,23 +2,30 @@ import type { ListResult } from 'pocketbase';
 
 import { createPocketbaseClient } from '@/lib/pocketbase';
 import { errAuthentication, type PromiseResult, resultMap, resultResolve } from '@/lib/result';
-import type { MessagesResponse, UsersResponse } from '@/pocketbase-types.gen';
+import type { LikesResponse, MessagesResponse, UsersResponse } from '@/pocketbase-types.gen';
 import type { MessageCreateType, MessageType } from './types';
 
 type MessageShareResponse = Pick<MessagesResponse, 'id' | 'title' | 'body' | 'answerTo' | 'created'> & {
   expand: {
     author: Pick<UsersResponse, 'id' | 'name' | 'avatar'>;
+    likes_via_message?: Pick<LikesResponse, 'author'>[];
   };
 };
 
 const messageShareOptions = {
-  expand: 'author',
-  fields: 'id,title,body,author,answerTo,created,expand.author.id,expand.author.name,expand.author.avatar',
+  expand: 'author, likes_via_message.message',
+  fields: `id,title,body,author,answerTo,created,likes,
+    expand.author.id,expand.author.name,expand.author.avatar,
+    expand.likes_via_message.author`,
 };
 
-const transformMessage = (record: MessageShareResponse): MessageType => ({
+const transformMessage = (record: MessageShareResponse, userId?: string): MessageType => ({
   ...record,
   author: record.expand.author,
+  likes: {
+    count: record.expand.likes_via_message?.length ?? 0,
+    hasLiked: userId ? (record.expand.likes_via_message?.some(i => i.author === userId) ?? false) : false,
+  },
 });
 
 export async function createMessage({ body, title, answerTo }: MessageCreateType): PromiseResult<MessageType> {
@@ -36,7 +43,7 @@ export async function createMessage({ body, title, answerTo }: MessageCreateType
 
   const record = await resultResolve<MessageShareResponse>(pb.collection('messages').create(data, messageShareOptions));
 
-  return resultMap(record, transformMessage);
+  return resultMap(record, r => transformMessage(r, user.id));
 }
 
 export async function getManyMessages({
@@ -45,6 +52,7 @@ export async function getManyMessages({
   answerTo?: string;
 } = {}): PromiseResult<ListResult<MessageType>> {
   const pb = await createPocketbaseClient();
+  const user = pb.authStore.record;
 
   const records = await resultResolve(
     pb.collection<MessageShareResponse>('messages').getList(1, 10, {
@@ -57,15 +65,16 @@ export async function getManyMessages({
   return resultMap(records, item => {
     return {
       ...item,
-      items: item.items.map(transformMessage),
+      items: item.items.map(r => transformMessage(r, user?.id)),
     };
   });
 }
 
 export async function getOneMessage(id: MessageType['id']): PromiseResult<MessageType> {
   const pb = await createPocketbaseClient();
+  const user = pb.authStore.record;
 
   const record = await resultResolve(pb.collection<MessageShareResponse>('messages').getOne(id, messageShareOptions));
 
-  return resultMap(record, transformMessage);
+  return resultMap(record, r => transformMessage(r, user?.id));
 }
