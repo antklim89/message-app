@@ -1,6 +1,6 @@
 import type { MessageType } from '@/features/messages';
 import { createPocketbaseClient } from '@/lib/pocketbase';
-import { errAuthentication } from '@/lib/result';
+import { errAuthentication, ok } from '@/lib/result';
 
 export async function addLike({ messageId }: { messageId: MessageType['id'] }) {
   const pb = await createPocketbaseClient();
@@ -9,6 +9,7 @@ export async function addLike({ messageId }: { messageId: MessageType['id'] }) {
   if (user == null) return errAuthentication();
 
   await pb.collection('likes').create({ message: messageId, author: user.id }, { fields: 'id' });
+  return ok(null);
 }
 
 export async function removeLike({ messageId }: { messageId: MessageType['id'] }) {
@@ -22,4 +23,5 @@ export async function removeLike({ messageId }: { messageId: MessageType['id'] }
     .getFirstListItem(`message = '${messageId}' && author = '${user.id}'`, { fields: 'id' });
 
   await pb.collection('likes').delete(likeId);
+  return ok(null);
 }
