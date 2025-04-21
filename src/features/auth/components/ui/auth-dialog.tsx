@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Button, CloseButton, Dialog, Heading, Portal, Text } from '@chakra-ui/react';
+import { Box, Button, CloseButton, Dialog, Flex, Heading, Portal, Text } from '@chakra-ui/react';
 
 export function AuthDialog({
   children,
@@ -14,9 +14,14 @@ export function AuthDialog({
   return (
     <Dialog.Root motionPreset="slide-in-bottom" placement="center" size="cover" {...props}>
       <Dialog.Trigger asChild>
-        <Button size="sm" variant="outline">
-          {type === 'login' ? 'Login' : 'Register'}
-        </Button>
+        <Flex gap={2}>
+          <Button onClick={() => setType('login')} size="sm" variant="outline">
+            Login
+          </Button>
+          <Button onClick={() => setType('register')} size="sm" variant="outline">
+            Register
+          </Button>
+        </Flex>
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
