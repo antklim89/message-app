@@ -5,6 +5,7 @@ import './index.css';
 import { ChakraProvider } from '@/components/providers/chakra-provider';
 import { App } from './app';
 import { ReactQueryProvider } from './components/providers/react-query';
+import { Toaster } from './components/ui/toaster';
 
 const root = document.getElementById('root');
 
@@ -18,6 +19,7 @@ createRoot(root).render(
       <ReactQueryProvider>
         <App />
       </ReactQueryProvider>
+      <Toaster />
     </ChakraProvider>
   </StrictMode>,
 );
