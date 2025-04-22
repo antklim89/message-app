@@ -39,7 +39,7 @@ $app.rootCmd.addCommand(
         });
         $app.save(messageRecord);
       }
-      let messages = $app.findAllRecords('messages');
+      const messages = $app.findAllRecords('messages');
       for (let index = 0; index < ANSWERS_COUNT; index++) {
         const messageRecord = new Record(messagesCollection, {
           title: faker.lorem.sentence(),
@@ -48,17 +48,6 @@ $app.rootCmd.addCommand(
           answerTo: messages[faker.number.int({ min: 0, max: messages.length - 1 })].id,
         });
         $app.save(messageRecord);
-      }
-      messages = $app.findAllRecords('messages');
-      for (const message of messages) {
-        for (const user of users) {
-          if (Math.random() > 0.5) continue;
-          const likeRecord = new Record(likesCollection, {
-            message: message.id,
-            author: user.id,
-          });
-          $app.save(likeRecord);
-        }
       }
     },
   }),

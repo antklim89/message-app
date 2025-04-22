@@ -8,7 +8,7 @@ export async function addLike({ messageId }: { messageId: MessageType['id'] }) {
   const user = pb.authStore.record;
   if (user == null) return errAuthentication();
 
-  await pb.collection('likes').create({ message: messageId, author: user.id }, { fields: 'id' });
+  await pb.collection('messages').update(messageId, { 'likes+': user.id });
   return ok(null);
 }
 
@@ -18,10 +18,7 @@ export async function removeLike({ messageId }: { messageId: MessageType['id'] }
   const user = pb.authStore.record;
   if (user == null) return errAuthentication();
 
-  const { id: likeId } = await pb
-    .collection('likes')
-    .getFirstListItem(`message = '${messageId}' && author = '${user.id}'`, { fields: 'id' });
+  await pb.collection('messages').update(messageId, { 'likes-': user.id });
 
-  await pb.collection('likes').delete(likeId);
   return ok(null);
 }

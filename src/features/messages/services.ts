@@ -2,30 +2,28 @@ import type { ListResult } from 'pocketbase';
 
 import { createPocketbaseClient } from '@/lib/pocketbase';
 import { errAuthentication, type PromiseResult, resultMap, resultResolve } from '@/lib/result';
-import type { LikesResponse, MessagesResponse, UsersResponse } from '@/pocketbase-types.gen';
+import type { MessagesResponse, UsersResponse } from '@/pocketbase-types.gen';
 import { MESSAGES_PER_PAGE } from './constants';
 import type { MessageCreateType, MessageType } from './types';
 
-type MessageShareResponse = Pick<MessagesResponse, 'id' | 'title' | 'body' | 'answerTo' | 'created'> & {
+type MessageShareResponse = Pick<MessagesResponse, 'id' | 'title' | 'body' | 'answerTo' | 'created' | 'likes'> & {
   expand: {
     author: Pick<UsersResponse, 'id' | 'name' | 'avatar'>;
-    likes_via_message?: Pick<LikesResponse, 'author'>[];
   };
 };
 
 const messageShareOptions = {
-  expand: 'author, likes_via_message.message',
+  expand: 'author',
   fields: `id,title,body,author,answerTo,created,likes,
-    expand.author.id,expand.author.name,expand.author.avatar,
-    expand.likes_via_message.author`,
+    expand.author.id,expand.author.name,expand.author.avatar,`,
 };
 
 const transformMessage = (record: MessageShareResponse, userId?: string): MessageType => ({
   ...record,
   author: record.expand.author,
   likes: {
-    count: record.expand.likes_via_message?.length ?? 0,
-    hasLiked: userId ? (record.expand.likes_via_message?.some(i => i.author === userId) ?? false) : false,
+    count: record.likes.length,
+    hasLiked: userId ? record.likes.includes(userId) : false,
   },
 });
 
