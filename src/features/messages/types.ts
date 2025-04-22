@@ -1,6 +1,9 @@
-import type { ListResult } from 'pocketbase';
+import type { InfiniteData } from '@tanstack/react-query';
+import type { ListResult as ListResultOriginal } from 'pocketbase';
 
 import type { MessagesRecord, UsersRecord } from '@/pocketbase-types.gen';
+
+export type ListResult<T> = Pick<ListResultOriginal<T>, 'items' | 'page' | 'totalPages'>;
 
 export type MessageType = Pick<MessagesRecord, 'id' | 'title' | 'body' | 'answerTo' | 'created'> & {
   author: Pick<UsersRecord, 'id' | 'name' | 'avatar'>;
@@ -15,7 +18,7 @@ export type MessageUpdateType = Pick<MessageType, 'body' | 'title'>;
 export interface FetchManyMessagesQuery {
   return: ListResult<MessageType>;
   error: Error;
-  data: ListResult<MessageType>;
+  data: InfiniteData<ListResult<MessageType>>;
   key: ['MESSAGES', { answerTo?: string }];
 }
 

@@ -1,4 +1,4 @@
-import { Box, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Skeleton } from '@chakra-ui/react';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { QuerySuspenseErrorBoundary } from '@/components/suspense/query-suspense-error-boundary';
@@ -31,13 +31,13 @@ function NewMessageLayout() {
 }
 
 function MessageListLayout() {
-  const { data } = useFetchManyMessages();
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useFetchManyMessages();
 
   return (
     <MessageList>
-      {data.items.map(message => (
-        <Message key={message.id} message={message} />
-      ))}
+      {data.pages.map(pageData => pageData.items.map(message => <Message key={message.id} message={message} />))}
+      {isFetchingNextPage && <MessageListFallback />}
+      {hasNextPage && <Button onClick={() => fetchNextPage()}>Show More</Button>}
     </MessageList>
   );
 }

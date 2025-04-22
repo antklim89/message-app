@@ -10,7 +10,9 @@ export function Message({ message }: { message: MessageType }) {
     <Card.Root w="full" border="none">
       <Card.Header>
         <Link to="/message/$messageId" params={{ messageId: message.id }}>
-          <Card.Title>{message.title}</Card.Title>
+          <Card.Title>
+            {message.title} {message.id}
+          </Card.Title>
         </Link>
         <Span fontSize="xs">
           Published <FromNowDate date={message.created} /> by {message.author.name}

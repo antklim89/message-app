@@ -3,6 +3,7 @@ import type { ListResult } from 'pocketbase';
 import { createPocketbaseClient } from '@/lib/pocketbase';
 import { errAuthentication, type PromiseResult, resultMap, resultResolve } from '@/lib/result';
 import type { LikesResponse, MessagesResponse, UsersResponse } from '@/pocketbase-types.gen';
+import { MESSAGES_PER_PAGE } from './constants';
 import type { MessageCreateType, MessageType } from './types';
 
 type MessageShareResponse = Pick<MessagesResponse, 'id' | 'title' | 'body' | 'answerTo' | 'created'> & {
@@ -47,17 +48,21 @@ export async function createMessage({ body, title, answerTo }: MessageCreateType
 }
 
 export async function getManyMessages({
-  answerTo,
+  answerTo = '',
+  page = 1,
 }: {
   answerTo?: string;
+  page?: number;
 } = {}): PromiseResult<ListResult<MessageType>> {
   const pb = await createPocketbaseClient();
   const user = pb.authStore.record;
 
+  const filter = pb.filter('answerTo = {:answerTo}', { answerTo });
+
   const records = await resultResolve(
-    pb.collection<MessageShareResponse>('messages').getList(1, 10, {
+    pb.collection<MessageShareResponse>('messages').getList(page, MESSAGES_PER_PAGE, {
       sort: '-created',
-      filter: `answerTo = '${answerTo ?? ''}'`,
+      filter,
       ...messageShareOptions,
     }),
   );

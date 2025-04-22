@@ -1,4 +1,4 @@
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { getManyMessages } from '../../services';
@@ -9,15 +9,16 @@ export function useFetchManyMessages() {
 
   const queryClient = useQueryClient();
 
-  return useSuspenseQuery<
+  return useSuspenseInfiniteQuery<
     FetchManyMessagesQuery['return'],
     FetchManyMessagesQuery['error'],
     FetchManyMessagesQuery['data'],
-    FetchManyMessagesQuery['key']
+    FetchManyMessagesQuery['key'],
+    number
   >({
     queryKey: ['MESSAGES', { answerTo: params?.messageId }],
-    async queryFn() {
-      const { type, error, result } = await getManyMessages({ answerTo: params?.messageId });
+    async queryFn({ pageParam }) {
+      const { type, error, result } = await getManyMessages({ answerTo: params?.messageId, page: pageParam });
       if (type === 'error') throw new Error(error.message);
 
       for (const message of result.items) {
@@ -28,5 +29,10 @@ export function useFetchManyMessages() {
       }
       return result;
     },
+    getNextPageParam(data) {
+      if (data.page >= data.totalPages) return undefined;
+      return data.page + 1;
+    },
+    initialPageParam: 1,
   });
 }

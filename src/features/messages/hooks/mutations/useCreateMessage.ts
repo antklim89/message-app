@@ -19,15 +19,20 @@ export function useCreateMessage() {
       if (createMessageResult.type === 'error') return createMessageResult;
 
       queryClient.setQueriesData<
-        FetchManyMessagesQuery['return'],
+        FetchManyMessagesQuery['data'],
         QueryFilters<
-          FetchManyMessagesQuery['return'],
+          FetchManyMessagesQuery['data'],
           FetchManyMessagesQuery['error'],
           FetchManyMessagesQuery['data'],
           FetchManyMessagesQuery['key']
         >
       >({ queryKey: ['MESSAGES', { answerTo }] }, oldData => {
-        return oldData ? { ...oldData, items: [createMessageResult.result, ...oldData.items] } : oldData;
+        return oldData
+          ? {
+              ...oldData,
+              pages: [{ items: [createMessageResult.result], page: 0, totalPages: 0 }, ...oldData.pages],
+            }
+          : oldData;
       });
 
       queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(
