@@ -3,8 +3,8 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { QuerySuspenseErrorBoundary } from '@/components/suspense/query-suspense-error-boundary';
 import { SuspenseErrorBoundary } from '@/components/suspense/suspense-error-boundary';
+import { useUser } from '@/features/auth/hooks/use-user';
 import { Message, MessageList, MessageListFallback, NewMessage, useFetchManyMessages } from '@/features/messages';
-import { useUser } from '@/hooks/useUser';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -32,10 +32,11 @@ function NewMessageLayout() {
 
 function MessageListLayout() {
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useFetchManyMessages();
+  // console.log('🚀 ~ data: \n%o\n', data);
 
   return (
     <MessageList>
-      {data.pages.map(pageData => pageData.items.map(message => <Message key={message.id} message={message} />))}
+      {data.pages.map(pageData => pageData.map(message => <Message key={message.id} message={message} />))}
       {isFetchingNextPage && <MessageListFallback />}
       {hasNextPage && <Button onClick={() => fetchNextPage()}>Show More</Button>}
     </MessageList>

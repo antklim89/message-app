@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const BaseAuthSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string().min(1),
   repeat: z.string(),
   username: z.string().min(2),
 });

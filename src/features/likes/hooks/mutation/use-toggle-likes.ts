@@ -19,11 +19,8 @@ export function useToggleLikes({ messageId, hasLiked }: { messageId: MessageType
           oldData
             ? {
                 ...oldData,
-                likes: {
-                  ...oldData.likes,
-                  count: oldData.likes.hasLiked ? oldData.likes.count - 1 : oldData.likes.count + 1,
-                  hasLiked: !oldData.likes.hasLiked,
-                },
+                hasLiked: !oldData.hasLiked,
+                likesCount: oldData.hasLiked ? (oldData.likesCount ?? 0) - 1 : (oldData.likesCount ?? 0) + 1,
               }
             : oldData,
       );

@@ -9,13 +9,13 @@ export function Message({ message }: { message: MessageType }) {
   return (
     <Card.Root w="full" border="none">
       <Card.Header>
-        <Link to="/message/$messageId" params={{ messageId: message.id }}>
+        <Link to="/message/$messageId" params={{ messageId: message.id.toString() }}>
           <Card.Title>
             {message.title} {message.id}
           </Card.Title>
         </Link>
         <Span fontSize="xs">
-          Published <FromNowDate date={message.created} /> by {message.author.name}
+          Published <FromNowDate date={message.created} /> by {message.author.username}
         </Span>
       </Card.Header>
       <Card.Body>

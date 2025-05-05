@@ -8,3 +8,8 @@ export type CreateUserInput = {
   password: string;
   username: string;
 };
+
+export type UserType = {
+  id: string;
+  username: string;
+};

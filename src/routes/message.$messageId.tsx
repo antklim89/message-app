@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { QuerySuspenseErrorBoundary } from '@/components/suspense/query-suspense-error-boundary';
 import { SuspenseErrorBoundary } from '@/components/suspense/suspense-error-boundary';
+import { useUser } from '@/features/auth/hooks/use-user';
 import {
   Message,
   MessageFallback,
@@ -12,7 +13,6 @@ import {
   useFetchManyMessages,
   useFetchOneMessage,
 } from '@/features/messages';
-import { useUser } from '@/hooks/useUser';
 
 export const Route = createFileRoute('/message/$messageId')({
   component: RouteComponent,
@@ -36,7 +36,7 @@ function RouteComponent() {
 
 function AnswerMessageLayout() {
   const { messageId } = Route.useParams();
-  const { data } = useFetchOneMessage({ id: messageId });
+  const { data } = useFetchOneMessage({ id: Number(messageId) });
 
   return <Message message={data} />;
 }
@@ -53,9 +53,7 @@ function MessageListLayout() {
 
   return (
     <MessageList>
-      {data.items.map(message => (
-        <Message key={message.id} message={message} />
-      ))}
+      {data.pages.map(pageData => pageData.map(message => <Message key={message.id} message={message} />))}
     </MessageList>
   );
 }

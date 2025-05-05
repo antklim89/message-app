@@ -1,47 +1,58 @@
-import { ClientResponseError } from 'pocketbase';
-
-import { createPocketbaseClient, flattenPocketbaseErrors } from '@/lib/pocketbase';
-import { err, resultResolve } from '@/lib/result';
+import { err, errUnexpected, ok } from '@/lib/result';
+import { createSupabaseClient } from '@/lib/supabase';
 import type { AuthWithPasswordInput, CreateUserInput } from './types';
 
 export async function loginWithPassword({ email, password }: AuthWithPasswordInput) {
-  const pb = await createPocketbaseClient();
+  const supabase = await createSupabaseClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  const result = await resultResolve(
-    pb.collection('users').authWithPassword(email, password),
-    error =>
-      error instanceof ClientResponseError &&
-      error.status === 400 &&
-      err({ message: 'Username or password are not valid.' }),
-    () => err({ message: 'Failed to login. Try again later', type: 'unexpected' }),
-  );
+  if (error?.code === 'invalid_credentials') {
+    const message = 'Email or password are not valid.';
+    return err({
+      type: 'validation',
+      message,
+      errors: { email: message, password: message },
+    });
+  }
+  if (error != null) {
+    return errUnexpected('Failed to login. Try again later');
+  }
 
-  return result;
+  return ok(data.user);
 }
 
 export async function createUser({ email, password, username }: CreateUserInput) {
-  const pb = await createPocketbaseClient();
-
-  const data = {
+  const supabase = await createSupabaseClient();
+  const { data, error } = await supabase.auth.signUp({
     email,
-    name: username,
     password,
-    passwordConfirm: password,
-  };
+    options: {
+      data: { username },
+    },
+  });
 
-  const result = await resultResolve(
-    pb.collection('users').create(data),
-    error =>
-      error instanceof ClientResponseError &&
-      error.status === 400 &&
-      err({ errors: flattenPocketbaseErrors(error), message: error.message, type: 'validation' }),
-    () => err({ message: 'Failed to create user. Try again later', type: 'unexpected' }),
-  );
+  if (error?.code === 'user_already_exists') {
+    const message = 'User already registered';
+    return err({
+      type: 'validation',
+      message,
+      errors: { email: message },
+    });
+  }
+  if (error?.code === '"weak_password"') {
+    return err({ type: 'validation', message: error.message, errors: { password: error.message } });
+  }
+  if (error != null) {
+    return errUnexpected('Failed to login. Try again later');
+  }
 
-  return result;
+  return ok(data.user);
 }
 
 export async function logout() {
-  const pb = await createPocketbaseClient();
-  return pb.authStore.clear();
+  const supabase = await createSupabaseClient();
+  await supabase.auth.signOut();
 }

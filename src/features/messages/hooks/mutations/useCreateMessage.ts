@@ -8,13 +8,13 @@ import type { FetchManyMessagesQuery, FetchOneMessagesQuery } from '../../types'
 export function useCreateMessage() {
   const queryClient = useQueryClient();
   const params = useParams({ from: '/message/$messageId', shouldThrow: false });
-  const answerTo = params?.messageId;
+  const answerToId = params?.messageId ? Number(params?.messageId) : undefined;
 
   return useMutation({
     async mutationFn(data: MessageEditSchema) {
       const createMessageResult = await createMessage({
         ...data,
-        answerTo,
+        answerToId,
       });
       if (createMessageResult.type === 'error') return createMessageResult;
 
@@ -26,11 +26,11 @@ export function useCreateMessage() {
           FetchManyMessagesQuery['data'],
           FetchManyMessagesQuery['key']
         >
-      >({ queryKey: ['MESSAGES', { answerTo }] }, oldData => {
+      >({ queryKey: ['MESSAGES', { answerTo: answerToId }] }, oldData => {
         return oldData
           ? {
               ...oldData,
-              pages: [{ items: [createMessageResult.result], page: 0, totalPages: 0 }, ...oldData.pages],
+              pages: [[createMessageResult.result], ...oldData.pages],
             }
           : oldData;
       });

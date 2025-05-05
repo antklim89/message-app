@@ -1,11 +1,13 @@
 import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
+import { MESSAGES_PER_PAGE } from '../../constants';
 import { getManyMessages } from '../../services';
-import type { FetchManyMessagesQuery, FetchOneMessagesQuery } from '../../types';
+import type { FetchManyMessagesQuery, FetchOneMessagesQuery, MessageType } from '../../types';
 
 export function useFetchManyMessages() {
   const params = useParams({ from: '/message/$messageId', shouldThrow: false });
+  const messageId = params?.messageId ? Number(params?.messageId) : undefined;
 
   const queryClient = useQueryClient();
 
@@ -14,11 +16,11 @@ export function useFetchManyMessages() {
     FetchManyMessagesQuery['error'],
     FetchManyMessagesQuery['data'],
     FetchManyMessagesQuery['key'],
-    number
+    MessageType['id'] | undefined
   >({
-    queryKey: ['MESSAGES', { answerTo: params?.messageId }],
-    async queryFn({ pageParam }) {
-      const { type, error, result } = await getManyMessages({ answerTo: params?.messageId, page: pageParam });
+    queryKey: ['MESSAGES', { answerTo: messageId }],
+    async queryFn({ pageParam: lastId }) {
+      const { type, error, result } = await getManyMessages({ answerTo: messageId, lastId });
       if (type === 'error') throw new Error(error.message);
 
       for (const message of result.items) {
@@ -27,12 +29,12 @@ export function useFetchManyMessages() {
           message,
         );
       }
-      return result;
+      return result.items;
     },
     getNextPageParam(data) {
-      if (data.page >= data.totalPages) return undefined;
-      return data.page + 1;
+      if (data.length < MESSAGES_PER_PAGE) return undefined;
+      return data.at(-1)?.id;
     },
-    initialPageParam: 1,
+    initialPageParam: undefined,
   });
 }

@@ -1,83 +1,52 @@
-import type { ListResult } from 'pocketbase';
-
-import { createPocketbaseClient } from '@/lib/pocketbase';
-import { errAuthentication, type PromiseResult, resultMap, resultResolve } from '@/lib/result';
-import type { MessagesResponse, UsersResponse } from '@/pocketbase-types.gen';
+import { err, errAuthentication, errUnexpected, ok, type PromiseResult } from '@/lib/result';
+import { createSupabaseClient } from '@/lib/supabase';
 import { MESSAGES_PER_PAGE } from './constants';
 import type { MessageCreateType, MessageType } from './types';
 
-type MessageShareResponse = Pick<MessagesResponse, 'id' | 'title' | 'body' | 'answerTo' | 'created' | 'likes'> & {
-  expand: {
-    author: Pick<UsersResponse, 'id' | 'name' | 'avatar'>;
-  };
-};
+const SELECT = '*, author:authorId(id,username), hasLiked, likesCount';
 
-const messageShareOptions = {
-  expand: 'author',
-  fields: `id,title,body,author,answerTo,created,likes,
-    expand.author.id,expand.author.name,expand.author.avatar,`,
-};
-
-const transformMessage = (record: MessageShareResponse, userId?: string): MessageType => ({
-  ...record,
-  author: record.expand.author,
-  likes: {
-    count: record.likes.length,
-    hasLiked: userId ? record.likes.includes(userId) : false,
-  },
-});
-
-export async function createMessage({ body, title, answerTo }: MessageCreateType): PromiseResult<MessageType> {
-  const pb = await createPocketbaseClient();
-
-  const user = pb.authStore.record;
+export async function createMessage({ body, title, answerToId }: MessageCreateType): PromiseResult<MessageType> {
+  const supabase = await createSupabaseClient();
+  const sessionResult = await supabase.auth.getSession();
+  const user = sessionResult.data?.session?.user;
   if (user == null) return errAuthentication();
 
-  const data = {
-    body,
-    title,
-    author: user.id,
-    answerTo,
-  };
+  const { data, error } = await supabase
+    .from('messages')
+    .insert({ answerToId, body, title, authorId: user.id })
+    .select(SELECT)
+    .single();
 
-  const record = await resultResolve<MessageShareResponse>(pb.collection('messages').create(data, messageShareOptions));
+  if (error != null) return errUnexpected('Failed to create message.');
 
-  return resultMap(record, r => transformMessage(r, user.id));
+  return ok(data);
 }
 
 export async function getManyMessages({
-  answerTo = '',
-  page = 1,
+  answerTo,
+  lastId,
 }: {
-  answerTo?: string;
-  page?: number;
-} = {}): PromiseResult<ListResult<MessageType>> {
-  const pb = await createPocketbaseClient();
-  const user = pb.authStore.record;
+  answerTo?: number;
+  lastId?: MessageType['id'];
+} = {}): PromiseResult<{ items: MessageType[] }> {
+  const supabase = await createSupabaseClient();
 
-  const filter = pb.filter('answerTo = {:answerTo}', { answerTo });
+  const query = supabase.from('messages').select(SELECT).limit(MESSAGES_PER_PAGE);
+  if (answerTo != null) query.eq('answerToId', answerTo);
+  if (lastId != null) query.lt('id', lastId);
 
-  const records = await resultResolve(
-    pb.collection<MessageShareResponse>('messages').getList(page, MESSAGES_PER_PAGE, {
-      sort: '-created',
-      filter,
-      ...messageShareOptions,
-    }),
-  );
+  const { data, error } = await query;
+  if (error != null) return errUnexpected('Failed to fetch messages');
 
-  return resultMap(records, item => {
-    return {
-      ...item,
-      items: item.items.map(r => transformMessage(r, user?.id)),
-    };
-  });
+  return ok({ items: data });
 }
 
 export async function getOneMessage(id: MessageType['id']): PromiseResult<MessageType> {
-  const pb = await createPocketbaseClient();
-  const user = pb.authStore.record;
+  const supabase = await createSupabaseClient();
 
-  const record = await resultResolve(pb.collection<MessageShareResponse>('messages').getOne(id, messageShareOptions));
+  const { data, error } = await supabase.from('messages').select(SELECT).eq('id', id).single();
+  if (error != null) return errUnexpected('Failed to fetch messages');
+  if (data == null) return err({ type: 'not-found', message: 'Message not found' });
 
-  return resultMap(record, r => transformMessage(r, user?.id));
+  return ok(data);
 }
