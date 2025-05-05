@@ -1,5 +1,7 @@
 import type { InfiniteData } from '@tanstack/react-query';
 
+import type { UserType } from '@/features/auth';
+
 export type MessageType = {
   answerToId?: number | null;
   authorId: string;
@@ -7,10 +9,7 @@ export type MessageType = {
   created: string;
   id: number;
   title: string;
-  author: {
-    id: string;
-    username: string | null;
-  };
+  author: UserType;
   hasLiked: boolean | null;
   likesCount: number | null;
 };
