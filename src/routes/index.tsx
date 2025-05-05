@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { QuerySuspenseErrorBoundary } from '@/components/suspense/query-suspense-error-boundary';
 import { SuspenseErrorBoundary } from '@/components/suspense/suspense-error-boundary';
-import { useUser } from '@/features/auth/hooks/use-user';
+import { useAuthenticated } from '@/features/auth';
 import { Message, MessageList, MessageListFallback, NewMessage, useFetchManyMessages } from '@/features/messages';
 
 export const Route = createFileRoute('/')({
@@ -24,7 +24,7 @@ function Index() {
 }
 
 function NewMessageLayout() {
-  const user = useUser();
+  const user = useAuthenticated();
 
   if (user == null) return <Box h={30} />;
   return <NewMessage />;

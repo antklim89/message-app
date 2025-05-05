@@ -1,27 +1,30 @@
 import { useState } from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 
-import { useUser } from '@/features/auth/hooks/use-user';
 import { AuthForm } from './forms/auth-form';
+import { LogoutButton } from './logout-button';
 import { AuthDialog } from './ui/auth-dialog';
-import { LogoutButton } from './ui/logout-button';
+import { useAuthenticated } from '../hooks/use-authenticated';
+import { useLogin } from '../hooks/use-login';
+import { useRegister } from '../hooks/use-register';
 import type { LoginSchema, RegisterSchema } from '../schemas';
-import { createUser, loginWithPassword } from '../services';
 
 export function Auth() {
   const [type, setType] = useState<'login' | 'register'>('login');
+  const { mutateAsync: login } = useLogin();
+  const { mutateAsync: register } = useRegister();
 
   function handleAuth(data: LoginSchema | RegisterSchema) {
-    if (type === 'register') return createUser(data as RegisterSchema);
-    else return loginWithPassword(data as LoginSchema);
+    if (type === 'register') return register(data as RegisterSchema);
+    else return login(data as LoginSchema);
   }
 
-  const user = useUser();
+  const isAuthenticated = useAuthenticated();
 
-  if (user != null)
+  if (isAuthenticated)
     return (
       <Flex flexDirection="column" gap={2} my={4}>
-        <Heading as="h3">Welcome {user.username}!</Heading>
+        <Heading as="h3">Welcome!</Heading>
 
         <LogoutButton />
       </Flex>

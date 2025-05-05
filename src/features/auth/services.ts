@@ -1,8 +1,8 @@
-import { err, errUnexpected, ok } from '@/lib/result';
+import { err, errUnexpected, ok, type PromiseResult } from '@/lib/result';
 import { createSupabaseClient } from '@/lib/supabase';
-import type { AuthWithPasswordInput, CreateUserInput } from './types';
+import type { AuthWithPasswordInput, CreateUserInput, UserType } from './types';
 
-export async function loginWithPassword({ email, password }: AuthWithPasswordInput) {
+export async function loginWithPassword({ email, password }: AuthWithPasswordInput): PromiseResult<UserType> {
   const supabase = await createSupabaseClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -21,10 +21,10 @@ export async function loginWithPassword({ email, password }: AuthWithPasswordInp
     return errUnexpected('Failed to login. Try again later');
   }
 
-  return ok(data.user);
+  return ok({ id: data.user.id, username: data.user.user_metadata.username });
 }
 
-export async function createUser({ email, password, username }: CreateUserInput) {
+export async function createUser({ email, password, username }: CreateUserInput): PromiseResult<UserType | null> {
   const supabase = await createSupabaseClient();
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -49,10 +49,24 @@ export async function createUser({ email, password, username }: CreateUserInput)
     return errUnexpected('Failed to login. Try again later');
   }
 
-  return ok(data.user);
+  const newUser = data.user;
+  if (newUser) ok({ id: newUser.id, username: newUser.user_metadata.username });
+  return ok(null);
+}
+
+export async function isAuthenticated(): Promise<boolean> {
+  const supabase = await createSupabaseClient();
+  const { data, error } = await supabase.auth.getSession();
+  if (error != null) return false;
+
+  if (data.session != null) return true;
+  return false;
 }
 
 export async function logout() {
   const supabase = await createSupabaseClient();
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+  if (error != null) return errUnexpected('Failed to logout.');
+
+  return ok(null);
 }
