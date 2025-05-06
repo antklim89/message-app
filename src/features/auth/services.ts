@@ -21,7 +21,7 @@ export async function loginWithPassword({ email, password }: AuthWithPasswordInp
     return errUnexpected('Failed to login. Try again later');
   }
 
-  return ok({ id: data.user.id, username: data.user.user_metadata.username });
+  return ok({ id: data.user.id, email: data.user.email ?? '' });
 }
 
 export async function createUser({ email, password, username }: CreateUserInput): PromiseResult<UserType | null> {
@@ -42,7 +42,7 @@ export async function createUser({ email, password, username }: CreateUserInput)
       issues: { email: message },
     });
   }
-  if (error?.code === '"weak_password"') {
+  if (error?.code === 'weak_password') {
     return err({ type: 'validation', message: error.message, issues: { password: error.message } });
   }
   if (error != null) {
@@ -50,17 +50,8 @@ export async function createUser({ email, password, username }: CreateUserInput)
   }
 
   const newUser = data.user;
-  if (newUser) ok({ id: newUser.id, username: newUser.user_metadata.username });
+  if (newUser) ok({ id: newUser.id, email: newUser.email ?? '' });
   return ok(null);
-}
-
-export async function isAuthenticated(): Promise<boolean> {
-  const supabase = await createSupabaseClient();
-  const { data, error } = await supabase.auth.getSession();
-  if (error != null) return false;
-
-  if (data.session != null) return true;
-  return false;
 }
 
 export async function logout() {
@@ -69,4 +60,17 @@ export async function logout() {
   if (error != null) return errUnexpected('Failed to logout.');
 
   return ok(null);
+}
+
+export async function getUser(): Promise<UserType | null> {
+  const supabase = await createSupabaseClient();
+  const { data, error } = await supabase.auth.getSession();
+  if (error != null) return null;
+
+  if (data.session == null) return null;
+
+  return {
+    id: data.session.user.id,
+    email: data.session.user.email ?? '',
+  };
 }
