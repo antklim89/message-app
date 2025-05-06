@@ -13,8 +13,12 @@ export function Like({ messageId }: Props) {
 
   const { mutateAsync, isPending } = useToggleLikes({ hasLiked: data.hasLiked || false, messageId });
 
+  function handleTogleLike() {
+    mutateAsync();
+  }
+
   return (
-    <IconButton aria-label="like message" variant="ghost" onClick={() => mutateAsync()}>
+    <IconButton aria-label="like message" variant="ghost" onClick={handleTogleLike}>
       {data.hasLiked ? <FaHeart /> : <FaRegHeart />}
       {isPending ? <Spinner size="xs" /> : data.likesCount}
     </IconButton>

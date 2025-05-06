@@ -1,8 +1,8 @@
 import { type QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import type { MessageEditSchema } from '../../schemas';
 import { createMessage } from '../../services';
+import type { MessageCreateType } from '../../types';
 import type { FetchManyMessagesQuery, FetchOneMessagesQuery } from '../../types';
 
 export function useCreateMessage() {
@@ -11,7 +11,7 @@ export function useCreateMessage() {
   const answerToId = params?.messageId ? Number(params?.messageId) : undefined;
 
   return useMutation({
-    async mutationFn(data: MessageEditSchema) {
+    async mutationFn(data: MessageCreateType) {
       const createMessageResult = await createMessage({
         ...data,
         answerToId,
@@ -26,14 +26,14 @@ export function useCreateMessage() {
           FetchManyMessagesQuery['data'],
           FetchManyMessagesQuery['key']
         >
-      >({ queryKey: ['MESSAGES', { answerTo: answerToId }] }, oldData => {
-        return oldData
+      >({ queryKey: ['MESSAGES', { answerTo: answerToId }] }, oldData =>
+        oldData
           ? {
               ...oldData,
               pages: [[createMessageResult.result], ...oldData.pages],
             }
-          : oldData;
-      });
+          : oldData,
+      );
 
       queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(
         ['MESSAGE', createMessageResult.result.id],
