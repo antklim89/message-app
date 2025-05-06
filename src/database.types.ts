@@ -95,19 +95,19 @@ export type Database = {
           created: string
           email: string
           id: string
-          username: string | null
+          username: string
         }
         Insert: {
           created?: string
           email: string
           id?: string
-          username?: string | null
+          username?: string
         }
         Update: {
           created?: string
           email?: string
           id?: string
-          username?: string | null
+          username?: string
         }
         Relationships: []
       }
