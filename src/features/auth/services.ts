@@ -14,7 +14,7 @@ export async function loginWithPassword({ email, password }: AuthWithPasswordInp
     return err({
       type: 'validation',
       message,
-      errors: { email: message, password: message },
+      issues: { email: message, password: message },
     });
   }
   if (error != null) {
@@ -39,11 +39,11 @@ export async function createUser({ email, password, username }: CreateUserInput)
     return err({
       type: 'validation',
       message,
-      errors: { email: message },
+      issues: { email: message },
     });
   }
   if (error?.code === '"weak_password"') {
-    return err({ type: 'validation', message: error.message, errors: { password: error.message } });
+    return err({ type: 'validation', message: error.message, issues: { password: error.message } });
   }
   if (error != null) {
     return errUnexpected('Failed to login. Try again later');

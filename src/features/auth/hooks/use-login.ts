@@ -11,7 +11,7 @@ export function useLogin() {
   return useMutation<Result<UserType>, Error, AuthWithPasswordInput>({
     async mutationFn(input) {
       const loginResult = await loginWithPassword(input);
-      if (loginResult.type === 'error') return loginResult;
+      if (loginResult.fail) return loginResult;
 
       await queryClient.invalidateQueries();
       toaster.success({

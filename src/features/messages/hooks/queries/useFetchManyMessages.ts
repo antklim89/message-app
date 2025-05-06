@@ -20,8 +20,8 @@ export function useFetchManyMessages() {
   >({
     queryKey: ['MESSAGES', { answerTo: messageId }],
     async queryFn({ pageParam: lastId }) {
-      const { type, error, result } = await getManyMessages({ answerTo: messageId, lastId });
-      if (type === 'error') throw new Error(error.message);
+      const { fail, error, result } = await getManyMessages({ answerTo: messageId, lastId });
+      if (fail) throw new Error(error.message);
 
       for (const message of result.items) {
         queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(

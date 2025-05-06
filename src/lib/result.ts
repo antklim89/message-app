@@ -1,97 +1,87 @@
-export type ErrVariants = { message: string } & (
-  | {
-      type?: null;
-    }
-  | {
-      type: 'authentication';
-    }
-  | {
-      type: 'unexpected';
-    }
-  | {
-      type: 'not-found';
-    }
-  | {
-      type: 'validation';
-      errors: Record<string, string>;
-    }
-);
-
 export interface Ok<T> {
-  type: 'success';
+  success: true;
+  fail: false;
   result: T;
-  message: null;
-  error: null;
+  error?: null;
 }
 
-export interface Err {
-  type: 'error';
-  error: ErrVariants;
-  result: null;
+export interface Err<T extends string = string> {
+  success: false;
+  fail: true;
+  error: ErrVariant<T>;
+  result?: null;
 }
 
-export type Result<T> = Ok<T> | Err;
+export type ErrVariant<T extends string = string> = {
+  type: T;
+  message: string;
+  original?: unknown;
+  issues?: Record<string, string | string[]>;
+};
 
-export type PromiseResult<T> = Promise<Result<T>>;
+export type Result<T, E extends string = string> = Ok<T> | Err<E>;
 
-export function ok<T>(result: T): Ok<T> {
+export type PromiseResult<T, E extends string = string> = Promise<Result<T, E>>;
+
+export function ok<const T>(result: T): Ok<T> {
   return {
-    error: null,
-    message: null,
+    success: true,
+    fail: false,
     result,
-    type: 'success',
+    error: null,
   };
 }
 
-export function err(error: ErrVariants): Err {
+export function err<const T extends string>(error: ErrVariant<T>): Err<T> {
   return {
+    success: false,
+    fail: true,
     error,
     result: null,
-    type: 'error',
   };
 }
 
-export function errUnexpected(message?: string): Err {
+export function errMap<const OldErr extends string, const NewErr extends string, const R>(
+  result: Result<R, OldErr>,
+  errCb: (arg: ErrVariant<OldErr>) => ErrVariant<NewErr>,
+): Result<R, NewErr> {
+  if (result.success) return result;
+  return err(errCb(result.error));
+}
+
+export function okMap<const OldResult, const NewResult, const E extends string>(
+  result: Result<OldResult, E>,
+  okCb: (arg: OldResult) => NewResult,
+): Result<NewResult, E> {
+  if (result.fail) return result;
+  return ok(okCb(result.result));
+}
+
+export const ErrType = {
+  UNEXPECTET: 'unexpected',
+  AUTHENTICATION: 'authentication',
+  VALIDATION: 'validation',
+} as const;
+type ErrType = (typeof ErrType)[keyof typeof ErrType];
+
+export function errUnexpected(message?: string): Err<'unexpected'> {
   return err({
     message: message ?? 'Unexpected error. Try again later.',
-    type: 'unexpected',
+    type: ErrType.UNEXPECTET,
   });
 }
 
-export function errAuthentication(message?: string): Err {
+export function errAuthentication(message?: string): Err<'authentication'> {
   return err({
     message: message ?? 'You are not authenticated to perform this operation.',
-    type: 'authentication',
+    type: ErrType.AUTHENTICATION,
   });
 }
 
-export function isOk<const T>(data: unknown): data is Ok<T> {
-  return data != null && typeof data === 'object' && 'type' in data && data.type === 'success';
-}
-
-export function isErr(error: unknown): error is Err {
-  return error != null && typeof error === 'object' && 'type' in error && error.type === 'error';
-}
-
-export async function resultResolve<T>(
-  promise: Promise<T>,
-  ...errorsCbs: ((data: unknown) => Err | unknown)[]
-): PromiseResult<T> {
-  try {
-    const result = await promise;
-    return ok(result);
-  } catch (error) {
-    for (const errorCb of errorsCbs) {
-      const errResult = errorCb(error);
-      if (isErr(errResult)) return errResult;
-    }
-
-    if (error instanceof Error) return errUnexpected(error.message);
-    return errUnexpected();
-  }
-}
-
-export function resultMap<T, U>(result: Result<T>, cb: (args: T) => U) {
-  if (result.type === 'error') return result;
-  return ok(cb(result.result));
+export function errValidation(message?: string, issues?: ErrVariant['issues']): Err<'validation'> {
+  return err({
+    message: message ?? 'Validation error. Please check your input.',
+    type: ErrType.VALIDATION,
+    issues,
+  });
 }

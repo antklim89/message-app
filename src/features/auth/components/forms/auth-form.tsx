@@ -31,13 +31,13 @@ export function AuthForm({
 
   const handleSubmit = form.handleSubmit(async data => {
     const submitResult = await onSubmit(data);
-    if (submitResult.type === 'success') {
+    if (submitResult.success) {
       return form.reset({ email: '' }, { keepValues: false });
     }
 
-    if (submitResult.error.type === 'validation') {
-      Object.entries(submitResult.error.errors).map(([name, value]) =>
-        form.setError(name as 'root', { message: value }),
+    if (submitResult.error.type === 'validation' && submitResult.error.issues != null) {
+      Object.entries(submitResult.error.issues).map(([name, value]) =>
+        form.setError(name as 'root', { message: Array.isArray(value) ? value.join(', ') : value }),
       );
     } else {
       form.setError('root', { message: submitResult.error.message });

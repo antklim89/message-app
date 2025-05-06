@@ -11,8 +11,8 @@ export function EditMessage({ onSubmit }: { onSubmit: (data: MessageEditSchema) 
   });
 
   const handleSubmit = form.handleSubmit(async data => {
-    const { type, error } = await onSubmit(data);
-    if (type === 'error') form.setError('root', { message: error.message });
+    const { fail, error } = await onSubmit(data);
+    if (fail) form.setError('root', { message: error.message });
     else form.reset();
   });
 

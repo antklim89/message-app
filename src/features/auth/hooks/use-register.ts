@@ -11,7 +11,7 @@ export function useRegister() {
   return useMutation<Result<UserType | null>, Error, CreateUserInput>({
     async mutationFn(input) {
       const registerResult = await createUser(input);
-      if (registerResult.type === 'error') return registerResult;
+      if (registerResult.fail) return registerResult;
 
       await queryClient.invalidateQueries();
       toaster.create({

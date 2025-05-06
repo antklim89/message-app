@@ -12,8 +12,8 @@ export function useFetchOneMessage({ id }: { id: MessageType['id'] }) {
   >({
     queryKey: ['MESSAGE', id],
     async queryFn() {
-      const { type, error, result } = await getOneMessage(id);
-      if (type === 'error') throw new Error(error.message);
+      const { fail, error, result } = await getOneMessage(id);
+      if (fail) throw new Error(error.message);
       return result;
     },
   });

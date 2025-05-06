@@ -2,16 +2,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { toaster } from '@/components/ui/toaster';
 import type { FetchOneMessagesQuery, MessageType } from '@/features/messages';
-import type { Err } from '@/lib/result';
+import type { ErrVariant } from '@/lib/result';
 import { addLike, removeLike } from '../../services';
 
 export function useToggleLikes({ messageId, hasLiked }: { messageId: MessageType['id']; hasLiked: boolean }) {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Err['error']>({
+  return useMutation<void, ErrVariant>({
     async mutationFn() {
-      const { type, error } = hasLiked ? await removeLike({ messageId }) : await addLike({ messageId });
-      if (type === 'error') throw error;
+      const { fail, error } = hasLiked ? await removeLike({ messageId }) : await addLike({ messageId });
+      if (fail) throw error;
 
       queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(
         ['MESSAGE', messageId],

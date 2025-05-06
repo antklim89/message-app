@@ -16,7 +16,7 @@ export function useCreateMessage() {
         ...data,
         answerToId,
       });
-      if (createMessageResult.type === 'error') return createMessageResult;
+      if (createMessageResult.fail) return createMessageResult;
 
       queryClient.setQueriesData<
         FetchManyMessagesQuery['data'],
