@@ -1,6 +1,6 @@
 import type { InfiniteData } from '@tanstack/react-query';
 
-import type { ProfileType } from '@/features/auth';
+import type { ProfileType } from '@/features/profile';
 
 export type MessageType = {
   answerToId?: number | null;
