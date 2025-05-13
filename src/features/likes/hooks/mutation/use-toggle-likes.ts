@@ -1,9 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { toaster } from '@/components/ui/toaster';
-import type { FetchOneMessagesQuery, MessageType } from '@/features/messages';
+import type { FetchManyMessagesQuery, FetchOneMessagesQuery, MessageType } from '@/features/messages';
 import { ErrType, type ErrVariant } from '@/lib/result';
 import { addLike, removeLike } from '../../services';
+
+const TOAST_ID = 'TOGGLE_LIKES';
 
 export function useToggleLikes({ messageId, hasLiked }: { messageId: MessageType['id']; hasLiked: boolean }) {
   const queryClient = useQueryClient();
@@ -14,31 +16,49 @@ export function useToggleLikes({ messageId, hasLiked }: { messageId: MessageType
 
       if (fail) {
         if (error.type === ErrType.AUTHENTICATION) {
-          toaster.create({
-            type: 'error',
+          toaster.error({
             description: 'Login to add likes.',
-            id: 'useToggleLikes',
+            id: TOAST_ID,
           });
         } else {
-          toaster.create({
-            type: 'error',
+          toaster.error({
             description: error.message,
-            id: 'useToggleLikes',
+            id: TOAST_ID,
           });
         }
       }
 
+      queryClient.setQueriesData<
+        FetchManyMessagesQuery['data'],
+        QueryFilters<
+          FetchManyMessagesQuery['data'],
+          FetchManyMessagesQuery['error'],
+          FetchManyMessagesQuery['return'],
+          FetchManyMessagesQuery['key']
+        >
+      >({ predicate: ({ queryKey }) => queryKey[0] === 'MESSAGES' }, oldData =>
+        oldData
+          ? {
+              ...oldData,
+              pages: oldData.pages.map(page =>
+                page.map(message => (message.id === messageId ? updateMessage(message) : message)),
+              ),
+            }
+          : oldData,
+      );
+
       queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(
         ['MESSAGE', messageId],
-        oldData =>
-          oldData
-            ? {
-                ...oldData,
-                hasLiked: !oldData.hasLiked,
-                likesCount: oldData.hasLiked ? (oldData.likesCount ?? 0) - 1 : (oldData.likesCount ?? 0) + 1,
-              }
-            : oldData,
+        oldData => (oldData ? updateMessage(oldData) : oldData),
       );
     },
   });
+}
+
+function updateMessage(message: MessageType): MessageType {
+  return {
+    ...message,
+    hasLiked: !message.hasLiked,
+    likesCount: message.hasLiked ? (message.likesCount ?? 0) - 1 : (message.likesCount ?? 0) + 1,
+  };
 }
