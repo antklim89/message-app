@@ -53,7 +53,9 @@ function MessageListLayout() {
 
   return (
     <MessageList>
-      {data.pages.map(pageData => pageData.map(message => <Message key={message.id} message={message} />))}
+      {data.map(message => (
+        <Message key={message.id} message={message} />
+      ))}
     </MessageList>
   );
 }
