@@ -1,7 +1,12 @@
-import { type QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { toaster } from '@/components/ui/toaster';
-import type { FetchManyMessagesQuery, FetchOneMessagesQuery, MessageType } from '@/features/messages';
+import {
+  type FetchManyMessagesQueryKey,
+  type FetchManyMessagesQueryReturn,
+  fetchOneMessageQueryOptions,
+  type MessageType,
+} from '@/features/messages';
 import { ErrType, type ErrVariant } from '@/lib/result';
 import { addLike, removeLike } from '../../services';
 
@@ -28,28 +33,21 @@ export function useToggleLikes({ messageId, hasLiked }: { messageId: MessageType
         }
       }
 
-      queryClient.setQueriesData<
-        FetchManyMessagesQuery['data'],
-        QueryFilters<
-          FetchManyMessagesQuery['data'],
-          FetchManyMessagesQuery['error'],
-          FetchManyMessagesQuery['return'],
-          FetchManyMessagesQuery['key']
-        >
-      >({ predicate: ({ queryKey }) => queryKey[0] === 'MESSAGES' }, oldData =>
-        oldData
-          ? {
-              ...oldData,
-              pages: oldData.pages.map(page =>
-                page.map(message => (message.id === messageId ? updateMessage(message) : message)),
-              ),
-            }
-          : oldData,
+      queryClient.setQueriesData<FetchManyMessagesQueryReturn>(
+        { predicate: ({ queryKey }) => queryKey[0] === ('MESSAGES' satisfies FetchManyMessagesQueryKey[0]) },
+        oldData =>
+          oldData
+            ? {
+                ...oldData,
+                pages: oldData.pages.map(page =>
+                  page.map(message => (message.id === messageId ? updateMessage(message) : message)),
+                ),
+              }
+            : oldData,
       );
 
-      queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(
-        ['MESSAGE', messageId],
-        oldData => (oldData ? updateMessage(oldData) : oldData),
+      queryClient.setQueryData(fetchOneMessageQueryOptions({ id: messageId }).queryKey, oldData =>
+        oldData ? updateMessage(oldData) : oldData,
       );
     },
   });

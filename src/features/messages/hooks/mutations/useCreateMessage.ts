@@ -1,9 +1,10 @@
-import { type QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { createMessage } from '../../services';
 import type { MessageCreateType } from '../../types';
-import type { FetchManyMessagesQuery, FetchOneMessagesQuery } from '../../types';
+import { fetchManyMessagesQueryOptions } from '../queries/useFetchManyMessages';
+import { fetchOneMessageQueryOptions } from '../queries/useFetchOneMessage';
 
 export function useCreateMessage() {
   const queryClient = useQueryClient();
@@ -18,27 +19,13 @@ export function useCreateMessage() {
       });
       if (createMessageResult.fail) return createMessageResult;
 
-      queryClient.setQueriesData<
-        FetchManyMessagesQuery['data'],
-        QueryFilters<
-          FetchManyMessagesQuery['data'],
-          FetchManyMessagesQuery['error'],
-          FetchManyMessagesQuery['data'],
-          FetchManyMessagesQuery['key']
-        >
-      >({ queryKey: ['MESSAGES', { answerTo: answerToId }] }, oldData =>
-        oldData
-          ? {
-              ...oldData,
-              pages: [[createMessageResult.result], ...oldData.pages],
-            }
-          : oldData,
+      queryClient.setQueryData(fetchManyMessagesQueryOptions(answerToId).queryKey, oldData =>
+        oldData ? { ...oldData, pages: [[createMessageResult.result], ...oldData.pages] } : oldData,
       );
 
-      queryClient.setQueryData<FetchOneMessagesQuery['return'], FetchOneMessagesQuery['key']>(
-        ['MESSAGE', createMessageResult.result.id],
-        createMessageResult.result,
-      );
+      if (answerToId) {
+        queryClient.setQueryData(fetchOneMessageQueryOptions({ id: answerToId }).queryKey, createMessageResult.result);
+      }
 
       return createMessageResult;
     },
