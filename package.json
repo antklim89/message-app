@@ -16,34 +16,34 @@
     "typegen": "supabase gen types typescript --project-id fdckcddxtlaanwrwrtng > ./src/database.types.ts"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.21.0",
+    "@chakra-ui/react": "^3.22.0",
     "@emotion/react": "^11.14.0",
     "@hookform/resolvers": "^5.1.1",
-    "@supabase/supabase-js": "^2.50.0",
-    "@tanstack/react-query": "^5.80.7",
-    "@tanstack/react-router": "^1.121.12",
+    "@supabase/supabase-js": "^2.52.0",
+    "@tanstack/react-query": "^5.83.0",
+    "@tanstack/react-router": "^1.129.0",
     "date-fns": "^4.1.0",
     "next-themes": "^0.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-hook-form": "^7.58.0",
+    "react-hook-form": "^7.60.0",
     "react-icons": "^5.5.0",
-    "supabase": "^2.24.3",
-    "zod": "^3.25.64"
+    "supabase": "^2.31.8",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.0-beta.1",
-    "@faker-js/faker": "^9.8.0",
-    "@tanstack/react-router-devtools": "^1.121.12",
-    "@tanstack/router-plugin": "^1.121.13",
+    "@biomejs/biome": "^2.1.2",
+    "@faker-js/faker": "^9.9.0",
+    "@tanstack/react-router-devtools": "^1.129.0",
+    "@tanstack/router-plugin": "^1.129.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.5.2",
-    "globals": "^16.2.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "globals": "^16.3.0",
     "npm-run-all": "^4.1.5",
     "react-error-boundary": "^6.0.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.0.5",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }
