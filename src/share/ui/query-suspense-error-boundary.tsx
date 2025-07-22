@@ -4,14 +4,6 @@ import { Alert, Button } from '@chakra-ui/react';
 
 import { SuspenseErrorBoundary } from './suspense-error-boundary';
 
-export function QuerySuspenseErrorBoundary({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
-  return (
-    <SuspenseErrorBoundary fallback={fallback} errorFallback={DefaultErrorFallback}>
-      {children}
-    </SuspenseErrorBoundary>
-  );
-}
-
 function DefaultErrorFallback({ resetErrorBoundary, error }: FallbackProps) {
   return (
     <Alert.Root status="error">
@@ -23,5 +15,13 @@ function DefaultErrorFallback({ resetErrorBoundary, error }: FallbackProps) {
         Restart
       </Button>
     </Alert.Root>
+  );
+}
+
+export function QuerySuspenseErrorBoundary({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+  return (
+    <SuspenseErrorBoundary fallback={fallback} errorFallback={DefaultErrorFallback}>
+      {children}
+    </SuspenseErrorBoundary>
   );
 }

@@ -14,10 +14,6 @@ import {
   useFetchOneMessage,
 } from '@/features/messages';
 
-export const Route = createFileRoute('/message/$messageId')({
-  component: RouteComponent,
-});
-
 function RouteComponent() {
   return (
     <div className="p-2">
@@ -59,3 +55,7 @@ function MessageListLayout() {
     </MessageList>
   );
 }
+
+export const Route = createFileRoute('/message/$messageId')({
+  component: RouteComponent,
+});

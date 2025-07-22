@@ -6,10 +6,6 @@ import { createFileRoute } from '@tanstack/react-router';
 // import { useUser } from '@/features/auth';
 // import { Message, MessageList, MessageListFallback, NewMessage, useFetchManyMessages } from '@/features/messages';
 
-export const Route = createFileRoute('/')({
-  component: Index,
-});
-
 function Index() {
   return (
     <div className="p-2">
@@ -44,3 +40,7 @@ function Index() {
 //     </MessageList>
 //   );
 // }
+
+export const Route = createFileRoute('/')({
+  component: Index,
+});

@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**/*", "!src/routeTree.gen.ts"]
+    "includes": ["**/*", "!src/routeTree.gen.ts", "!src/database.types.ts"]
   },
   "formatter": {
     "enabled": true,
@@ -36,7 +36,7 @@
       // "suspicious": "error",
       // "style": "error"
       "nursery": {
-        "useConsistentCurlyBraces": "error"
+        "useExportsLast": "error"
       },
       "suspicious": {
         "noConsole": "warn",
@@ -44,7 +44,7 @@
       },
       "style": {
         "useImportType": "error",
-        "noDefaultExport": "error"
+        "noDefaultExport": "off"
       }
     }
   },
