@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import { Avatar, Card, Separator, Span } from '@chakra-ui/react';
+import { Avatar, Card, IconButton, Separator, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
+import { FaComment } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { useSession } from '@/share/hooks/use-session';
@@ -29,7 +30,14 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
       <Card.Body>
         <Card.Description>{message.body}</Card.Description>
       </Card.Body>
-      <Card.Footer display="flex">{footer}</Card.Footer>
+      <Card.Footer display="flex" pb={2} css={{ '& > *': { flex: '1 0 auto' } }}>
+        {footer}
+        <IconButton asChild variant="ghost" aria-label="answers for this message">
+          <Link to="/message/$messageId" params={{ messageId: message.id }}>
+            <FaComment />
+          </Link>
+        </IconButton>
+      </Card.Footer>
       <Separator />
     </Card.Root>
   );
