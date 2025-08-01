@@ -3,8 +3,8 @@ import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-bo
 import { MessageCard } from '@/widgets/message-card';
 
 export const MessageAnswerLayout = withSuspenseErrorBoundary(
-  ({ messageId }: { messageId: number }) => {
-    const { data } = useMessageQuery({ id: messageId });
+  ({ answerId }: { answerId: number }) => {
+    const { data } = useMessageQuery({ id: answerId });
 
     return <MessageCard message={data} />;
   },

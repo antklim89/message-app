@@ -5,13 +5,13 @@ import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-bo
 import { MessageCard } from '@/widgets/message-card';
 
 export const MessageListLayout = withSuspenseErrorBoundary(
-  ({ messageId }: { messageId?: number }) => {
+  ({ answerId }: { answerId?: number }) => {
     const {
       data: messages,
       isFetchingNextPage,
       hasNextPage,
       fetchNextPage,
-    } = useMessageListQuery({ answerToId: messageId });
+    } = useMessageListQuery({ answerToId: answerId });
 
     return (
       <MessageList>

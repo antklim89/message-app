@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './../../app/routes/__root'
 import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
-import { Route as MessageMessageIdRouteImport } from './../../app/routes/message.$messageId'
+import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -23,40 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MessageMessageIdRoute = MessageMessageIdRouteImport.update({
-  id: '/message/$messageId',
-  path: '/message/$messageId',
+const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
+  id: '/answers/$answerId',
+  path: '/answers/$answerId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/message/$messageId': typeof MessageMessageIdRoute
+  '/answers/$answerId': typeof AnswersAnswerIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/message/$messageId': typeof MessageMessageIdRoute
+  '/answers/$answerId': typeof AnswersAnswerIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/message/$messageId': typeof MessageMessageIdRoute
+  '/answers/$answerId': typeof AnswersAnswerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/message/$messageId'
+  fullPaths: '/' | '/about' | '/answers/$answerId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/message/$messageId'
-  id: '__root__' | '/' | '/about' | '/message/$messageId'
+  to: '/' | '/about' | '/answers/$answerId'
+  id: '__root__' | '/' | '/about' | '/answers/$answerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  MessageMessageIdRoute: typeof MessageMessageIdRoute
+  AnswersAnswerIdRoute: typeof AnswersAnswerIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +75,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/message/$messageId': {
-      id: '/message/$messageId'
-      path: '/message/$messageId'
-      fullPath: '/message/$messageId'
-      preLoaderRoute: typeof MessageMessageIdRouteImport
+    '/answers/$answerId': {
+      id: '/answers/$answerId'
+      path: '/answers/$answerId'
+      fullPath: '/answers/$answerId'
+      preLoaderRoute: typeof AnswersAnswerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  MessageMessageIdRoute: MessageMessageIdRoute,
+  AnswersAnswerIdRoute: AnswersAnswerIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

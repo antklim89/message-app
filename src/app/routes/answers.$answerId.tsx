@@ -5,24 +5,24 @@ import { MessageAnswerLayout, MessageListLayout, MessageNewLayout, parseMessageP
 import { ErrorComponent } from '@/share/ui/error-component';
 
 function RouteComponent() {
-  const { messageId } = Route.useParams();
+  const { answerId } = Route.useParams();
   return (
     <div>
-      <MessageAnswerLayout messageId={messageId} />
-      <MessageNewLayout messageId={messageId} />
-      <MessageListLayout messageId={messageId} />
+      <MessageAnswerLayout answerId={answerId} />
+      <MessageNewLayout answerId={answerId} />
+      <MessageListLayout answerId={answerId} />
     </div>
   );
 }
 
-export const Route = createFileRoute('/message/$messageId')({
+export const Route = createFileRoute('/answers/$answerId')({
   component: RouteComponent,
   params: {
     parse: parseMessageParams,
   },
   errorComponent: ErrorComponent,
-  loader({ context, params: { messageId } }) {
+  loader({ context, params: { answerId } }) {
     context.queryClient.ensureInfiniteQueryData(messageListQueryOptions());
-    context.queryClient.ensureQueryData(messageQueryOptions({ id: messageId }));
+    context.queryClient.ensureQueryData(messageQueryOptions({ id: answerId }));
   },
 });
