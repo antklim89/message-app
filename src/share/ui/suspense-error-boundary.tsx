@@ -1,14 +1,21 @@
 import { type ReactNode, Suspense } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import { Alert, Center, Spinner } from '@chakra-ui/react';
+import { Alert, Button, Center, Spinner } from '@chakra-ui/react';
 
-function DefaultErrorFallback() {
+function DefaultErrorFallback({ resetErrorBoundary, error }: Partial<FallbackProps>) {
+  const message = error instanceof Error ? error.message : 'Failed to load component. Unexpected error.';
+
   return (
     <Alert.Root status="error">
       <Alert.Indicator />
       <Alert.Content>
-        <Alert.Description>Failed to load component.</Alert.Description>
+        <Alert.Description whiteSpace="pre">{message}</Alert.Description>
       </Alert.Content>
+      {resetErrorBoundary ? (
+        <Button size="xs" onClick={() => resetErrorBoundary()}>
+          Restart
+        </Button>
+      ) : null}
     </Alert.Root>
   );
 }
@@ -23,15 +30,15 @@ function DefaultSuspenseFallback() {
 
 export function SuspenseErrorBoundary({
   children,
-  errorFallback,
+  errorFallback: ErrorFallback,
   fallback,
 }: {
   children: ReactNode;
   fallback?: ReactNode;
-  errorFallback?: (props: FallbackProps) => ReactNode;
+  errorFallback?: (props: Partial<FallbackProps>) => ReactNode;
 }) {
   return (
-    <ErrorBoundary fallbackRender={props => errorFallback?.(props) ?? <DefaultErrorFallback />}>
+    <ErrorBoundary fallbackRender={ErrorFallback ?? DefaultErrorFallback}>
       <Suspense fallback={fallback ?? <DefaultSuspenseFallback />}>{children}</Suspense>
     </ErrorBoundary>
   );

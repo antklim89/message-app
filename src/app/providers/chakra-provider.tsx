@@ -1,6 +1,6 @@
 import { ChakraProvider as OriginalChakraProvider } from '@chakra-ui/react';
 
-import { system } from '@/app/theme';
+import { system } from '@/app/styles/theme';
 import type { ColorModeProviderProps } from '@/share/ui/color-mode';
 import { ColorModeProvider } from '@/share/ui/color-mode';
 

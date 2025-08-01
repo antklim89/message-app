@@ -5,8 +5,14 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [tanstackRouter({ target: 'react', autoCodeSplitting: true }), react(), tsconfigPaths()],
-  build: {
-    outDir: 'pb_public',
-  },
+  plugins: [
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
+      routesDirectory: 'src/app/routes',
+      generatedRouteTree: './src/share/model/route-tree.generated.ts',
+    }),
+    react(),
+    tsconfigPaths(),
+  ],
 });

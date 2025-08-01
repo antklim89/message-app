@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**/*", "!src/routeTree.gen.ts", "!src/database.types.ts"]
+    "includes": ["**/*", "!src/routeTree.gen.ts", "!**/*.generated.*"]
   },
   "formatter": {
     "enabled": true,
@@ -39,7 +39,12 @@
         "useExportsLast": "error"
       },
       "suspicious": {
-        "noConsole": "warn",
+        "noConsole": {
+          "level": "warn",
+          "options": {
+            "allow": ["error"]
+          }
+        },
         "useAwait": "error"
       },
       "style": {
