@@ -17,7 +17,7 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
         <Link to="/message/$messageId" params={{ messageId: message.id }}>
           <Card.Title display="flex" alignItems="center" gap={4}>
             <Avatar.Root>
-              <Avatar.Image src={message.author.avatar} />
+              <Avatar.Image src={message.author.avatar || undefined} />
               <Avatar.Fallback />
             </Avatar.Root>
             {message.title}
