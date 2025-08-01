@@ -13,24 +13,24 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
 
   return (
     <Card.Root w="full" border="none">
-      <Card.Header>
+      <Card.Header asChild display="flex" flexDirection="row" alignItems="center" gap={4}>
         <Link to="/message/$messageId" params={{ messageId: message.id }}>
-          <Card.Title display="flex" alignItems="center" gap={4}>
-            <Avatar.Root>
-              <Avatar.Image src={message.author.avatar || undefined} />
-              <Avatar.Fallback />
-            </Avatar.Root>
+          <Avatar.Root>
+            <Avatar.Image src={message.author.avatar || undefined} />
+            <Avatar.Fallback />
+          </Avatar.Root>
+          <Card.Title display="flex" flexDirection="column">
             {message.title}
+            <Span fontSize="xs" fontWeight="normal">
+              Published <FromNowDate date={message.created} /> by {author}
+            </Span>
           </Card.Title>
         </Link>
-        <Span fontSize="xs">
-          Published <FromNowDate date={message.created} /> by {author}
-        </Span>
       </Card.Header>
       <Card.Body>
         <Card.Description>{message.body}</Card.Description>
       </Card.Body>
-      <Card.Footer display="flex" pb={2} css={{ '& > *': { flex: '1 0 auto' } }}>
+      <Card.Footer display="flex" p={0} css={{ '& > *': { flex: '1 0 auto' } }}>
         {footer}
         <IconButton asChild variant="ghost" aria-label="answers for this message">
           <Link to="/message/$messageId" params={{ messageId: message.id }}>
