@@ -18,7 +18,10 @@ export async function getMessageList({
     .select(MESSAGE_SELECT)
     .order('id', { ascending: false })
     .limit(MESSAGES_PER_PAGE);
-  if (answerToId != null) query.eq('answerToId', answerToId);
+
+  if (answerToId == null) query.is('answerToId', null);
+  else query.eq('answerToId', answerToId);
+
   if (lastId != null) query.lt('id', lastId);
 
   const { data, error } = await query;
