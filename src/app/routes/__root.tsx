@@ -12,8 +12,8 @@ function RootComponent() {
       <MainLayout>
         <Outlet />
       </MainLayout>
-      <TanStackRouterDevtools />
-      <ReactQueryDevtools initialIsOpen={false} />
+      <TanStackRouterDevtools position="top-right" />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" position="bottom" />
     </>
   );
 }
