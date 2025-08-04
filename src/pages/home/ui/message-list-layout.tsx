@@ -11,7 +11,7 @@ export const MessageListLayout = withSuspenseErrorBoundary(
       isFetchingNextPage,
       hasNextPage,
       fetchNextPage,
-    } = useMessageListQuery({ answerToId: answerId });
+    } = useMessageListQuery({ answerId: answerId });
 
     return (
       <MessageList>

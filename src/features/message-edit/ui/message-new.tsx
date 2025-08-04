@@ -6,8 +6,8 @@ import { MessageEditCollapsible } from './message-edit-collapsible';
 import { useMessageCreateMutation } from '../api/hooks/use-message-create-mutation';
 import type { MessageEditSchema } from '../model/schemas';
 
-export function MessageNew({ answerToId }: { answerToId?: MessageType['answerToId'] }) {
-  const { mutateAsync } = useMessageCreateMutation({ answerToId });
+export function MessageNew({ answerId }: { answerId?: MessageType['answerId'] }) {
+  const { mutateAsync } = useMessageCreateMutation({ answerId });
   const { onToggle, open, setOpen } = useDisclosure();
 
   async function handleNewMessage(data: MessageEditSchema) {

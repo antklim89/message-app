@@ -80,7 +80,7 @@ export type Database = {
       }
       messages: {
         Row: {
-          answerToId: number | null
+          answerId: number | null
           authorId: string
           body: string
           created: string
@@ -93,7 +93,7 @@ export type Database = {
           test: Json | null
         }
         Insert: {
-          answerToId?: number | null
+          answerId?: number | null
           authorId?: string
           body?: string
           created?: string
@@ -101,7 +101,7 @@ export type Database = {
           title?: string
         }
         Update: {
-          answerToId?: number | null
+          answerId?: number | null
           authorId?: string
           body?: string
           created?: string
@@ -110,8 +110,8 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "messages_answerToId_fkey"
-            columns: ["answerToId"]
+            foreignKeyName: "messages_answerId_fkey"
+            columns: ["answerId"]
             isOneToOne: false
             referencedRelation: "messages"
             referencedColumns: ["id"]

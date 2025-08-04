@@ -1,7 +1,7 @@
 import type { MessageType } from './types';
 
 export function messageDto(data: {
-  answerToId: number | null;
+  answerId: number | null;
   authorId: string;
   body: string;
   created: string;
@@ -16,7 +16,7 @@ export function messageDto(data: {
   };
 }): MessageType {
   return {
-    answerToId: data.answerToId ?? undefined,
+    answerId: data.answerId ?? undefined,
     authorId: data.authorId,
     body: data.body,
     created: data.created,

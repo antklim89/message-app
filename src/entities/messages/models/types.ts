@@ -1,5 +1,5 @@
 export type MessageType = {
-  answerToId?: number;
+  answerId?: number;
   authorId: string;
   body: string;
   created: string;

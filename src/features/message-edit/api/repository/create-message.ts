@@ -4,14 +4,14 @@ import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/shar
 import { createSupabaseClient, getSupabaseSession } from '@/share/lib/supabase';
 import type { MessageCreateType } from '../../model/types';
 
-export async function createMessage({ body, title, answerToId }: MessageCreateType): PromiseResult<MessageType> {
+export async function createMessage({ body, title, answerId }: MessageCreateType): PromiseResult<MessageType> {
   const supabase = await createSupabaseClient();
   const session = await getSupabaseSession();
   if (session == null) return errAuthentication();
 
   const { data, error } = await supabase
     .from('messages')
-    .insert({ answerToId, body, title, authorId: session.user.id })
+    .insert({ answerId, body, title, authorId: session.user.id })
     .select(MESSAGE_SELECT)
     .single();
 

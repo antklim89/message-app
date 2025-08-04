@@ -5,10 +5,10 @@ import { messageDto } from '../../models/dto';
 import type { MessageType } from '../../models/types';
 
 export async function getMessageList({
-  answerToId,
+  answerId,
   lastId,
 }: {
-  answerToId?: MessageType['answerToId'];
+  answerId?: MessageType['answerId'];
   lastId?: MessageType['id'];
 } = {}): PromiseResult<{ items: MessageType[] }> {
   const supabase = await createSupabaseClient();
@@ -19,8 +19,8 @@ export async function getMessageList({
     .order('id', { ascending: false })
     .limit(MESSAGES_PER_PAGE);
 
-  if (answerToId == null) query.is('answerToId', null);
-  else query.eq('answerToId', answerToId);
+  if (answerId == null) query.is('answerId', null);
+  else query.eq('answerId', answerId);
 
   if (lastId != null) query.lt('id', lastId);
 
