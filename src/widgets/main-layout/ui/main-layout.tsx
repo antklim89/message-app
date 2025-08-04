@@ -17,7 +17,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
             <LeftSide />
           </Box>
         </Box>
-        <Box borderLeft="gray.600" borderRight="gray.600" borderWidth="1px" flex={8} h="vh" w="100%">
+        <Box flex={8} h="vh" w="100%">
           {children}
         </Box>
         <Box flex={2} py={8}>
@@ -29,7 +29,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
     );
   return (
     <Container display="flex" flexDirection="column" gap="4">
-      <Box borderLeft="gray.600" borderRight="gray.600" borderWidth="1px" flex={8} h="vh" w="100%">
+      <Box flex={8} h="vh" w="100%">
         {children}
       </Box>
       <BottomSide
