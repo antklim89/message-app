@@ -1,9 +1,11 @@
-import { Box } from '@chakra-ui/react';
+import { type StackProps, VStack } from '@chakra-ui/react';
 
-export function RightSide() {
+import { ColorModeButton } from '@/share/ui/color-mode';
+
+export function RightSide(props: StackProps) {
   return (
-    <Box flex={2} h="vh" display="flex" flexDirection="column" gap={8}>
-      ASIDE
-    </Box>
+    <VStack {...props}>
+      <ColorModeButton alignSelf="flex-end" />
+    </VStack>
   );
 }

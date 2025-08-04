@@ -1,19 +1,23 @@
-import { Box } from '@chakra-ui/react';
+import { Heading, type StackProps, VStack } from '@chakra-ui/react';
 
-import { Auth } from '@/entities/auth';
-import { ColorModeButton } from '@/share/ui/color-mode';
-import { SuspenseErrorBoundary } from '@/share/ui/suspense-error-boundary';
+import { AuthLayout } from '@/entities/auth';
+import { LogoutButton } from '@/entities/auth/ui/logout-button';
+import { useSession } from '@/share/hooks/use-session';
 import { Logo } from './logo';
 
-export function LeftSide() {
+export function LeftSide(props: StackProps) {
+  const { data: user } = useSession();
   return (
-    <Box flex={2} h="vh" display="flex" flexDirection="column" gap={8}>
+    <VStack {...props}>
       <Logo />
-      <SuspenseErrorBoundary>
-        <Auth />
-      </SuspenseErrorBoundary>
-
-      <ColorModeButton mb={4} alignSelf="flex-start" />
-    </Box>
+      {user != null ? (
+        <VStack>
+          <Heading>Welcome!</Heading>
+          <LogoutButton />
+        </VStack>
+      ) : (
+        <AuthLayout />
+      )}
+    </VStack>
   );
 }

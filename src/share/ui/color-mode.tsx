@@ -54,15 +54,9 @@ export function ColorModeButton({
         aria-label="Toggle color mode"
         onClick={toggleColorMode}
         ref={ref}
-        size="sm"
+        boxSize="8"
         variant="ghost"
         {...props}
-        css={{
-          _icon: {
-            height: '5',
-            width: '5',
-          },
-        }}
       >
         <ColorModeIcon />
       </IconButton>

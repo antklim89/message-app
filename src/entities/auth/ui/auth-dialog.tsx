@@ -1,28 +1,21 @@
 import type { ReactNode } from 'react';
-import { Box, Button, CloseButton, Dialog, Flex, Heading, Portal, Text } from '@chakra-ui/react';
+import { Box, CloseButton, Dialog, Heading, Portal } from '@chakra-ui/react';
 
 export function AuthDialog({
   children,
-  type,
-  setType,
+  title,
+  trigger,
+  toggleText,
   ...props
 }: {
   children?: ReactNode;
-  type: 'login' | 'register';
-  setType: (newType: 'login' | 'register') => void;
+  trigger: ReactNode;
+  toggleText: ReactNode;
+  title: ReactNode;
 } & Dialog.RootProps) {
   return (
     <Dialog.Root motionPreset="slide-in-bottom" placement="center" size="cover" {...props}>
-      <Dialog.Trigger asChild>
-        <Flex gap={2}>
-          <Button onClick={() => setType('login')} size="sm" variant="outline">
-            Login
-          </Button>
-          <Button onClick={() => setType('register')} size="sm" variant="outline">
-            Register
-          </Button>
-        </Flex>
-      </Dialog.Trigger>
+      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
@@ -42,21 +35,9 @@ export function AuthDialog({
               >
                 <Box as="aside" flex={{ base: '0 1 0', lg: '0 1 320px' }} flexDirection="column">
                   <Heading fontSize="4xl" mb={4}>
-                    {type === 'login' ? 'Login' : 'Register'}
+                    {title}
                   </Heading>
-                  <Text fontSize="xl">
-                    Thanks for using our app!
-                    <br />
-                    Please{' '}
-                    <Button onClick={() => setType('login')} p={1} variant="ghost" verticalAlign="baseline">
-                      login
-                    </Button>{' '}
-                    or{' '}
-                    <Button onClick={() => setType('register')} p={1} variant="ghost" verticalAlign="baseline">
-                      register
-                    </Button>{' '}
-                    to continue.
-                  </Text>
+                  {toggleText}
                 </Box>
                 <Box as="section" flex={{ base: '0 1 0', lg: '0 1 320px' }}>
                   {children}
