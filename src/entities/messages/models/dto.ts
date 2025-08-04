@@ -14,6 +14,9 @@ export function messageDto(data: {
     username: string;
     avatar: string | null;
   };
+  answersCount: {
+    count: number;
+  }[];
 }): MessageType {
   return {
     answerId: data.answerId ?? undefined,
@@ -29,5 +32,6 @@ export function messageDto(data: {
       username: data.author.username,
       avatar: data.author.avatar ?? undefined,
     },
+    answersCount: data.answersCount[0].count ?? 0,
   };
 }

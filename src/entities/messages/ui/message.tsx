@@ -34,7 +34,7 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
         {footer}
         <IconButton asChild variant="ghost" aria-label="answers for this message">
           <Link to="/answers/$answerId" params={{ answerId: message.id }}>
-            <FaComment />
+            <FaComment /> {message.answersCount}
           </Link>
         </IconButton>
       </Card.Footer>

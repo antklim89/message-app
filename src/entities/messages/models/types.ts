@@ -12,4 +12,5 @@ export type MessageType = {
   };
   hasLiked: boolean;
   likesCount: number;
+  answersCount: number;
 };
