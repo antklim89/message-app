@@ -14,7 +14,7 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
   return (
     <Card.Root w="full" border="none">
       <Card.Header asChild display="flex" flexDirection="row" alignItems="center" gap={4}>
-        <Link to="/message/$messageId" params={{ messageId: message.id }}>
+        <Link to="/answers/$answerId" params={{ answerId: message.id }}>
           <Avatar.Root>
             <Avatar.Image src={message.author.avatar || undefined} />
             <Avatar.Fallback />
@@ -33,7 +33,7 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
       <Card.Footer display="flex" p={0} css={{ '& > *': { flex: '1 0 auto' } }}>
         {footer}
         <IconButton asChild variant="ghost" aria-label="answers for this message">
-          <Link to="/message/$messageId" params={{ messageId: message.id }}>
+          <Link to="/answers/$answerId" params={{ answerId: message.id }}>
             <FaComment />
           </Link>
         </IconButton>
