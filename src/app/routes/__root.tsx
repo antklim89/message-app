@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
+import { sessionQueryOptions } from '@/share/hooks/use-session';
 import { MainLayout } from '@/widgets/main-layout';
 
 function RootComponent() {
@@ -13,7 +14,7 @@ function RootComponent() {
         <Outlet />
       </MainLayout>
       <TanStackRouterDevtools position="top-right" />
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" position="bottom" />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" position="bottom" />
     </>
   );
 }
@@ -25,4 +26,7 @@ export const Route = createRootRoute<undefined, { queryClient: QueryClient }>({
     };
   },
   component: RootComponent,
+  loader({ context }) {
+    context.queryClient.ensureQueryData(sessionQueryOptions());
+  },
 });
