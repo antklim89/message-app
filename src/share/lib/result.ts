@@ -61,8 +61,9 @@ export const ErrType = {
   UNEXPECTET: 'unexpected',
   AUTHENTICATION: 'authentication',
   VALIDATION: 'validation',
+  CONFLICT: 'conflict',
 } as const;
-type ErrType = (typeof ErrType)[keyof typeof ErrType];
+export type ErrType = (typeof ErrType)[keyof typeof ErrType];
 
 export function errUnexpected(message?: string): Err<'unexpected'> {
   return err({
@@ -83,5 +84,12 @@ export function errValidation(message?: string, issues?: ErrVariant['issues']): 
     message: message ?? 'Validation error. Please check your input.',
     type: ErrType.VALIDATION,
     issues,
+  });
+}
+
+export function errConflict(message?: string): Err<'conflict'> {
+  return err({
+    message: message ?? 'There was a conflict during the operation. Please check your input.',
+    type: ErrType.CONFLICT,
   });
 }
