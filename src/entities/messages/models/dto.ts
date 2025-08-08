@@ -17,6 +17,7 @@ export function messageDto(data: {
   answersCount: {
     count: number;
   }[];
+  isFavorite: boolean | null;
 }): MessageType {
   return {
     answerId: data.answerId ?? undefined,
@@ -33,8 +34,6 @@ export function messageDto(data: {
       avatar: data.author.avatar ?? undefined,
     },
     answersCount: data.answersCount[0].count ?? 0,
-
-    // TODO: get from database
-    isFavorite: false,
+    isFavorite: data.isFavorite ?? false,
   };
 }
