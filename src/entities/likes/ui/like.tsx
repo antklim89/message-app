@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function Like({ messageId, hasLiked, likesCount }: Props) {
-  const { mutateAsync, isPending } = useToggleLikeMutation({ hasLiked: hasLiked || false, messageId });
+  const { mutateAsync, isPending } = useToggleLikeMutation({ hasLiked, messageId });
 
   function handleTogleLike() {
     mutateAsync();

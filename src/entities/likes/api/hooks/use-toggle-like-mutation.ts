@@ -22,21 +22,9 @@ export function useToggleLikeMutation({ messageId, hasLiked }: { messageId: Mess
   return useMutation<void, ErrVariant>({
     async mutationFn() {
       const { fail, error } = hasLiked ? await removeLike({ messageId }) : await addLike({ messageId });
-
-      if (fail) {
-        if (error.type === ErrType.AUTHENTICATION) {
-          toaster.error({
-            description: 'Login to add likes.',
-            id: TOAST_ID,
-          });
-        } else {
-          toaster.error({
-            description: error.message,
-            id: TOAST_ID,
-          });
-        }
-      }
-
+      if (fail && error.type !== ErrType.CONFLICT) throw error;
+    },
+    onSuccess() {
       queryClient.setQueriesData<InfiniteData<MessageType[], unknown>>(
         { queryKey: messageListQueryOptions({}).queryKey },
         oldData =>
@@ -53,6 +41,21 @@ export function useToggleLikeMutation({ messageId, hasLiked }: { messageId: Mess
       queryClient.setQueryData(messageQueryOptions({ id: messageId }).queryKey, oldData =>
         oldData ? updateMessage(oldData) : oldData,
       );
+    },
+    onError(error) {
+      if (error.type === ErrType.AUTHENTICATION) {
+        toaster.error({
+          description: 'Login to like message.',
+          id: TOAST_ID,
+        });
+        return;
+      } else {
+        toaster.error({
+          description: error.message,
+          id: TOAST_ID,
+        });
+        return;
+      }
     },
   });
 }

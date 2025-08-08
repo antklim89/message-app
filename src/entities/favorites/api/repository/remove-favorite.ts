@@ -1,4 +1,4 @@
-import { err, errAuthentication, errConflict, ok } from '@/share/lib/result';
+import { errAuthentication, errConflict, errUnexpected, ok } from '@/share/lib/result';
 import { createSupabaseClient } from '@/share/lib/supabase';
 
 export async function removeLike({ messageId }: { messageId: number }) {
@@ -14,10 +14,8 @@ export async function removeLike({ messageId }: { messageId: number }) {
     .eq('messageId', messageId)
     .eq('authorId', user.id);
 
-  if (error != null) {
-    if (count === 0) return errConflict('Message is not in favorites.');
-    return err({ type: 'unexpected', message: 'Failed to remove message from favorites. Try again later.' });
-  }
+  if (count === 0) return errConflict('Message is not in favorites.');
+  if (error != null) return errUnexpected('Failed to remove message from favorites. Try again later.');
 
   return ok(null);
 }

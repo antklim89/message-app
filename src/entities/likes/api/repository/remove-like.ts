@@ -1,4 +1,4 @@
-import { err, errAuthentication, ok } from '@/share/lib/result';
+import { err, errAuthentication, errConflict, ok } from '@/share/lib/result';
 import { createSupabaseClient } from '@/share/lib/supabase';
 
 export async function removeLike({ messageId }: { messageId: number }) {
@@ -8,7 +8,14 @@ export async function removeLike({ messageId }: { messageId: number }) {
   const user = sessionResult.data?.session?.user;
   if (user == null) return errAuthentication();
 
-  const { error } = await supabase.from('likes').delete().eq('messageId', messageId).eq('authorId', user.id);
-  if (error != null) err({ type: 'unexpected', message: 'Failed to unlike message. Try again later.' });
+  const { error, count } = await supabase
+    .from('likes')
+    .delete({ count: 'exact' })
+    .eq('messageId', messageId)
+    .eq('authorId', user.id);
+
+  if (count === 0) return errConflict('Message is not liked.');
+  if (error != null) return err({ type: 'unexpected', message: 'Failed to unlike message. Try again later.' });
+
   return ok(null);
 }

@@ -12,9 +12,7 @@ export async function addFavorite({ messageId }: { messageId: number }) {
   const { error } = await supabase.from('favorites').insert({ authorId: user.id, messageId });
 
   if (error != null) {
-    if (error.code === '23505') {
-      return errConflict('Message is already favorite.');
-    }
+    if (error.code === '23505') return errConflict('Message is already favorite.');
     return errUnexpected('Failed to add message to favorites. Try again later.');
   }
 

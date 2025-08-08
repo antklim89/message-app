@@ -1,4 +1,4 @@
-import { err, errAuthentication, ok } from '@/share/lib/result';
+import { err, errAuthentication, errConflict, ok } from '@/share/lib/result';
 import { createSupabaseClient } from '@/share/lib/supabase';
 
 export async function addLike({ messageId }: { messageId: number }) {
@@ -9,6 +9,9 @@ export async function addLike({ messageId }: { messageId: number }) {
   if (user == null) return errAuthentication();
 
   const { error } = await supabase.from('likes').insert({ authorId: user.id, messageId });
-  if (error != null) err({ type: 'unexpected', message: 'Failed to like message. Try again later.' });
+  if (error != null) {
+    if (error.code === '23505') return errConflict('Message is already liked.');
+    return err({ type: 'unexpected', message: 'Failed to like message. Try again later.' });
+  }
   return ok(null);
 }
