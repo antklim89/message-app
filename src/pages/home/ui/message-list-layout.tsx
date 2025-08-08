@@ -1,6 +1,4 @@
-import { Button } from '@chakra-ui/react';
-
-import { MessageList, MessageListFallback, useMessageListQuery } from '@/entities/messages';
+import { MessageInfininyScroll, MessageList, MessageListFallback, useMessageListQuery } from '@/entities/messages';
 import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-boundary';
 import { MessageCard } from '@/widgets/message-card';
 
@@ -18,8 +16,11 @@ export const MessageListLayout = withSuspenseErrorBoundary(
         {messages.map(message => (
           <MessageCard key={message.id} message={message} />
         ))}
-        {isFetchingNextPage && <MessageListFallback />}
-        {hasNextPage && <Button onClick={() => fetchNextPage()}>Show More</Button>}
+        <MessageInfininyScroll
+          hasNext={hasNextPage}
+          isFetchingNext={isFetchingNextPage}
+          onScreenEnd={() => fetchNextPage()}
+        />
       </MessageList>
     );
   },

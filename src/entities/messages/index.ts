@@ -6,5 +6,6 @@ export { MESSAGE_SELECT, MESSAGES_PER_PAGE } from './config/constants';
 export type { MessageType } from './models/types';
 export { Message } from './ui/message';
 export { MessageFallback } from './ui/message-fallback';
+export { MessageInfininyScroll } from './ui/message-infininy-scroll';
 export { MessageList } from './ui/message-list';
 export { MessageListFallback } from './ui/message-list-fallback';
