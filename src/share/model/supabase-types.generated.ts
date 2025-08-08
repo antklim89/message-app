@@ -48,10 +48,6 @@ export type Database = {
         Row: {
           authorId: string
           messageId: number
-          has_likedbigint: number | null
-          has_likedboolean: boolean | null
-          has_likedx: string | null
-          test: boolean | null
         }
         Insert: {
           authorId: string
@@ -86,11 +82,9 @@ export type Database = {
           created: string
           id: number
           title: string
-          has_liked: boolean | null
           hasLiked: boolean | null
-          likes_with_count: Json | null
+          isFavorite: boolean | null
           likesCount: number | null
-          test: Json | null
         }
         Insert: {
           answerId?: number | null
@@ -183,39 +177,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_liked: {
-        Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: boolean
-      }
-      has_likedbigint: {
-        Args: { "": Database["public"]["Tables"]["likes"]["Row"] }
-        Returns: number
-      }
-      has_likedboolean: {
-        Args: { "": Database["public"]["Tables"]["likes"]["Row"] }
-        Returns: boolean
-      }
-      has_likedx: {
-        Args: { "": Database["public"]["Tables"]["likes"]["Row"] }
-        Returns: string
-      }
       hasLiked: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: boolean
       }
-      likes_with_count: {
+      isFavorite: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: Json
+        Returns: boolean
       }
       likesCount: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: number
-      }
-      test: {
-        Args:
-          | { "": Database["public"]["Tables"]["likes"]["Row"] }
-          | { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: boolean
       }
     }
     Enums: {
