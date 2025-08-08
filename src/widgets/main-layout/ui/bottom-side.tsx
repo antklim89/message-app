@@ -2,12 +2,9 @@ import type { ReactNode } from 'react';
 import { Box, Container, HStack } from '@chakra-ui/react';
 
 import { AuthCompactLayout } from '@/entities/auth';
-import { useSession } from '@/share/hooks/use-session';
 import { Logo } from './logo';
 
 export function BottomSide({ rightSide }: { rightSide: ReactNode }) {
-  const { data: user } = useSession();
-
   return (
     <>
       <Container asChild>
@@ -25,9 +22,10 @@ export function BottomSide({ rightSide }: { rightSide: ReactNode }) {
         >
           <Logo width={32} height={32} />
 
-          {user == null ? <AuthCompactLayout /> : null}
-
           <Box flex="1" />
+
+          <AuthCompactLayout />
+
           {rightSide}
         </HStack>
       </Container>
