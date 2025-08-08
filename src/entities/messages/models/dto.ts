@@ -33,5 +33,8 @@ export function messageDto(data: {
       avatar: data.author.avatar ?? undefined,
     },
     answersCount: data.answersCount[0].count ?? 0,
+
+    // TODO: get from database
+    isFavorite: false,
   };
 }

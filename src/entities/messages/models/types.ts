@@ -10,7 +10,9 @@ export type MessageType = {
     username: string;
     avatar?: string;
   };
+
   hasLiked: boolean;
   likesCount: number;
   answersCount: number;
+  isFavorite: boolean;
 };
