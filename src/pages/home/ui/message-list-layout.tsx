@@ -4,12 +4,7 @@ import { MessageCard } from '@/widgets/message-card';
 
 export const MessageListLayout = withSuspenseErrorBoundary(
   ({ answerId }: { answerId?: number }) => {
-    const {
-      data: messages,
-      isFetchingNextPage,
-      hasNextPage,
-      fetchNextPage,
-    } = useMessageListQuery({ answerId: answerId });
+    const { data: messages, isFetchingNextPage, hasNextPage, fetchNextPage } = useMessageListQuery({ answerId });
 
     return (
       <MessageList>

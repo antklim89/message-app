@@ -7,7 +7,7 @@ import { ErrorComponent } from '@/share/ui/error-component';
 function RouteComponent() {
   const { answerId } = Route.useParams();
   return (
-    <div>
+    <>
       <MessageAnswerLayout answerId={answerId} />
       <MessageNewLayout answerId={answerId} />
       <MessageListLayout answerId={answerId} />
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/answers/$answerId')({
   },
   errorComponent: ErrorComponent,
   loader({ context, params: { answerId } }) {
-    context.queryClient.ensureInfiniteQueryData(messageListQueryOptions());
+    context.queryClient.ensureInfiniteQueryData(messageListQueryOptions({ answerId }));
     context.queryClient.ensureQueryData(messageQueryOptions({ id: answerId }));
   },
 });
