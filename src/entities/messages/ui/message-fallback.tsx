@@ -1,16 +1,22 @@
-import { Card, Separator, Skeleton, SkeletonText } from '@chakra-ui/react';
+import { Avatar, Card, Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react';
 
 export function MessageFallback() {
   return (
     <Card.Root w="full" border="none">
-      <Card.Header>
-        <Skeleton h={6} w={200} />
-        <Skeleton h={4} w={120} />
+      <Card.Header display="flex" flexDirection="row" alignItems="center" gap={4}>
+        <SkeletonCircle>
+          <Avatar.Root></Avatar.Root>
+        </SkeletonCircle>
+        <Card.Title display="flex" flexDirection="column" w="50%">
+          <SkeletonText noOfLines={2} />
+        </Card.Title>
       </Card.Header>
       <Card.Body>
         <SkeletonText noOfLines={4} />
       </Card.Body>
-      <Separator />
+      <Card.Footer p={0}>
+        <Skeleton h={10} w="full" />
+      </Card.Footer>
     </Card.Root>
   );
 }
