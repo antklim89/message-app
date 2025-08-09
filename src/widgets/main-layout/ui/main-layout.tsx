@@ -23,7 +23,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
   }) as (typeof BREAKPOINTS)[number];
 
   return (
-    <Container px={PADDING} display="flex" gap={{ base: GAP, mdDown: 0 }} justifyContent="center">
+    <Container px={PADDING} my={4} display="flex" gap={{ base: GAP, mdDown: 0 }} justifyContent="center">
       {bp === 'lg' && (
         <SideLayout width={SIDE_WIDTH}>
           <LeftSide />

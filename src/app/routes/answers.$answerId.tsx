@@ -11,7 +11,7 @@ function RouteComponent() {
       <MessageAnswerLayout answerId={answerId} />
       <MessageNewLayout answerId={answerId} />
       <MessageListLayout answerId={answerId} />
-    </div>
+    </>
   );
 }
 
