@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Avatar, Card, IconButton, Separator, Span } from '@chakra-ui/react';
+import { Avatar, Card, IconButton, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaComment } from 'react-icons/fa6';
 
@@ -28,7 +28,7 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
         </Link>
       </Card.Header>
       <Card.Body>
-        <Card.Description>{message.body}</Card.Description>
+        <Card.Body>{message.body}</Card.Body>
       </Card.Body>
       <Card.Footer display="flex" p={0} css={{ '& > *': { flex: '1 0 auto' } }}>
         {footer}
@@ -38,7 +38,6 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
           </Link>
         </IconButton>
       </Card.Footer>
-      <Separator />
     </Card.Root>
   );
 }
