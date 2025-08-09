@@ -5,40 +5,61 @@ import { BottomSide } from './bottom-side';
 import { LeftSide } from './left-side';
 import { RightSide } from './right-side';
 import { RightSideDrawer } from './right-side-drawer.';
+import { SideLayout } from './side-layout';
+
+const BREAKPOINTS = ['sm', 'md', 'lg'] as const;
+const SIDE_WIDTH = 180;
+const FULL_WIDTH = 1024;
+const GAP = 4;
+const PADDING = 4;
+const MAIN_WIDTH = FULL_WIDTH - SIDE_WIDTH * 2 - GAP * 2 - PADDING * 2;
+const BOTTOM_SIDE_HEIGHT = 12;
 
 export function MainLayout({ children }: { children: ReactNode }) {
-  const bp = useBreakpoint({ breakpoints: ['lg'] });
+  const bp = useBreakpoint({
+    breakpoints: BREAKPOINTS as unknown as string[],
+    fallback: BREAKPOINTS[0],
+    ssr: false,
+  }) as (typeof BREAKPOINTS)[number];
 
-  if (bp === 'lg')
-    return (
-      <Container display="flex" gap="4">
-        <Box flex={2} py={8}>
-          <Box asChild position="fixed" h="vh">
-            <LeftSide />
-          </Box>
-        </Box>
-        <Box flex={8} h="vh" w="100%">
-          {children}
-        </Box>
-        <Box flex={2} py={8}>
-          <Box asChild position="fixed" h="vh">
-            <RightSide />
-          </Box>
-        </Box>
-      </Container>
-    );
   return (
-    <Container display="flex" flexDirection="column" gap="4">
-      <Box flex={8} h="vh" w="100%">
+    <Container px={PADDING} display="flex" gap={{ base: GAP, mdDown: 0 }} justifyContent="center">
+      {bp === 'lg' && (
+        <SideLayout width={SIDE_WIDTH}>
+          <LeftSide />
+        </SideLayout>
+      )}
+
+      <Box w={{ base: 'full', md: MAIN_WIDTH }}>
         {children}
+        {(bp === 'md' || bp === 'sm') && <Box h={BOTTOM_SIDE_HEIGHT} />}
       </Box>
-      <BottomSide
-        rightSide={
-          <RightSideDrawer>
-            <RightSide />
-          </RightSideDrawer>
-        }
-      />
+
+      {bp === 'lg' && (
+        <SideLayout width={SIDE_WIDTH}>
+          <RightSide />
+        </SideLayout>
+      )}
+      {bp === 'md' && (
+        <>
+          <SideLayout width={SIDE_WIDTH}>
+            <RightSide pb={BOTTOM_SIDE_HEIGHT} />
+          </SideLayout>
+          <BottomSide h={BOTTOM_SIDE_HEIGHT} />
+        </>
+      )}
+      {bp === 'sm' && (
+        <BottomSide
+          h={BOTTOM_SIDE_HEIGHT}
+          rightSide={
+            <RightSideDrawer>
+              <Box display="flex" h="full" asChild overflow="scroll">
+                <RightSide />
+              </Box>
+            </RightSideDrawer>
+          }
+        />
+      )}
     </Container>
   );
 }
