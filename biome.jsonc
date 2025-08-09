@@ -25,16 +25,21 @@
     "domains": {
       "react": "all"
     },
+    // "rules": {
+    //   "recommended": true,
+    //   "a11y": "error",
+    //   "security": "error",
+    //   "performance": "error",
+    //   "complexity": "error",
+    //   "correctness": "error",
+    //   "nursery": "error",
+    //   "suspicious": "error",
+    //   "style": "error"
+    // }
     "rules": {
       "recommended": true,
       "a11y": "error",
       "security": "error",
-      // "performance": "error",
-      // "complexity": "error",
-      // "correctness": "error",
-      // "nursery": "error",
-      // "suspicious": "error",
-      // "style": "error"
       "nursery": {
         "useExportsLast": "error"
       },
