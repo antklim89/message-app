@@ -30,7 +30,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
         </SideLayout>
       )}
 
-      <Box w={{ base: 'full', md: MAIN_WIDTH }}>
+      <Box my={4} w={{ base: 'full', md: MAIN_WIDTH }}>
         {children}
         {(bp === 'md' || bp === 'sm') && <Box h={BOTTOM_SIDE_HEIGHT} />}
       </Box>
