@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Container, useBreakpoint } from '@chakra-ui/react';
+import { Box, Container, HStack, useBreakpoint, VStack } from '@chakra-ui/react';
 
 import { BottomSide } from './bottom-side';
 import { LeftSide } from './left-side';
@@ -7,48 +7,24 @@ import { RightSide } from './right-side';
 import { RightSideDrawer } from './right-side-drawer.';
 import { SideLayout } from './side-layout';
 
-const BREAKPOINTS = ['sm', 'md', 'lg'] as const;
-const SIDE_WIDTH = 180;
-const FULL_WIDTH = 1024;
+const BREAKPOINTS = ['md', 'lg', 'xl'] as const;
+const SIDE_WIDTH = '14rem';
 const GAP = 4;
-const PADDING = 4;
-const MAIN_WIDTH = FULL_WIDTH - SIDE_WIDTH * 2 - GAP * 2 - PADDING * 2;
 const BOTTOM_SIDE_HEIGHT = 12;
 
 export function MainLayout({ children }: { children: ReactNode }) {
-  const bp = useBreakpoint({
+  const breakpoint = useBreakpoint({
     breakpoints: BREAKPOINTS as unknown as string[],
     fallback: BREAKPOINTS[0],
     ssr: false,
   }) as (typeof BREAKPOINTS)[number];
 
-  return (
-    <Container px={PADDING} my={4} display="flex" gap={{ base: GAP, mdDown: 0 }} justifyContent="center">
-      {bp === 'lg' && (
-        <SideLayout width={SIDE_WIDTH}>
-          <LeftSide />
-        </SideLayout>
-      )}
-
-      <Box my={4} w={{ base: 'full', md: MAIN_WIDTH }}>
-        {children}
-        {(bp === 'md' || bp === 'sm') && <Box h={BOTTOM_SIDE_HEIGHT} />}
-      </Box>
-
-      {bp === 'lg' && (
-        <SideLayout width={SIDE_WIDTH}>
-          <RightSide />
-        </SideLayout>
-      )}
-      {bp === 'md' && (
-        <>
-          <SideLayout width={SIDE_WIDTH}>
-            <RightSide pb={BOTTOM_SIDE_HEIGHT} />
-          </SideLayout>
-          <BottomSide h={BOTTOM_SIDE_HEIGHT} />
-        </>
-      )}
-      {bp === 'sm' && (
+  if (breakpoint === 'md') {
+    return (
+      <VStack gap={GAP} position="relative">
+        <Container py={4} flexGrow={1}>
+          {children}
+        </Container>
         <BottomSide
           h={BOTTOM_SIDE_HEIGHT}
           rightSide={
@@ -59,7 +35,45 @@ export function MainLayout({ children }: { children: ReactNode }) {
             </RightSideDrawer>
           }
         />
-      )}
+      </VStack>
+    );
+  }
+
+  if (breakpoint === 'lg') {
+    return (
+      <VStack gap={GAP}>
+        <Container asChild>
+          <HStack gap={GAP} position="relative">
+            <Box py={4} flexGrow={1} mb={BOTTOM_SIDE_HEIGHT + GAP}>
+              {children}
+            </Box>
+
+            <SideLayout width={SIDE_WIDTH} mb={BOTTOM_SIDE_HEIGHT + GAP}>
+              <RightSide />
+            </SideLayout>
+          </HStack>
+        </Container>
+
+        <BottomSide h={BOTTOM_SIDE_HEIGHT} />
+      </VStack>
+    );
+  }
+
+  return (
+    <Container>
+      <HStack gap={GAP} position="relative">
+        <SideLayout width={SIDE_WIDTH}>
+          <LeftSide />
+        </SideLayout>
+
+        <Box py={4} flexGrow={1}>
+          {children}
+        </Box>
+
+        <SideLayout width={SIDE_WIDTH}>
+          <RightSide />
+        </SideLayout>
+      </HStack>
     </Container>
   );
 }
