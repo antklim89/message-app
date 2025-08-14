@@ -2,16 +2,14 @@ import { Box, Button, Skeleton } from '@chakra-ui/react';
 import { useParams } from '@tanstack/react-router';
 
 import { MessageCreateCollapsible } from '@/features/message-edit';
-import { useSession } from '@/share/hooks/use-session';
-import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-boundary';
+import { Protected } from '@/share/ui/protected';
 
-export const MessageNewLayout = withSuspenseErrorBoundary(
-  ({ answerId }: { answerId?: number }) => {
-    const { data: user } = useSession();
-    const params = useParams({ from: '/answers/$answerId', shouldThrow: false });
+export const MessageNewLayout = ({ answerId }: { answerId?: number }) => {
+  const params = useParams({ from: '/answers/$answerId', shouldThrow: false });
 
-    if (user)
-      return (
+  return (
+    <Protected
+      privateElement={
         <MessageCreateCollapsible
           answerId={answerId}
           trigger={
@@ -20,8 +18,9 @@ export const MessageNewLayout = withSuspenseErrorBoundary(
             </Button>
           }
         />
-      );
-    return <Box h={30} />;
-  },
-  <Skeleton h={30} />,
-);
+      }
+      publicElement={<Box h={30} />}
+      fallback={<Skeleton h={30} />}
+    />
+  );
+};

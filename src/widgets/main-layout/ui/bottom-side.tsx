@@ -1,7 +1,10 @@
 import type { ReactNode } from 'react';
-import { Box, Container, HStack, type StackProps } from '@chakra-ui/react';
+import { Box, Container, HStack, Skeleton, type StackProps } from '@chakra-ui/react';
+import { FaRightFromBracket } from 'react-icons/fa6';
 
 import { AuthCompactLayout } from '@/entities/auth';
+import { LogoutButton } from '@/entities/auth/ui/logout-button';
+import { Protected } from '@/share/ui/protected';
 import { Logo } from './logo';
 
 export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & StackProps) {
@@ -23,7 +26,15 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
 
         <Box flex="1" />
 
-        <AuthCompactLayout />
+        <Protected
+          privateElement={
+            <LogoutButton>
+              <FaRightFromBracket />
+            </LogoutButton>
+          }
+          publicElement={<AuthCompactLayout />}
+          fallback={<Skeleton w={100} h="60%" />}
+        />
 
         {rightSide}
       </HStack>

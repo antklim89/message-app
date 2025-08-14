@@ -4,8 +4,8 @@ import { Link } from '@tanstack/react-router';
 import { FaComment, FaEllipsis } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
-import { useSession } from '@/share/hooks/use-session';
 import { FromNowDate } from '@/share/ui/from-now-date';
+import { Protected } from '@/share/ui/protected';
 
 export function Message({
   message,
@@ -16,9 +16,6 @@ export function Message({
   footer?: ReactNode;
   menuItems: ReactNode;
 }) {
-  const { data: user } = useSession();
-  const author = user?.id === message.author.id ? 'you' : message.author.username;
-
   return (
     <Card.Root w="full" border="none">
       <Card.Header asChild alignItems="center" gap={4}>
@@ -30,7 +27,8 @@ export function Message({
           <Card.Title display="flex" flexDirection="column">
             {message.title}
             <Span fontSize="xs" fontWeight="normal">
-              Published <FromNowDate date={message.created} /> by {author}
+              Published <FromNowDate date={message.created} />{' '}
+              <Protected privateElement={'by you'} publicElement={`by ${message.author.username}`} />
             </Span>
           </Card.Title>
           <Flex flexGrow={1} />
