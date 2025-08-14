@@ -1,3 +1,3 @@
-import type { MessageType } from '@/entities/messages';
+import type { MessageEditSchema } from './schemas';
 
-export type MessageCreateType = Pick<MessageType, 'title' | 'body' | 'answerId'>;
+export type MessageEditType = MessageEditSchema;

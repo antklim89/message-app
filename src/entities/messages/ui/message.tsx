@@ -1,20 +1,28 @@
 import type { ReactNode } from 'react';
-import { Avatar, Card, IconButton, Span } from '@chakra-ui/react';
+import { Avatar, Card, Flex, HStack, IconButton, Menu, Portal, Span, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { FaComment } from 'react-icons/fa6';
+import { FaComment, FaEllipsis } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { useSession } from '@/share/hooks/use-session';
 import { FromNowDate } from '@/share/ui/from-now-date';
 
-export function Message({ message, footer }: { message: MessageType; footer?: ReactNode }) {
+export function Message({
+  message,
+  footer,
+  menuItems,
+}: {
+  message: MessageType;
+  footer?: ReactNode;
+  menuItems: ReactNode;
+}) {
   const { data: user } = useSession();
   const author = user?.id === message.author.id ? 'you' : message.author.username;
 
   return (
     <Card.Root w="full" border="none">
-      <Card.Header asChild display="flex" flexDirection="row" alignItems="center" gap={4}>
-        <Link to="/answers/$answerId" params={{ answerId: message.id }}>
+      <Card.Header asChild alignItems="center" gap={4}>
+        <HStack>
           <Avatar.Root>
             <Avatar.Image src={message.author.avatar || undefined} />
             <Avatar.Fallback />
@@ -25,10 +33,28 @@ export function Message({ message, footer }: { message: MessageType; footer?: Re
               Published <FromNowDate date={message.created} /> by {author}
             </Span>
           </Card.Title>
-        </Link>
+          <Flex flexGrow={1} />
+
+          <Menu.Root positioning={{ placement: 'bottom-end' }} unmountOnExit={false} lazyMount={false} size="md">
+            <Menu.Trigger asChild>
+              <IconButton variant="ghost" aria-label="message menu">
+                <FaEllipsis />
+              </IconButton>
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content>{menuItems}</Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
+        </HStack>
       </Card.Header>
       <Card.Body>
-        <Card.Body>{message.body}</Card.Body>
+        <Card.Body>
+          <Text whiteSpace="pre" textWrap="wrap" w={'fit-content'}>
+            {message.body}
+          </Text>
+        </Card.Body>
       </Card.Body>
       <Card.Footer display="flex" p={0} css={{ '& > *': { flex: '1 0 auto' } }}>
         {footer}

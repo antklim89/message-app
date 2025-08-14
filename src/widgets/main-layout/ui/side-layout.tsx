@@ -3,7 +3,7 @@ import { Box, type BoxProps } from '@chakra-ui/react';
 
 export function SideLayout({ children, width, w, mb, ...props }: { children: ReactNode } & BoxProps) {
   return (
-    <Box width={width} w={w}>
+    <Box width={width} w={w} flexShrink={0}>
       <Box
         py={8}
         w={width}
@@ -14,6 +14,7 @@ export function SideLayout({ children, width, w, mb, ...props }: { children: Rea
         mb={mb}
         overflow="auto"
         scrollbarWidth="none"
+        flexShrink={0}
         {...props}
       >
         {children}
