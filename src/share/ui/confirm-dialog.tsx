@@ -7,6 +7,7 @@ export function ConfirmDialog({
   onConfirm,
   isConfirming,
   confirmButtonText,
+  confirmButtonLoadingText,
   cancelButtonText,
 }: {
   trigger: ReactNode;
@@ -14,6 +15,7 @@ export function ConfirmDialog({
   onConfirm: () => void;
   isConfirming?: boolean;
   confirmButtonText?: string;
+  confirmButtonLoadingText?: string;
   cancelButtonText?: string;
 }) {
   return (
@@ -33,7 +35,11 @@ export function ConfirmDialog({
               <Dialog.CloseTrigger position="static" asChild>
                 <Button variant="ghost">{cancelButtonText ?? 'Cancel'}</Button>
               </Dialog.CloseTrigger>
-              <Button loading={isConfirming} onClick={() => onConfirm()}>
+              <Button
+                loadingText={confirmButtonLoadingText ?? 'Confirming'}
+                loading={isConfirming}
+                onClick={() => onConfirm()}
+              >
                 {confirmButtonText ?? 'Confirm'}
               </Button>
             </Dialog.Footer>
