@@ -1,4 +1,6 @@
-import { Button, Menu } from '@chakra-ui/react';
+import { Menu } from '@chakra-ui/react';
+import { useRouter } from '@tanstack/react-router';
+import { FaCopy, FaPencil, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { MessageUpdateDialog } from '@/features/message-edit';
@@ -6,17 +8,22 @@ import { MessageDeleteDialog } from '@/features/message-edit/ui/message-delete-d
 import { Protected } from '@/share/ui/protected';
 
 export function MessageCardMenu({ message }: { message: MessageType }) {
+  const { href } = useRouter().buildLocation({ params: { answerId: message.id }, to: '/answers/$answerId' });
+  const fullPath = `${location.origin}${href}`;
+
   return (
     <Menu.ItemGroup>
+      <Menu.Item onClick={() => navigator.clipboard?.writeText(fullPath)} as="button" value="copy-url" asChild>
+        <FaCopy /> Copy URL
+      </Menu.Item>
+
       <Protected
         privateElement={
           <MessageUpdateDialog
             message={message}
             trigger={
-              <Menu.Item cursor="pointer" value="update-message" asChild>
-                <Button w="full" variant="ghost">
-                  Update
-                </Button>
+              <Menu.Item as="button" value="update-message">
+                <FaPencil /> Update
               </Menu.Item>
             }
           />
@@ -27,10 +34,8 @@ export function MessageCardMenu({ message }: { message: MessageType }) {
           <MessageDeleteDialog
             id={message.id}
             trigger={
-              <Menu.Item cursor="pointer" value="delete-message" asChild>
-                <Button w="full" variant="ghost">
-                  Delete
-                </Button>
+              <Menu.Item as="button" value="delete-message" asChild>
+                <FaTrash /> Delete
               </Menu.Item>
             }
           />
