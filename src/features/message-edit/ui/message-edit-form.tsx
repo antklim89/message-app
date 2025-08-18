@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 import { useForm } from 'react-hook-form';
-import { Alert, Field, Flex, Input, Textarea } from '@chakra-ui/react';
+import { Alert, Field, Input, Stack, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import type { PromiseResult } from '@/share/lib/result';
@@ -28,14 +28,11 @@ export function MessageEditForm({
   });
 
   return (
-    <Flex
+    <Stack
       asChild
       onKeyDown={e => {
         e.key === 'Enter' && e.ctrlKey && handleSubmit(e);
       }}
-      flexDirection="column"
-      p={8}
-      gap={4}
     >
       <form onSubmit={handleSubmit} {...props}>
         {form.formState.errors.root != null && (
@@ -61,6 +58,6 @@ export function MessageEditForm({
 
         {children}
       </form>
-    </Flex>
+    </Stack>
   );
 }

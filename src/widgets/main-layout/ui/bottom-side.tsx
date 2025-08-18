@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
-import { Box, Container, HStack, Skeleton, type StackProps } from '@chakra-ui/react';
-import { FaRightFromBracket } from 'react-icons/fa6';
+import { Box, Button, Container, HStack, Skeleton, type StackProps } from '@chakra-ui/react';
+import { FaDoorOpen, FaRightFromBracket } from 'react-icons/fa6';
 
-import { AuthCompactLayout } from '@/entities/auth';
-import { LogoutButton } from '@/entities/auth/ui/logout-button';
+import { LoginDialog, LogoutButton } from '@/entities/auth';
 import { Protected } from '@/share/ui/protected';
 import { Logo } from './logo';
 
@@ -32,7 +31,15 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
               <FaRightFromBracket />
             </LogoutButton>
           }
-          publicElement={<AuthCompactLayout />}
+          publicElement={
+            <LoginDialog
+              openElement={
+                <Button variant="outline">
+                  <FaDoorOpen />
+                </Button>
+              }
+            />
+          }
           fallback={<Skeleton w={100} h="60%" />}
         />
 

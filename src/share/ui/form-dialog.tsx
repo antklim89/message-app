@@ -14,7 +14,6 @@ export function FormDialog({
   openElement: ReactElement;
   submitElement: ReactElement;
   title?: ReactNode;
-  submitText?: string;
 } & UseDisclosureProps) {
   const id = useId();
   return (

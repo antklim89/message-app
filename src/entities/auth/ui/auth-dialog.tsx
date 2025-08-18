@@ -1,52 +1,73 @@
-import type { ReactNode } from 'react';
-import { Box, CloseButton, Dialog, Heading, Portal } from '@chakra-ui/react';
+import { type ReactElement, useState } from 'react';
+import { Button, Text, useDisclosure } from '@chakra-ui/react';
 
-export function AuthDialog({
-  children,
-  title,
-  trigger,
-  toggleText,
-  ...props
-}: {
-  children?: ReactNode;
-  trigger: ReactNode;
-  toggleText: ReactNode;
-  title: ReactNode;
-} & Dialog.RootProps) {
+import { FormDialog } from '@/share/ui/form-dialog';
+import { LoginForm } from './login-form';
+import { RegisterForm } from './register-form';
+import { useLoginMutation } from '../api/hooks/use-login-mutation';
+import { useRegisterMutation } from '../api/hooks/use-register-mutation';
+import type { LoginSchema, RegisterSchema } from '../models/schemas';
+
+export function LoginDialog({ openElement }: { openElement: ReactElement }) {
+  const [type, setType] = useState<'login' | 'register'>('login');
+  const disclosure = useDisclosure();
+  const loginMutation = useLoginMutation();
+  const registerMutation = useRegisterMutation();
+
+  async function handleLogin(data: LoginSchema) {
+    const result = await loginMutation.mutateAsync(data);
+    if (result.success) disclosure.onClose();
+    return result;
+  }
+  async function handleRegister(data: RegisterSchema) {
+    const result = await registerMutation.mutateAsync(data);
+    if (result.success) disclosure.onClose();
+    return result;
+  }
+
   return (
-    <Dialog.Root motionPreset="slide-in-bottom" placement="center" size="cover" {...props}>
-      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="lg" />
-              </Dialog.CloseTrigger>
-            </Dialog.Header>
-            <Dialog.Body asChild>
-              <Box
-                alignItems={{ base: 'stretch', lg: 'center' }}
-                display="flex"
-                flexDirection={{ base: 'column', lg: 'row' }}
-                gap="4"
-                justifyContent="center"
-              >
-                <Box as="aside" flex={{ base: '0 1 0', lg: '0 1 320px' }} flexDirection="column">
-                  <Heading fontSize="4xl" mb={4}>
-                    {title}
-                  </Heading>
-                  {toggleText}
-                </Box>
-                <Box as="section" flex={{ base: '0 1 0', lg: '0 1 320px' }}>
-                  {children}
-                </Box>
-              </Box>
-            </Dialog.Body>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <FormDialog
+      {...disclosure}
+      formElement={type === 'login' ? <LoginForm onSubmit={handleLogin} /> : <RegisterForm onSubmit={handleRegister} />}
+      openElement={openElement ?? <Button>Login</Button>}
+      submitElement={
+        type === 'login' ? (
+          <Button loading={loginMutation.isPending} loadingText="Saving...">
+            Save
+          </Button>
+        ) : (
+          <Button loading={registerMutation.isPending} loadingText="Registering...">
+            Register
+          </Button>
+        )
+      }
+      title={
+        type === 'login' ? (
+          <Text display="flex" flexDirection="column" textAlign="center">
+            <Text as="span" fontSize="2xl">
+              Login
+            </Text>
+            <Text as="span" fontSize="sm">
+              Doesn't have an account?{' '}
+              <Button variant="ghost" p={1} onClick={() => setType('register')}>
+                Register
+              </Button>
+            </Text>
+          </Text>
+        ) : (
+          <Text display="flex" flexDirection="column" textAlign="center">
+            <Text as="span" fontSize="2xl">
+              Register
+            </Text>
+            <Text as="span" fontSize="sm">
+              Already have an account{' '}
+              <Button variant="ghost" p={1} onClick={() => setType('login')}>
+                Login
+              </Button>
+            </Text>
+          </Text>
+        )
+      }
+    />
   );
 }
