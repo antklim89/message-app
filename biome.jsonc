@@ -40,9 +40,6 @@
       "recommended": true,
       "a11y": "error",
       "security": "error",
-      "nursery": {
-        "useExportsLast": "error"
-      },
       "suspicious": {
         "noConsole": {
           "level": "warn",
