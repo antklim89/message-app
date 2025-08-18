@@ -1,11 +1,17 @@
-import { infiniteQueryOptions } from '@tanstack/react-query';
+import { type InferDataFromTag, infiniteQueryOptions } from '@tanstack/react-query';
 
 import { MESSAGES_PER_PAGE } from '../../config/constants';
 import { getMessageList } from '../repository/get-message-list';
 
+export const MessageListQueryOptionsBaseKey = 'MESSAGES';
+export type MessageListQueryOptionsReturnType = InferDataFromTag<
+  ReturnType<typeof messageListQueryOptions>['queryFn'],
+  ReturnType<typeof messageListQueryOptions>['queryKey']
+>;
+
 export function messageListQueryOptions({ answerId }: { answerId?: number } = {}) {
   return infiniteQueryOptions({
-    queryKey: ['MESSAGES', { answerId }],
+    queryKey: [MessageListQueryOptionsBaseKey, { answerId }],
     async queryFn({ pageParam: lastId }) {
       const { fail, error, result } = await getMessageList({ answerId, lastId });
       if (fail) throw new Error(error.message);
