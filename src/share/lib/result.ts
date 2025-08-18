@@ -1,4 +1,7 @@
+const symbol = Symbol('err');
+
 export interface Ok<T> {
+  [symbol]: 'ok';
   success: true;
   fail: false;
   result: T;
@@ -6,6 +9,7 @@ export interface Ok<T> {
 }
 
 export interface Err<T extends string = string> {
+  [symbol]: 'err';
   success: false;
   fail: true;
   error: ErrVariant<T>;
@@ -25,6 +29,7 @@ export type PromiseResult<T, E extends string = string> = Promise<Result<T, E>>;
 
 export function ok<const T>(result: T): Ok<T> {
   return {
+    [symbol]: 'ok',
     success: true,
     fail: false,
     result,
@@ -34,6 +39,7 @@ export function ok<const T>(result: T): Ok<T> {
 
 export function err<const T extends string>(error: ErrVariant<T>): Err<T> {
   return {
+    [symbol]: 'err',
     success: false,
     fail: true,
     error,
@@ -57,8 +63,15 @@ export function okMap<const OldResult, const NewResult, const E extends string>(
   return ok(okCb(result.result));
 }
 
+export function isErr<T extends string = string>(result: unknown): result is Err<T> {
+  return typeof result === 'object' && result != null && symbol in result && result[symbol] === 'err';
+}
+export function isOk<T>(result: unknown): result is Ok<T> {
+  return typeof result === 'object' && result != null && symbol in result && result[symbol] === 'ok';
+}
+
 export const ErrType = {
-  UNEXPECTET: 'unexpected',
+  UNEXPECTED: 'unexpected',
   AUTHENTICATION: 'authentication',
   VALIDATION: 'validation',
   CONFLICT: 'conflict',
@@ -68,7 +81,7 @@ export type ErrType = (typeof ErrType)[keyof typeof ErrType];
 export function errUnexpected(message?: string): Err<'unexpected'> {
   return err({
     message: message ?? 'Unexpected error. Try again later.',
-    type: ErrType.UNEXPECTET,
+    type: ErrType.UNEXPECTED,
   });
 }
 
