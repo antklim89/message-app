@@ -15,6 +15,6 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   build: {
-    target: 'es2018',
+    target: 'es2022',
   },
 });
