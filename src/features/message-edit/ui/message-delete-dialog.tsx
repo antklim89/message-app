@@ -21,7 +21,7 @@ export function MessageDeleteDialog({ id: messageId, trigger }: { id: MessageTyp
         <Button
           onClick={() => handleDelete()}
           loading={deleteMutation.isPending}
-          loadingText="Deleting"
+          loadingText="Deleting..."
           colorPalette="red"
         >
           Delete

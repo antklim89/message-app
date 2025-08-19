@@ -15,10 +15,10 @@ export function MessageUpdateDialog({
   trigger: ReactElement;
 }) {
   const disclosure = useDisclosure();
-  const messageEditMutation = useMessageUpdateMutation({ messageId: message.id });
+  const messageUpdateMutation = useMessageUpdateMutation({ messageId: message.id });
 
   async function handleSubmit(data: MessageEditType) {
-    const result = await messageEditMutation.mutateAsync(data);
+    const result = await messageUpdateMutation.mutateAsync(data);
     if (result.success) disclosure.onClose();
     return result;
   }
@@ -28,7 +28,11 @@ export function MessageUpdateDialog({
       {...disclosure}
       title="Update Message"
       openElement={trigger}
-      submitElement={<Button loadingText="Saving...">Save</Button>}
+      submitElement={
+        <Button loading={messageUpdateMutation.isPending} loadingText="Updating...">
+          Update
+        </Button>
+      }
       formElement={<MessageEditForm values={message} onSubmit={handleSubmit} />}
     />
   );

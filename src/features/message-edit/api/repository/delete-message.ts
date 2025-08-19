@@ -9,7 +9,7 @@ export async function deleteMessage(id: MessageType['id']): PromiseResult<null> 
 
   const { count, error } = await supabase.from('messages').delete({ count: 'exact' }).eq('id', id);
 
-  if (error != null || count == null || count <= 0) return errUnexpected('Message to delete not found.');
+  if (count == null || count <= 0) return errUnexpected('Message to delete not found.');
   if (error != null) return errUnexpected('Failed to delete message.');
 
   return ok(null);
