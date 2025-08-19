@@ -3,6 +3,7 @@ import { Toaster as ChakraToaster, createToaster, Portal, Spinner, Stack, Toast 
 export const toaster = createToaster({
   pauseOnPageIdle: true,
   placement: 'top-end',
+  duration: 8 * 1000,
 });
 
 export function Toaster() {
@@ -10,14 +11,16 @@ export function Toaster() {
     <Portal>
       <ChakraToaster insetInline={{ mdDown: '4' }} toaster={toaster}>
         {toast => (
-          <Toast.Root width={{ md: 'sm' }}>
+          <Toast.Root alignItems="center" width={{ md: 'sm' }}>
             {toast.type === 'loading' ? <Spinner color="blue.solid" size="sm" /> : <Toast.Indicator />}
             <Stack flex="1" gap="1" maxWidth="100%">
-              {toast.title != null && <Toast.Title>{toast.title}</Toast.Title>}
+              <Toast.Title fontSize="lg" textTransform="capitalize">
+                {toast.title ?? toast.type}
+              </Toast.Title>
               {toast.description != null && <Toast.Description>{toast.description}</Toast.Description>}
             </Stack>
             {toast.action && <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>}
-            {toast.meta?.closable != null && <Toast.CloseTrigger />}
+            {<Toast.CloseTrigger />}
           </Toast.Root>
         )}
       </ChakraToaster>
