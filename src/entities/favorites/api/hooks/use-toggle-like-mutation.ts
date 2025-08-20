@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ErrType, type ErrVariant } from '@/share/lib/result';
 import { toaster } from '@/share/ui/toaster';
 import { type MessageType, updateMessageQueryData } from '../../@x/entities/messages';
-import { addFavorite } from '../repository/add-faviorite';
+import { addFavorite } from '../repository/add-favorite';
 import { removeLike } from '../repository/remove-favorite';
 
 const TOAST_ID = 'TOGGLE_FAVORITES';

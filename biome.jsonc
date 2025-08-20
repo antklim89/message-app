@@ -38,6 +38,14 @@
     // }
     "rules": {
       "recommended": true,
+      "performance": {},
+      // "complexity": "error",
+      // "correctness": "error",
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noImportCycles": "error",
+        "noMisusedPromises": "error"
+      },
       "a11y": "error",
       "security": "error",
       "suspicious": {
@@ -50,6 +58,16 @@
         "useAwait": "error"
       },
       "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              { "group": "@/entities/*/*/**" },
+              { "group": "@/features/*/*/**" },
+              { "group": "@/widgets/*/*/**" }
+            ]
+          }
+        },
         "useImportType": "error",
         "noDefaultExport": "off"
       }

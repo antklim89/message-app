@@ -1,4 +1,4 @@
-import { MessageInfininyScroll, MessageList, MessageListFallback, useMessageListQuery } from '@/entities/messages';
+import { MessageInfinityScroll, MessageList, MessageListFallback, useMessageListQuery } from '@/entities/messages';
 import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-boundary';
 import { MessageCard } from '@/widgets/message-card';
 
@@ -11,7 +11,7 @@ export const MessageListLayout = withSuspenseErrorBoundary(
         {messages.map(message => (
           <MessageCard key={message.id} message={message} />
         ))}
-        <MessageInfininyScroll
+        <MessageInfinityScroll
           hasNext={hasNextPage}
           isFetchingNext={isFetchingNextPage}
           onScreenEnd={() => fetchNextPage()}

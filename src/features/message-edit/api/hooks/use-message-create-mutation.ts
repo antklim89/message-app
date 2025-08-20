@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { MessageType } from '@/entities/messages';
-import { MessageListQueryOptionsBaseKey } from '@/entities/messages/api/query-options/message-list-query-options';
+import { MessageListQueryOptionsBaseKey, type MessageType } from '@/entities/messages';
 import { toaster } from '@/share/ui/toaster';
 import type { MessageEditType } from '../../model/types';
 import { createMessage } from '../repository/create-message';

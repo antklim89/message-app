@@ -3,8 +3,7 @@ import { useRouter } from '@tanstack/react-router';
 import { FaCopy, FaPencil, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
-import { MessageUpdateDialog } from '@/features/message-edit';
-import { MessageDeleteDialog } from '@/features/message-edit/ui/message-delete-dialog';
+import { MessageDeleteDialog, MessageUpdateDialog } from '@/features/message-edit';
 import { Protected } from '@/share/ui/protected';
 
 export function MessageCardMenu({ message }: { message: MessageType }) {

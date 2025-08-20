@@ -1,8 +1,8 @@
 import useInfiniteScroll from '@/share/hooks/use-infinity-scroll';
+import { MessageFallback } from './message-fallback';
 import { MESSAGES_PER_PAGE } from '../config/constants';
-import { MessageFallback } from '../ui/message-fallback';
 
-export function MessageInfininyScroll({
+export function MessageInfinityScroll({
   onScreenEnd,
   isFetchingNext,
   hasNext,

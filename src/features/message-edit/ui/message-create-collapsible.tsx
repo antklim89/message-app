@@ -1,7 +1,7 @@
 import { type ReactElement, useId } from 'react';
 import { Button, Card, Collapsible, useDisclosure } from '@chakra-ui/react';
 
-import type { MessageType } from '@/entities/messages/models/types';
+import type { MessageType } from '@/entities/messages';
 import { MessageEditForm } from './message-edit-form';
 import { useMessageCreateMutation } from '../api/hooks/use-message-create-mutation';
 import type { MessageEditType } from '../model/types';

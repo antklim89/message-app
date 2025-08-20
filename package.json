@@ -11,7 +11,7 @@
     "dev:typecheck": "yarn typecheck",
     "build": "tsc -b && vite build",
     "start": "vite preview --host 0.0.0.0 --port 3000",
-    "lint": "biome check ./src --fix",
+    "lint": "biome check ./src",
     "typecheck": "tsc --noEmit -w --preserveWatchOutput",
     "typegen": "supabase gen types typescript --project-id fdckcddxtlaanwrwrtng > ./src/share/model/supabase-types.generated.ts"
   },
