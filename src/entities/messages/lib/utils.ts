@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { QueryClient } from '@tanstack/react-query';
 
 import {
@@ -32,4 +33,18 @@ export function updateMessageQueryData(
         ),
       },
   );
+}
+
+export function wrapMessageHashTags(text: string, wrapper: (word: string, key: number) => ReactNode): ReactNode {
+  return text.split(' ').reduce((acc, word, idx) => {
+    if (word.startsWith('#')) {
+      acc.push(wrapper(word, idx), ' ');
+    } else {
+      const last = acc[acc.length - 1];
+      if (typeof last === 'string') acc[acc.length - 1] = `${last}${word} `;
+      else acc.push(`${word} `);
+    }
+
+    return acc;
+  }, [] as ReactNode[]);
 }

@@ -6,6 +6,7 @@ import { FaCircleCheck, FaComment, FaEllipsis } from 'react-icons/fa6';
 import type { MessageType } from '@/entities/messages';
 import { FromNowDate } from '@/share/ui/from-now-date';
 import { Protected } from '@/share/ui/protected';
+import { wrapMessageHashTags } from '../lib/utils';
 
 export function Message({
   message,
@@ -54,8 +55,12 @@ export function Message({
       </Card.Header>
       <Card.Body>
         <Card.Body>
-          <Text textWrap="wrap" w="fit-content" whiteSpace="pre">
-            {message.body}
+          <Text textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
+            {wrapMessageHashTags(message.body, (word, key) => (
+              <Span color="blue.200" key={key}>
+                {word}
+              </Span>
+            ))}
           </Text>
         </Card.Body>
       </Card.Body>
