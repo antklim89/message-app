@@ -1,5 +1,5 @@
-import { MESSAGE_SELECT, type MessageType } from '@/entities/messages';
-import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
+import { type MessageType } from '@/entities/messages';
+import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
 import { createSupabaseClient, getSupabaseSession } from '@/share/lib/supabase';
 import type { MessageEditType } from '../../model/types';
 
@@ -8,13 +8,13 @@ export async function updateMessage(messageId: MessageType['id'], input: Message
   const session = await getSupabaseSession();
   if (session == null) return errAuthentication();
 
-  const { error } = await supabase
+  const { count, error } = await supabase
     .from('messages')
-    .update(input)
+    .update(input, { count: 'exact' })
     .eq('authorId', session.user.id)
-    .eq('id', messageId)
-    .select(MESSAGE_SELECT);
+    .eq('id', messageId);
 
+  if (count == null || count <= 0) return errNotFound('The message has not been updated.');
   if (error != null) return errUnexpected('Failed to update message.');
 
   return ok(null);
