@@ -73,6 +73,7 @@ export function isOk<T>(result: unknown): result is Ok<T> {
 export const ErrType = {
   AUTHENTICATION: 'authentication',
   CONFLICT: 'conflict',
+  NOT_FOUND: 'not_found',
   UNEXPECTED: 'unexpected',
   VALIDATION: 'validation',
 } as const;
@@ -82,6 +83,12 @@ export function errUnexpected(message?: string): Err<'unexpected'> {
   return err({
     message: message ?? 'Unexpected error. Try again later.',
     type: ErrType.UNEXPECTED,
+  });
+}
+export function errNotFound(message?: string): Err<'not_found'> {
+  return err({
+    message: message ?? 'Not found. Try again later.',
+    type: ErrType.NOT_FOUND,
   });
 }
 
