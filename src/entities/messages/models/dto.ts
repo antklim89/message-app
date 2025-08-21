@@ -31,7 +31,7 @@ export function messageDto(data: {
       username: data.author.username,
       avatar: data.author.avatar ?? undefined,
     },
-    answersCount: data.answersCount[0].count ?? 0,
+    answersCount: data.answersCount[0]?.count ?? 0,
     isFavorite: data.isFavorite ?? false,
   };
 }

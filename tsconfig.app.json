@@ -19,7 +19,10 @@
     "noEmit": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true
+
   },
   "include": ["./src/**/*"]
 }

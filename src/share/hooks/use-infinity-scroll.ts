@@ -18,7 +18,7 @@ const useInfiniteScroll = ({
 
     const observer = new IntersectionObserver(
       async ([entry]) => {
-        if (entry.isIntersecting && !isLoading.current) {
+        if (entry?.isIntersecting && !isLoading.current) {
           isLoading.current = true;
           try {
             await loadMore();
