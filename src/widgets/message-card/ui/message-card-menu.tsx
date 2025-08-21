@@ -17,6 +17,7 @@ export function MessageCardMenu({ message }: { message: MessageType }) {
       </Menu.Item>
 
       <Protected
+        checkIsPublic={user => user?.id !== message.authorId}
         privateElement={
           <MessageUpdateDialog
             message={message}
@@ -29,6 +30,7 @@ export function MessageCardMenu({ message }: { message: MessageType }) {
         }
       />
       <Protected
+        checkIsPublic={user => user?.id !== message.authorId}
         privateElement={
           <MessageDeleteDialog
             id={message.id}

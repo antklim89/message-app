@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import { Avatar, Card, Flex, HStack, IconButton, Menu, Portal, Span, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { FaComment, FaEllipsis } from 'react-icons/fa6';
+import { FaCircleCheck, FaComment, FaEllipsis } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { FromNowDate } from '@/share/ui/from-now-date';
-// import { Protected } from '@/share/ui/protected';
+import { Protected } from '@/share/ui/protected';
 
 export function Message({
   message,
@@ -25,10 +25,15 @@ export function Message({
             <Avatar.Fallback />
           </Avatar.Root>
           <Card.Title display="flex" flexDirection="column">
-            {message.author.username}
+            <Span alignItems="baseline" display="flex" fontSize="xl" gap={4}>
+              {message.author.username}
+              <Protected
+                checkIsPublic={user => user?.id !== message.authorId}
+                privateElement={<FaCircleCheck size={12} title="This is your message." />}
+              />
+            </Span>
             <Span fontSize="xs" fontWeight="normal">
-              <FromNowDate date={message.created} />{' '}
-              {/* <Protected privateElement="by you" publicElement={`by ${message.author.username}`} /> */}
+              <FromNowDate date={message.created} />
             </Span>
           </Card.Title>
           <Flex flexGrow={1} />
