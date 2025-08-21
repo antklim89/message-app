@@ -5,20 +5,22 @@ import { toaster } from '@/share/lib/toaster';
 import type { AuthWithPasswordInput, UserType } from '../../models/types';
 import { loginWithPassword } from '../repository/login-with-password';
 
+const TOAST_ID = 'LOGIN';
+
 export function useLoginMutation() {
   const queryClient = useQueryClient();
 
   return useMutation<Result<UserType>, Error, AuthWithPasswordInput>({
     async mutationFn(input) {
+      toaster.loading({ description: 'Log in...', id: TOAST_ID });
       const loginResult = await loginWithPassword(input);
-      if (loginResult.fail) return loginResult;
-
-      await queryClient.invalidateQueries();
-      toaster.success({
-        title: 'Login successful',
-      });
-
       return loginResult;
+    },
+    async onSuccess({ fail, success, error }) {
+      await queryClient.invalidateQueries();
+
+      if (fail) toaster.error({ description: error.message, id: TOAST_ID });
+      if (success) toaster.success({ description: 'Login successful!', id: TOAST_ID });
     },
   });
 }
