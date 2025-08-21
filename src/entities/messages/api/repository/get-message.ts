@@ -1,4 +1,4 @@
-import { err, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
+import { errNotFound, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
 import { createSupabaseClient } from '@/share/lib/supabase';
 import { MESSAGE_SELECT } from '../../config/constants';
 import { messageDto } from '../../models/dto';
@@ -8,8 +8,9 @@ export async function getMessage(id: MessageType['id']): PromiseResult<MessageTy
   const supabase = await createSupabaseClient();
 
   const { data, error } = await supabase.from('messages').select(MESSAGE_SELECT).eq('id', id).single();
+
+  if (error && error.code === 'PGRST116') return errNotFound('Message not found');
   if (error != null) return errUnexpected('Failed to fetch messages');
-  if (data == null) return err({ message: 'Message not found', type: 'not-found' });
 
   return ok(messageDto(data));
 }

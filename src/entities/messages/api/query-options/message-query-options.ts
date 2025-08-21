@@ -13,7 +13,7 @@ export function messageQueryOptions({ id }: { id: MessageType['id'] }) {
   return queryOptions({
     async queryFn() {
       const { fail, error, result } = await getMessage(id);
-      if (fail) throw new Error(error.message);
+      if (fail) throw error;
       return result;
     },
     queryKey: [MessageQueryOptionsBaseKey, { id }],
