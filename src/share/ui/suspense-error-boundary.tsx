@@ -1,21 +1,38 @@
 import { type ReactNode, Suspense } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import { Alert, Button, Center, Spinner } from '@chakra-ui/react';
+import { Alert, Button, Center, Spinner, Stack } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
 
-function DefaultErrorFallback({ resetErrorBoundary, error }: Partial<FallbackProps>) {
-  const message = error instanceof Error ? error.message : 'Failed to load component. Unexpected error.';
+import { ErrType, isErr } from '../lib/result';
+
+function DefaultErrorFallback({ error }: FallbackProps) {
+  const message =
+    error instanceof Error
+      ? error.message
+      : isErr(error)
+        ? error.message
+        : 'Failed to load component. Unexpected error.';
+
+  const type = isErr(error) ? error.type : ErrType.UNEXPECTED;
 
   return (
     <Alert.Root status="error">
       <Alert.Indicator />
       <Alert.Content>
+        <Alert.Title fontSize="xl" mb={2} textTransform="uppercase">
+          {type === ErrType.NOT_FOUND && 'Not Found Error'}
+          {type === ErrType.UNEXPECTED && 'Unexpected Error'}
+          {type === ErrType.AUTHENTICATION && ' Authentication Error'}
+        </Alert.Title>
         <Alert.Description whiteSpace="pre">{message}</Alert.Description>
       </Alert.Content>
-      {resetErrorBoundary ? (
-        <Button onClick={() => resetErrorBoundary()} size="xs">
-          Restart
+      <Stack>
+        <Button asChild size="xs">
+          <Link reloadDocument to="/">
+            Reload
+          </Link>
         </Button>
-      ) : null}
+      </Stack>
     </Alert.Root>
   );
 }
@@ -38,7 +55,9 @@ export function SuspenseErrorBoundary({
   errorFallback?: (props: Partial<FallbackProps>) => ReactNode;
 }) {
   return (
-    <ErrorBoundary fallbackRender={ErrorFallback ?? DefaultErrorFallback}>
+    <ErrorBoundary
+      fallbackRender={props => (ErrorFallback ? <ErrorFallback {...props} /> : <DefaultErrorFallback {...props} />)}
+    >
       <Suspense fallback={fallback ?? <DefaultSuspenseFallback />}>{children}</Suspense>
     </ErrorBoundary>
   );
