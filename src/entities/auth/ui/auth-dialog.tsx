@@ -49,7 +49,7 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
             </Text>
             <Text as="span" fontSize="sm">
               Doesn't have an account?{' '}
-              <Button variant="ghost" p={1} onClick={() => setType('register')}>
+              <Button onClick={() => setType('register')} p={1} variant="ghost">
                 Register
               </Button>
             </Text>
@@ -61,7 +61,7 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
             </Text>
             <Text as="span" fontSize="sm">
               Already have an account{' '}
-              <Button variant="ghost" p={1} onClick={() => setType('login')}>
+              <Button onClick={() => setType('login')} p={1} variant="ghost">
                 Login
               </Button>
             </Text>

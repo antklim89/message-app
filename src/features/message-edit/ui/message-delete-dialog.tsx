@@ -16,17 +16,17 @@ export function MessageDeleteDialog({ id: messageId, trigger }: { id: MessageTyp
   return (
     <ConfirmDialog
       {...disclosure}
-      text="Are you sure you want to delete this message?"
       confirmElement={
         <Button
-          onClick={() => handleDelete()}
+          colorPalette="red"
           loading={deleteMutation.isPending}
           loadingText="Deleting..."
-          colorPalette="red"
+          onClick={() => handleDelete()}
         >
           Delete
         </Button>
       }
+      text="Are you sure you want to delete this message?"
       trigger={trigger}
     />
   );

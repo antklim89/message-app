@@ -1,10 +1,6 @@
-import { Toaster as ChakraToaster, createToaster, Portal, Spinner, Stack, Toast } from '@chakra-ui/react';
+import { Toaster as ChakraToaster, Portal, Spinner, Stack, Toast } from '@chakra-ui/react';
 
-export const toaster = createToaster({
-  pauseOnPageIdle: true,
-  placement: 'top-end',
-  duration: 8 * 1000,
-});
+import { toaster } from '../lib/toaster';
 
 export function Toaster() {
   return (

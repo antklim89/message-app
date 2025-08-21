@@ -18,7 +18,7 @@ export function Like({ messageId, hasLiked, likesCount }: Props) {
   }
 
   return (
-    <IconButton aria-label="like message" variant="ghost" onClick={handleToggleLike}>
+    <IconButton aria-label="like message" onClick={handleToggleLike} variant="ghost">
       {hasLiked ? <Icon as={FaHeart} fill="red.600" /> : <FaRegHeart />}
       {isPending ? <Spinner size="xs" /> : likesCount}
     </IconButton>

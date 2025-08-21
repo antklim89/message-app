@@ -15,7 +15,7 @@ export async function removeLike({ messageId }: { messageId: number }) {
     .eq('authorId', user.id);
 
   if (count === 0) return errConflict('Message is not liked.');
-  if (error != null) return err({ type: 'unexpected', message: 'Failed to unlike message. Try again later.' });
+  if (error != null) return err({ message: 'Failed to unlike message. Try again later.', type: 'unexpected' });
 
   return ok(null);
 }

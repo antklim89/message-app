@@ -17,12 +17,12 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/answers/$answerId')({
   component: RouteComponent,
-  params: {
-    parse: parseMessageParams,
-  },
   errorComponent: ErrorComponent,
   loader({ context, params: { answerId } }) {
     context.queryClient.ensureInfiniteQueryData(messageListQueryOptions({ answerId }));
     context.queryClient.ensureQueryData(messageQueryOptions({ id: answerId }));
+  },
+  params: {
+    parse: parseMessageParams,
   },
 });

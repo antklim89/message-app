@@ -29,5 +29,5 @@ export function ProtectedContent({
   const { data: user } = useSession();
 
   if (user == null) return publicElement;
-  else return privateElement;
+  return privateElement;
 }

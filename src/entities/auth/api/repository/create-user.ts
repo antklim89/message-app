@@ -6,28 +6,28 @@ export async function createUser({ email, password, username }: CreateUserInput)
   const supabase = await createSupabaseClient();
   const { data, error } = await supabase.auth.signUp({
     email,
-    password,
     options: {
       data: { username },
     },
+    password,
   });
 
   if (error?.code === 'user_already_exists') {
     const message = 'User already registered';
     return err({
-      type: 'validation',
-      message,
       issues: { email: message },
+      message,
+      type: 'validation',
     });
   }
   if (error?.code === 'weak_password') {
-    return err({ type: 'validation', message: error.message, issues: { password: error.message } });
+    return err({ issues: { password: error.message }, message: error.message, type: 'validation' });
   }
   if (error != null) {
     return errUnexpected('Failed to login. Try again later');
   }
 
   const newUser = data.user;
-  if (newUser) ok({ id: newUser.id, email: newUser.email ?? '' });
+  if (newUser) ok({ email: newUser.email ?? '', id: newUser.id });
   return ok(null);
 }

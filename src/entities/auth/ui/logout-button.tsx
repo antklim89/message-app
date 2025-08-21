@@ -9,14 +9,14 @@ export function LogoutButton({ children }: { children: ReactNode }) {
 
   return (
     <ConfirmDialog
+      isConfirming={isPending}
+      onConfirm={logout}
       text="Are you sure you want to logout?"
       trigger={
         <Button loading={isPending} size="sm" variant="outline">
           {children}
         </Button>
       }
-      onConfirm={logout}
-      isConfirming={isPending}
-    ></ConfirmDialog>
+    />
   );
 }

@@ -7,10 +7,19 @@ const customConfig = defineConfig({
     },
   },
   theme: {
+    semanticTokens: {
+      colors: {
+        bg: {
+          DEFAULT: { value: { _dark: '{colors.black}', _light: '{colors.white}' } },
+        },
+        bgPanel: {
+          DEFAULT: { value: { _dark: '{colors.gray.950}', _light: '{colors.gray.50}' } },
+        },
+      },
+    },
     tokens: {
       colors: {
         black: { value: '#090A0B' },
-        white: { value: '#F4F5F6' },
         blue: {
           '0': { value: '#92bbfe' },
           '50': { value: '#92bbfe' },
@@ -39,16 +48,7 @@ const customConfig = defineConfig({
           '900': { value: '#2b343d' },
           '950': { value: '#1c2228' },
         },
-      },
-    },
-    semanticTokens: {
-      colors: {
-        bg: {
-          DEFAULT: { value: { _light: '{colors.white}', _dark: '{colors.black}' } },
-        },
-        bgPanel: {
-          DEFAULT: { value: { _light: '{colors.gray.50}', _dark: '{colors.gray.950}' } },
-        },
+        white: { value: '#F4F5F6' },
       },
     },
   },

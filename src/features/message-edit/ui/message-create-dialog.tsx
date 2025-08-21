@@ -26,14 +26,14 @@ export function MessageCreateDialog({
   return (
     <FormDialog
       {...disclosure}
-      title="Create New Message"
+      formElement={<MessageEditForm onSubmit={handleSubmit} />}
       openElement={trigger}
       submitElement={
-        <Button loadingText="Creating..." loading={messageCreateMutation.isPending}>
+        <Button loading={messageCreateMutation.isPending} loadingText="Creating...">
           Create
         </Button>
       }
-      formElement={<MessageEditForm onSubmit={handleSubmit} />}
+      title="Create New Message"
     />
   );
 }

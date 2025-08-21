@@ -20,18 +20,18 @@ export function messageDto(data: {
 }): MessageType {
   return {
     answerId: data.answerId ?? undefined,
+    answersCount: data.answersCount[0]?.count ?? 0,
+    author: {
+      avatar: data.author.avatar ?? undefined,
+      id: data.author.id,
+      username: data.author.username,
+    },
     authorId: data.authorId,
     body: data.body,
     created: data.created,
-    id: data.id,
     hasLiked: data.hasLiked ?? false,
-    likesCount: data.likesCount ?? 0,
-    author: {
-      id: data.author.id,
-      username: data.author.username,
-      avatar: data.author.avatar ?? undefined,
-    },
-    answersCount: data.answersCount[0]?.count ?? 0,
+    id: data.id,
     isFavorite: data.isFavorite ?? false,
+    likesCount: data.likesCount ?? 0,
   };
 }

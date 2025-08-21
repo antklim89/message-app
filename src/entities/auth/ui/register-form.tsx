@@ -18,9 +18,9 @@ export function RegisterForm({
   });
 
   useEffect(() => {
-    const { unsubscribe } = form.watch((_, { name, type }) => {
+    const { unsubscribe } = form.watch(async (_, { name, type }) => {
       if (type === 'change' && name === 'password' && form.formState.isSubmitted) {
-        form.trigger('repeat');
+        await form.trigger('repeat');
       }
     });
     return unsubscribe;

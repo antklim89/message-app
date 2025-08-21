@@ -17,7 +17,7 @@ export function FavoriteButton({ messageId, isFavorite }: Props) {
   }
 
   return (
-    <IconButton aria-label="like message" variant="ghost" onClick={handleTogleLike}>
+    <IconButton aria-label="like message" onClick={handleTogleLike} variant="ghost">
       {isFavorite ? <Icon as={FaBookmark} fill="yellow.600" /> : <FaRegBookmark />}
       {isPending ? <Spinner size="xs" /> : null}
     </IconButton>

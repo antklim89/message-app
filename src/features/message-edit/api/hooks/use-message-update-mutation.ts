@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type MessageType, updateMessageQueryData } from '@/entities/messages';
-import { toaster } from '@/share/ui/toaster';
+import { toaster } from '@/share/lib/toaster';
 import type { MessageEditType } from '../../model/types';
 import { updateMessage } from '../repository/update-message';
 
@@ -10,15 +10,15 @@ export function useMessageUpdateMutation({ messageId }: { messageId: MessageType
 
   return useMutation({
     async mutationFn(data: MessageEditType) {
-      toaster.loading({ id: 'update', description: 'Messages are updating...' });
+      toaster.loading({ description: 'Messages are updating...', id: 'update' });
       const updateMessageResult = await updateMessage(messageId, data);
       return updateMessageResult;
     },
     onSuccess({ fail, success, error }, variables) {
-      updateMessageQueryData({ queryClient, messageId }, () => variables);
+      updateMessageQueryData({ messageId, queryClient }, () => variables);
 
-      if (fail) toaster.error({ id: 'update', description: error.message });
-      if (success) toaster.success({ id: 'update', description: 'Message updated successfully!' });
+      if (fail) toaster.error({ description: error.message, id: 'update' });
+      if (success) toaster.success({ description: 'Message updated successfully!', id: 'update' });
     },
   });
 }

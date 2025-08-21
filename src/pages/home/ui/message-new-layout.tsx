@@ -9,6 +9,7 @@ export const MessageNewLayout = ({ answerId }: { answerId?: number }) => {
 
   return (
     <Protected
+      fallback={<Skeleton h={30} />}
       privateElement={
         <MessageCreateCollapsible
           answerId={answerId}
@@ -20,7 +21,6 @@ export const MessageNewLayout = ({ answerId }: { answerId?: number }) => {
         />
       }
       publicElement={<Box h={30} />}
-      fallback={<Skeleton h={30} />}
     />
   );
 };

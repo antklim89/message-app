@@ -10,22 +10,23 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
   return (
     <Container asChild>
       <HStack
-        borderTop="sm"
-        borderColor="border"
-        position="fixed"
         alignItems="center"
         bg="bg"
+        borderColor="border"
+        borderTop="sm"
         bottom={0}
-        right={0}
-        left={0}
         gap={4}
+        left={0}
+        position="fixed"
+        right={0}
         {...props}
       >
-        <Logo width={32} height={32} />
+        <Logo height={32} width={32} />
 
         <Box flex="1" />
 
         <Protected
+          fallback={<Skeleton h="60%" w={100} />}
           privateElement={
             <LogoutButton>
               <FaRightFromBracket />
@@ -40,7 +41,6 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
               }
             />
           }
-          fallback={<Skeleton w={100} h="60%" />}
         />
 
         {rightSide}

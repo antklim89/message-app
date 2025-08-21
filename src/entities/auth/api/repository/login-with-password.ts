@@ -12,14 +12,14 @@ export async function loginWithPassword({ email, password }: AuthWithPasswordInp
   if (error?.code === 'invalid_credentials') {
     const message = 'Email or password are not valid.';
     return err({
-      type: 'validation',
-      message,
       issues: { email: message, password: message },
+      message,
+      type: 'validation',
     });
   }
   if (error != null) {
     return errUnexpected('Failed to login. Try again later');
   }
 
-  return ok({ id: data.user.id, email: data.user.email ?? '' });
+  return ok({ email: data.user.email ?? '', id: data.user.id });
 }

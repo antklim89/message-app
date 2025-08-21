@@ -2,6 +2,7 @@ import { type InferDataFromTag, infiniteQueryOptions } from '@tanstack/react-que
 
 import { messageQueryOptions } from './message-query-options';
 import { MESSAGES_PER_PAGE } from '../../config/constants';
+import { type MessageType } from '../../models/types';
 import { getMessageList } from '../repository/get-message-list';
 
 export const MessageListQueryOptionsBaseKey = 'MESSAGES';
@@ -12,7 +13,11 @@ export type MessageListQueryOptionsReturnType = InferDataFromTag<
 
 export function messageListQueryOptions({ answerId }: { answerId?: number } = {}) {
   return infiniteQueryOptions({
-    queryKey: [MessageListQueryOptionsBaseKey, { answerId }],
+    getNextPageParam(data: MessageType[]) {
+      if (data.length < MESSAGES_PER_PAGE) return;
+      return data.at(-1)?.id ?? undefined;
+    },
+    initialPageParam: undefined as number | undefined,
     async queryFn({ client, pageParam: lastId }) {
       const { fail, error, result } = await getMessageList({ answerId, lastId });
       if (fail) throw new Error(error.message);
@@ -23,11 +28,7 @@ export function messageListQueryOptions({ answerId }: { answerId?: number } = {}
 
       return result.items;
     },
-    getNextPageParam(data) {
-      if (data.length < MESSAGES_PER_PAGE) return;
-      return data.at(-1)?.id ?? undefined;
-    },
-    initialPageParam: undefined as number | undefined,
+    queryKey: [MessageListQueryOptionsBaseKey, { answerId }],
     select(data) {
       return data.pages.flat();
     },

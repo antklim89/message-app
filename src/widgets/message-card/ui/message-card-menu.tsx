@@ -12,7 +12,7 @@ export function MessageCardMenu({ message }: { message: MessageType }) {
 
   return (
     <Menu.ItemGroup>
-      <Menu.Item onClick={() => navigator.clipboard?.writeText(fullPath)} as="button" value="copy-url" asChild>
+      <Menu.Item as="button" asChild onClick={() => navigator.clipboard?.writeText(fullPath)} value="copy-url">
         <FaCopy /> Copy URL
       </Menu.Item>
 
@@ -33,7 +33,7 @@ export function MessageCardMenu({ message }: { message: MessageType }) {
           <MessageDeleteDialog
             id={message.id}
             trigger={
-              <Menu.Item as="button" value="delete-message" asChild>
+              <Menu.Item as="button" asChild value="delete-message">
                 <FaTrash /> Delete
               </Menu.Item>
             }

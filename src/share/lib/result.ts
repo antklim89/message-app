@@ -16,12 +16,12 @@ export interface Err<T extends string = string> {
   result?: null;
 }
 
-export type ErrVariant<T extends string = string> = {
+export interface ErrVariant<T extends string = string> {
   type: T;
   message: string;
   original?: unknown;
   issues?: Record<string, string | string[]>;
-};
+}
 
 export type Result<T, E extends string = string> = Ok<T> | Err<E>;
 
@@ -30,20 +30,20 @@ export type PromiseResult<T, E extends string = string> = Promise<Result<T, E>>;
 export function ok<const T>(result: T): Ok<T> {
   return {
     [symbol]: 'ok',
-    success: true,
+    error: null,
     fail: false,
     result,
-    error: null,
+    success: true,
   };
 }
 
 export function err<const T extends string>(error: ErrVariant<T>): Err<T> {
   return {
     [symbol]: 'err',
-    success: false,
-    fail: true,
     error,
+    fail: true,
     result: null,
+    success: false,
   };
 }
 
@@ -71,10 +71,10 @@ export function isOk<T>(result: unknown): result is Ok<T> {
 }
 
 export const ErrType = {
-  UNEXPECTED: 'unexpected',
   AUTHENTICATION: 'authentication',
-  VALIDATION: 'validation',
   CONFLICT: 'conflict',
+  UNEXPECTED: 'unexpected',
+  VALIDATION: 'validation',
 } as const;
 export type ErrType = (typeof ErrType)[keyof typeof ErrType];
 
@@ -94,9 +94,9 @@ export function errAuthentication(message?: string): Err<'authentication'> {
 
 export function errValidation(message?: string, issues?: ErrVariant['issues']): Err<'validation'> {
   return err({
+    issues,
     message: message ?? 'Validation error. Please check your input.',
     type: ErrType.VALIDATION,
-    issues,
   });
 }
 

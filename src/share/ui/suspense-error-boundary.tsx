@@ -12,7 +12,7 @@ function DefaultErrorFallback({ resetErrorBoundary, error }: Partial<FallbackPro
         <Alert.Description whiteSpace="pre">{message}</Alert.Description>
       </Alert.Content>
       {resetErrorBoundary ? (
-        <Button size="xs" onClick={() => resetErrorBoundary()}>
+        <Button onClick={() => resetErrorBoundary()} size="xs">
           Restart
         </Button>
       ) : null}

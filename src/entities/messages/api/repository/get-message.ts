@@ -9,7 +9,7 @@ export async function getMessage(id: MessageType['id']): PromiseResult<MessageTy
 
   const { data, error } = await supabase.from('messages').select(MESSAGE_SELECT).eq('id', id).single();
   if (error != null) return errUnexpected('Failed to fetch messages');
-  if (data == null) return err({ type: 'not-found', message: 'Message not found' });
+  if (data == null) return err({ message: 'Message not found', type: 'not-found' });
 
   return ok(messageDto(data));
 }

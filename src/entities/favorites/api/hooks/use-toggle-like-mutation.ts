@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { ErrType, type ErrVariant } from '@/share/lib/result';
-import { toaster } from '@/share/ui/toaster';
+import { toaster } from '@/share/lib/toaster';
 import { type MessageType, updateMessageQueryData } from '../../@x/entities/messages';
 import { addFavorite } from '../repository/add-favorite';
 import { removeLike } from '../repository/remove-favorite';
@@ -22,11 +22,6 @@ export function useToggleLikeMutation({
       const { fail, error } = isFavorite ? await removeLike({ messageId }) : await addFavorite({ messageId });
       if (fail && error.type !== ErrType.CONFLICT) throw error;
     },
-    onSuccess() {
-      updateMessageQueryData({ queryClient, messageId }, ({ isFavorite }) => ({
-        isFavorite: !isFavorite,
-      }));
-    },
     onError(error) {
       if (error.type === ErrType.AUTHENTICATION) {
         toaster.error({
@@ -34,13 +29,17 @@ export function useToggleLikeMutation({
           id: TOAST_ID,
         });
         return;
-      } else {
-        toaster.error({
-          description: error.message,
-          id: TOAST_ID,
-        });
-        return;
       }
+      toaster.error({
+        description: error.message,
+        id: TOAST_ID,
+      });
+      return;
+    },
+    onSuccess() {
+      updateMessageQueryData({ messageId, queryClient }, prevMessage => ({
+        isFavorite: !prevMessage.isFavorite,
+      }));
     },
   });
 }

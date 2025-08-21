@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { ErrType } from '@/share/lib/result';
-import { toaster } from '@/share/ui/toaster';
+import { toaster } from '@/share/lib/toaster';
 import { type MessageType, updateMessageQueryData } from '../../@x/entities/messages';
 import { addLike } from '../repository/add-like';
 import { removeLike } from '../repository/remove-like';
@@ -27,9 +27,9 @@ export function useToggleLikeMutation({ messageId, hasLiked }: { messageId: Mess
       return result;
     },
     onSuccess() {
-      updateMessageQueryData({ queryClient, messageId }, ({ hasLiked, likesCount }) => ({
-        hasLiked: !hasLiked,
-        likesCount: hasLiked ? likesCount - 1 : likesCount + 1,
+      updateMessageQueryData({ messageId, queryClient }, prevMessage => ({
+        hasLiked: !prevMessage.hasLiked,
+        likesCount: prevMessage.hasLiked ? prevMessage.likesCount - 1 : prevMessage.likesCount + 1,
       }));
     },
   });

@@ -6,14 +6,14 @@ import { MessageCardMenu } from './message-card-menu';
 export function MessageCard({ message }: { message: MessageType }) {
   return (
     <Message
-      menuItems={<MessageCardMenu message={message} />}
-      message={message}
       footer={
         <>
-          <Like messageId={message.id} hasLiked={message.hasLiked} likesCount={message.likesCount} />
+          <Like hasLiked={message.hasLiked} likesCount={message.likesCount} messageId={message.id} />
           <FavoriteButton isFavorite={message.isFavorite} messageId={message.id} />
         </>
       }
+      menuItems={<MessageCardMenu message={message} />}
+      message={message}
     />
   );
 }

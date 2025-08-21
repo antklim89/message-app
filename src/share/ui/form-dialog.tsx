@@ -17,7 +17,7 @@ export function FormDialog({
 } & UseDisclosureProps) {
   const id = useId();
   return (
-    <Dialog.Root open={open} motionPreset="slide-in-bottom" placement="center" size="lg">
+    <Dialog.Root motionPreset="slide-in-bottom" open={open} placement="center" size="lg">
       <Dialog.Trigger asChild onClick={onOpen}>
         {openElement}
       </Dialog.Trigger>

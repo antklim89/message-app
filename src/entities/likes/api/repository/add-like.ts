@@ -11,7 +11,7 @@ export async function addLike({ messageId }: { messageId: number }) {
   const { error } = await supabase.from('likes').insert({ authorId: user.id, messageId });
   if (error != null) {
     if (error.code === '23505') return errConflict('Message is already liked.');
-    return err({ type: 'unexpected', message: 'Failed to like message. Try again later.' });
+    return err({ message: 'Failed to like message. Try again later.', type: 'unexpected' });
   }
   return ok(null);
 }

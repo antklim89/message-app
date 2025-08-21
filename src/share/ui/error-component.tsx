@@ -10,7 +10,7 @@ export function ErrorComponent({ error, reset }: ErrorComponentProps) {
       <Alert.Content>
         <Alert.Description whiteSpace="pre">{message}</Alert.Description>
       </Alert.Content>
-      <Button size="xs" onClick={() => reset()}>
+      <Button onClick={() => reset()} size="xs">
         Restart
       </Button>
       <Button asChild size="xs">

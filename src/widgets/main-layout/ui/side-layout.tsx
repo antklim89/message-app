@@ -3,18 +3,18 @@ import { Box, type BoxProps } from '@chakra-ui/react';
 
 export function SideLayout({ children, width, w, mb, ...props }: { children: ReactNode } & BoxProps) {
   return (
-    <Box width={width} w={w} flexShrink={0}>
+    <Box flexShrink={0} w={w} width={width}>
       <Box
-        py={8}
-        w={width}
         asChild
-        position="fixed"
-        top={0}
         bottom={0}
+        flexShrink={0}
         mb={mb}
         overflow="auto"
+        position="fixed"
+        py={8}
         scrollbarWidth="none"
-        flexShrink={0}
+        top={0}
+        w={width}
         {...props}
       >
         {children}

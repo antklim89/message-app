@@ -1,41 +1,16 @@
 import type { RefObject } from 'react';
-import type { ThemeProviderProps } from 'next-themes';
-import { ThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 import type { IconButtonProps, SpanProps } from '@chakra-ui/react';
 import { ClientOnly, IconButton, Skeleton, Span } from '@chakra-ui/react';
 import { LuMoon, LuSun } from 'react-icons/lu';
 
+import { useColorMode } from '../hooks/use-color-mode-value';
+import { type ColorModeProviderProps } from '../model/colors';
+
 interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {}
-
-function useColorMode(): UseColorModeReturn {
-  const { resolvedTheme, setTheme } = useTheme();
-  const toggleColorMode = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-  };
-  return {
-    colorMode: resolvedTheme as ColorMode,
-    setColorMode: setTheme,
-    toggleColorMode,
-  };
-}
-
-export interface ColorModeProviderProps extends ThemeProviderProps {}
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return <ThemeProvider attribute="class" disableTransitionOnChange {...props} />;
-}
-
-export type ColorMode = 'light' | 'dark';
-
-export interface UseColorModeReturn {
-  colorMode: ColorMode;
-  setColorMode: (colorMode: ColorMode) => void;
-  toggleColorMode: () => void;
-}
-
-export function useColorModeValue<T>(light: T, dark: T) {
-  const { colorMode } = useColorMode();
-  return colorMode === 'dark' ? dark : light;
 }
 
 export function ColorModeIcon() {
@@ -52,9 +27,9 @@ export function ColorModeButton({
     <ClientOnly fallback={<Skeleton boxSize="8" />}>
       <IconButton
         aria-label="Toggle color mode"
+        boxSize="8"
         onClick={toggleColorMode}
         ref={ref}
-        boxSize="8"
         variant="ghost"
         {...props}
       >

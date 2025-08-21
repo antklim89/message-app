@@ -1,4 +1,4 @@
-export type ProfileType = {
+export interface ProfileType {
   id: string;
   username: string;
-};
+}

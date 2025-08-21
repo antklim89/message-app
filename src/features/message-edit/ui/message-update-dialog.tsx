@@ -26,14 +26,14 @@ export function MessageUpdateDialog({
   return (
     <FormDialog
       {...disclosure}
-      title="Update Message"
+      formElement={<MessageEditForm onSubmit={handleSubmit} values={message} />}
       openElement={trigger}
       submitElement={
         <Button loading={messageUpdateMutation.isPending} loadingText="Updating...">
           Update
         </Button>
       }
-      formElement={<MessageEditForm values={message} onSubmit={handleSubmit} />}
+      title="Update Message"
     />
   );
 }

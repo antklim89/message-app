@@ -14,18 +14,18 @@ function RootComponent() {
         <Outlet />
       </MainLayout>
       <TanStackRouterDevtools position="top-right" />
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" position="bottom" />
+      <ReactQueryDevtools buttonPosition="top-left" initialIsOpen={false} position="bottom" />
     </>
   );
 }
 
 export const Route = createRootRoute<undefined, { queryClient: QueryClient }>({
+  component: RootComponent,
   head() {
     return {
       meta: [{ title: 'Message App' }],
     };
   },
-  component: RootComponent,
   loader({ context }) {
     context.queryClient.ensureQueryData(sessionQueryOptions());
   },

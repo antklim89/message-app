@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { Result } from '@/share/lib/result';
-import { toaster } from '@/share/ui/toaster';
+import { toaster } from '@/share/lib/toaster';
 import type { AuthWithPasswordInput, UserType } from '../../models/types';
 import { loginWithPassword } from '../repository/login-with-password';
 

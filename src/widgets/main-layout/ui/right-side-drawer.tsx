@@ -6,7 +6,7 @@ export function RightSideDrawer({ children }: { children: ReactNode }) {
   return (
     <Drawer.Root>
       <Drawer.Trigger asChild>
-        <IconButton variant="ghost" aria-label="toggle right side drawer">
+        <IconButton aria-label="toggle right side drawer" variant="ghost">
           <FaBars />
         </IconButton>
       </Drawer.Trigger>
@@ -16,7 +16,7 @@ export function RightSideDrawer({ children }: { children: ReactNode }) {
           <Drawer.Body>{children}</Drawer.Body>
           <Drawer.Footer>
             <Drawer.CloseTrigger asChild position="static">
-              <IconButton variant="outline" aria-label="toggle right side drawer">
+              <IconButton aria-label="toggle right side drawer" variant="outline">
                 <FaXmark />
               </IconButton>
             </Drawer.CloseTrigger>

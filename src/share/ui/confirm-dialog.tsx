@@ -33,21 +33,21 @@ export function ConfirmDialog({
         <Dialog.Positioner>
           <Dialog.Content display="flex">
             <Dialog.Header>
-              <Dialog.CloseTrigger onClick={onClose} asChild>
+              <Dialog.CloseTrigger asChild onClick={onClose}>
                 <CloseButton size="sm" />
               </Dialog.CloseTrigger>
             </Dialog.Header>
             <Dialog.Body>{text}</Dialog.Body>
             <Dialog.Footer>
-              <Dialog.CloseTrigger onClick={onClose} position="static" asChild>
+              <Dialog.CloseTrigger asChild onClick={onClose} position="static">
                 <Button variant="ghost">{cancelButtonText ?? 'Cancel'}</Button>
               </Dialog.CloseTrigger>
               {confirmElement ? (
                 confirmElement
               ) : (
                 <Button
-                  loadingText={confirmButtonLoadingText ?? 'Confirming'}
                   loading={isConfirming}
+                  loadingText={confirmButtonLoadingText ?? 'Confirming'}
                   onClick={() => onConfirm?.()}
                 >
                   {confirmButtonText ?? 'Confirm'}

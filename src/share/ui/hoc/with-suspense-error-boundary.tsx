@@ -9,7 +9,7 @@ export function withSuspenseErrorBoundary<T extends Record<string, unknown> = Re
   errorFallback?: (props: Partial<FallbackProps>) => ReactNode,
 ): ComponentType<T> {
   return props => (
-    <SuspenseErrorBoundary fallback={fallback} errorFallback={errorFallback}>
+    <SuspenseErrorBoundary errorFallback={errorFallback} fallback={fallback}>
       <Component {...props} />
     </SuspenseErrorBoundary>
   );

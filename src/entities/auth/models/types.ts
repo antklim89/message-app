@@ -1,15 +1,15 @@
-export type AuthWithPasswordInput = {
+export interface AuthWithPasswordInput {
   email: string;
   password: string;
-};
+}
 
-export type CreateUserInput = {
+export interface CreateUserInput {
   email: string;
   password: string;
   username: string;
-};
+}
 
-export type UserType = {
+export interface UserType {
   id: string;
   email: string;
-};
+}
