@@ -24,7 +24,7 @@ export function messageListQueryOptions({ answerId }: { answerId?: number } = {}
       return result.items;
     },
     getNextPageParam(data) {
-      if (data.length < MESSAGES_PER_PAGE) return undefined;
+      if (data.length < MESSAGES_PER_PAGE) return;
       return data.at(-1)?.id ?? undefined;
     },
     initialPageParam: undefined as number | undefined,

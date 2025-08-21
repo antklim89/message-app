@@ -1,5 +1,5 @@
 import { type ReactElement, useId } from 'react';
-import { Button, Card, Collapsible, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Card, Collapsible, HStack, useDisclosure, VStack } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
 import { MessageEditForm } from './message-edit-form';
@@ -27,29 +27,33 @@ export function MessageCreateCollapsible({
     <Collapsible.Root open={disclosure.open} unmountOnExit>
       <Collapsible.Trigger
         asChild
-        onClick={disclosure.onToggle}
-        textTransform="uppercase"
-        p={2}
-        w="full"
+        cursor="pointer"
         display="flex"
         justifyContent="center"
-        cursor="pointer"
+        onClick={disclosure.onToggle}
+        p={2}
+        textTransform="uppercase"
+        w="full"
       >
         {trigger ?? <Button variant="outline">Create new message</Button>}
       </Collapsible.Trigger>
       <Collapsible.Content asChild mb={4}>
-        <Card.Root>
-          <Card.Body>
-            <MessageEditForm id={id} onSubmit={handleSubmit} />
+        <Card.Root alignItems="center" display="flex" flexDirection="row">
+          <Card.Body asChild>
+            <HStack>
+              <Box asChild w="full">
+                <MessageEditForm id={id} onSubmit={handleSubmit} />
+              </Box>
+              <VStack>
+                <Button form={id} loading={messageCreateMutation.isPending} loadingText="Creating..." type="submit">
+                  Create
+                </Button>
+                <Button onClick={disclosure.onClose} variant="ghost">
+                  Cancel
+                </Button>
+              </VStack>
+            </HStack>
           </Card.Body>
-          <Card.Footer justifyContent="flex-end">
-            <Button variant="ghost" onClick={disclosure.onClose}>
-              Cancel
-            </Button>
-            <Button form={id} type="submit" loadingText="Creating..." loading={messageCreateMutation.isPending}>
-              Create
-            </Button>
-          </Card.Footer>
         </Card.Root>
       </Collapsible.Content>
     </Collapsible.Root>

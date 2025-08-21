@@ -5,7 +5,7 @@ import { FaComment, FaEllipsis } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { FromNowDate } from '@/share/ui/from-now-date';
-import { Protected } from '@/share/ui/protected';
+// import { Protected } from '@/share/ui/protected';
 
 export function Message({
   message,
@@ -17,25 +17,25 @@ export function Message({
   menuItems: ReactNode;
 }) {
   return (
-    <Card.Root w="full" border="none">
-      <Card.Header asChild alignItems="center" gap={4}>
+    <Card.Root border="none" w="full">
+      <Card.Header alignItems="center" asChild gap={4}>
         <HStack>
           <Avatar.Root>
             <Avatar.Image src={message.author.avatar || undefined} />
             <Avatar.Fallback />
           </Avatar.Root>
           <Card.Title display="flex" flexDirection="column">
-            {message.title}
+            {message.author.username}
             <Span fontSize="xs" fontWeight="normal">
-              Published <FromNowDate date={message.created} />{' '}
-              <Protected privateElement={'by you'} publicElement={`by ${message.author.username}`} />
+              <FromNowDate date={message.created} />{' '}
+              {/* <Protected privateElement="by you" publicElement={`by ${message.author.username}`} /> */}
             </Span>
           </Card.Title>
           <Flex flexGrow={1} />
 
-          <Menu.Root positioning={{ placement: 'bottom-end' }} unmountOnExit={false} lazyMount={false} size="md">
+          <Menu.Root lazyMount={false} positioning={{ placement: 'bottom-end' }} size="md" unmountOnExit={false}>
             <Menu.Trigger asChild>
-              <IconButton variant="ghost" aria-label="message menu">
+              <IconButton aria-label="message menu" variant="ghost">
                 <FaEllipsis />
               </IconButton>
             </Menu.Trigger>
@@ -49,15 +49,15 @@ export function Message({
       </Card.Header>
       <Card.Body>
         <Card.Body>
-          <Text whiteSpace="pre" textWrap="wrap" w={'fit-content'}>
+          <Text textWrap="wrap" w="fit-content" whiteSpace="pre">
             {message.body}
           </Text>
         </Card.Body>
       </Card.Body>
-      <Card.Footer display="flex" p={0} css={{ '& > *': { flex: '1 0 auto' } }}>
+      <Card.Footer css={{ '& > *': { flex: '1 0 auto' } }} display="flex" p={0}>
         {footer}
-        <IconButton asChild variant="ghost" aria-label="answers for this message">
-          <Link to="/answers/$answerId" params={{ answerId: message.id }}>
+        <IconButton aria-label="answers for this message" asChild variant="ghost">
+          <Link params={{ answerId: message.id }} to="/answers/$answerId">
             <FaComment /> {message.answersCount}
           </Link>
         </IconButton>

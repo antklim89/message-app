@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 import { useForm } from 'react-hook-form';
-import { Alert, Field, Input, Stack, Textarea } from '@chakra-ui/react';
+import { Alert, Field, Stack, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import type { PromiseResult } from '@/share/lib/result';
@@ -44,14 +44,7 @@ export function MessageEditForm({
           </Alert.Root>
         )}
 
-        <Field.Root invalid={form.formState.errors.title != null}>
-          <Field.Label>Title</Field.Label>
-          <Input placeholder="Enter title of the message" {...form.register('title')} />
-          <Field.ErrorText>{form.formState.errors.title?.message as string}</Field.ErrorText>
-        </Field.Root>
-
         <Field.Root invalid={form.formState.errors.body != null}>
-          <Field.Label>Message</Field.Label>
           <Textarea autoresize placeholder="Enter you message" {...form.register('body')} />
           <Field.ErrorText>{form.formState.errors.body?.message as string}</Field.ErrorText>
         </Field.Root>

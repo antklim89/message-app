@@ -1,10 +1,10 @@
-export type MessageType = {
-  answerId?: number;
-  authorId: string;
+export interface MessageType {
+  id: number;
   body: string;
   created: string;
-  id: number;
-  title: string;
+  answerId?: number;
+  authorId: string;
+
   author: {
     id: string;
     username: string;
@@ -15,4 +15,4 @@ export type MessageType = {
   likesCount: number;
   answersCount: number;
   isFavorite: boolean;
-};
+}

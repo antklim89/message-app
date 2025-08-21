@@ -6,7 +6,6 @@ export function messageDto(data: {
   body: string;
   created: string;
   id: number;
-  title: string;
   hasLiked: boolean | null;
   likesCount: number | null;
   author: {
@@ -25,7 +24,6 @@ export function messageDto(data: {
     body: data.body,
     created: data.created,
     id: data.id,
-    title: data.title,
     hasLiked: data.hasLiked ?? false,
     likesCount: data.likesCount ?? 0,
     author: {
