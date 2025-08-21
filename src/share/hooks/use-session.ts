@@ -1,12 +1,17 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { getSupabaseSession } from '../lib/supabase';
+import { type User } from '../model/user';
 
 export function sessionQueryOptions() {
-  return queryOptions({
+  return queryOptions<User | null>({
     async queryFn() {
       const session = await getSupabaseSession();
-      return session?.user || null;
+      if (session?.user == null) return null;
+      return {
+        email: session.user.email,
+        id: session.user.id,
+      };
     },
     queryKey: ['SESSION'],
   });
