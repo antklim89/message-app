@@ -1,12 +1,9 @@
 import { Box, Button, Skeleton } from '@chakra-ui/react';
-import { useParams } from '@tanstack/react-router';
 
 import { MessageCreateCollapsible } from '@/features/message-edit';
 import { Protected } from '@/share/ui/protected';
 
 export const MessageNewLayout = ({ answerId }: { answerId?: number }) => {
-  const params = useParams({ from: '/answers/$answerId', shouldThrow: false });
-
   return (
     <Protected
       fallback={<Skeleton h={30} />}
@@ -15,7 +12,7 @@ export const MessageNewLayout = ({ answerId }: { answerId?: number }) => {
           answerId={answerId}
           trigger={
             <Button my={4} variant="outline">
-              {params == null ? 'Create new message.' : 'Answer to this message.'}
+              Create new message.
             </Button>
           }
         />

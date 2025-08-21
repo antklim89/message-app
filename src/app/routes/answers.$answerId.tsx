@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { messageListQueryOptions, messageQueryOptions } from '@/entities/messages';
-import { MessageAnswerLayout, MessageListLayout, MessageNewLayout, parseMessageParams } from '@/pages/home';
+import { MessageAnswerLayout, MessageListLayout, parseMessageParams } from '@/pages/home';
 import { ErrorComponent } from '@/share/ui/error-component';
 
 function RouteComponent() {
@@ -9,7 +9,6 @@ function RouteComponent() {
   return (
     <>
       <MessageAnswerLayout answerId={answerId} />
-      <MessageNewLayout answerId={answerId} />
       <MessageListLayout answerId={answerId} />
     </>
   );
