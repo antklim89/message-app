@@ -12,8 +12,8 @@ export function useMessageDeleteMutation({ id }: { id: MessageType['id'] }) {
       const deleteMessageResult = await deleteMessage(id);
       return deleteMessageResult;
     },
-    onSuccess({ fail, success, error }) {
-      queryClient.invalidateQueries({ queryKey: [MessageListQueryOptionsBaseKey] });
+    async onSuccess({ fail, success, error }) {
+      await queryClient.invalidateQueries({ queryKey: [MessageListQueryOptionsBaseKey] });
 
       if (fail) toaster.error({ description: error.message });
       if (success) toaster.success({ description: 'Message deleted Successfully!' });

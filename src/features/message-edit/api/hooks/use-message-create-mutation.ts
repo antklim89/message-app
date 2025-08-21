@@ -13,8 +13,8 @@ export function useMessageCreateMutation({ answerId }: { answerId?: MessageType[
       const createMessageResult = await createMessage(answerId, input);
       return createMessageResult;
     },
-    onSuccess({ fail, success, error }) {
-      queryClient.invalidateQueries({ queryKey: [MessageListQueryOptionsBaseKey] });
+    async onSuccess({ fail, success, error }) {
+      await queryClient.invalidateQueries({ queryKey: [MessageListQueryOptionsBaseKey] });
 
       if (fail) toaster.error({ description: error.message });
       if (success) toaster.success({ description: 'Message created successfully!' });
