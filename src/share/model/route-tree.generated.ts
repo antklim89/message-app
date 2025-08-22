@@ -10,53 +10,53 @@
 
 import { Route as rootRouteImport } from './../../app/routes/__root'
 import { Route as AboutRouteImport } from './../../app/routes/about'
-import { Route as IndexRouteImport } from './../../app/routes/index'
-import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
+import { Route as mainIndexRouteImport } from './../../app/routes/(main)/index'
+import { Route as mainAnswersAnswerIdRouteImport } from './../../app/routes/(main)/answers.$answerId'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const mainIndexRoute = mainIndexRouteImport.update({
+  id: '/(main)/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
-  id: '/answers/$answerId',
+const mainAnswersAnswerIdRoute = mainAnswersAnswerIdRouteImport.update({
+  id: '/(main)/answers/$answerId',
   path: '/answers/$answerId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/answers/$answerId': typeof AnswersAnswerIdRoute
+  '/': typeof mainIndexRoute
+  '/answers/$answerId': typeof mainAnswersAnswerIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/answers/$answerId': typeof AnswersAnswerIdRoute
+  '/': typeof mainIndexRoute
+  '/answers/$answerId': typeof mainAnswersAnswerIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/answers/$answerId': typeof AnswersAnswerIdRoute
+  '/(main)/': typeof mainIndexRoute
+  '/(main)/answers/$answerId': typeof mainAnswersAnswerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/answers/$answerId'
+  fullPaths: '/about' | '/' | '/answers/$answerId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/answers/$answerId'
-  id: '__root__' | '/' | '/about' | '/answers/$answerId'
+  to: '/about' | '/' | '/answers/$answerId'
+  id: '__root__' | '/about' | '/(main)/' | '/(main)/answers/$answerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AnswersAnswerIdRoute: typeof AnswersAnswerIdRoute
+  mainIndexRoute: typeof mainIndexRoute
+  mainAnswersAnswerIdRoute: typeof mainAnswersAnswerIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,27 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/(main)/': {
+      id: '/(main)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof mainIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/answers/$answerId': {
-      id: '/answers/$answerId'
+    '/(main)/answers/$answerId': {
+      id: '/(main)/answers/$answerId'
       path: '/answers/$answerId'
       fullPath: '/answers/$answerId'
-      preLoaderRoute: typeof AnswersAnswerIdRouteImport
+      preLoaderRoute: typeof mainAnswersAnswerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AnswersAnswerIdRoute: AnswersAnswerIdRoute,
+  mainIndexRoute: mainIndexRoute,
+  mainAnswersAnswerIdRoute: mainAnswersAnswerIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -14,7 +14,7 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/answers/$answerId')({
+export const Route = createFileRoute('/(main)/answers/$answerId')({
   component: RouteComponent,
   errorComponent: ErrorComponent,
   loader({ context, params: { answerId } }) {

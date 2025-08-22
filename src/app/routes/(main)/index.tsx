@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { messageListQueryOptions } from '@/entities/messages';
 import { MessageListLayout, MessageNewLayout } from '@/pages/home';
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/(main)/')({
   component: () => (
     <>
       <MessageNewLayout />
