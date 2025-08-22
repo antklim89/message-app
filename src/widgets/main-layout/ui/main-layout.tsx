@@ -3,7 +3,7 @@ import { Box, Container, HStack, useBreakpoint, VStack } from '@chakra-ui/react'
 
 import { BottomSide } from './bottom-side';
 import { LeftSide } from './left-side';
-import { RightSide } from './right-side';
+// import { RightSide } from './right-side';
 import { RightSideDrawer } from './right-side-drawer';
 import { SideLayout } from './side-layout';
 
@@ -12,7 +12,7 @@ const SIDE_WIDTH = '14rem';
 const GAP = 4;
 const BOTTOM_SIDE_HEIGHT = 12;
 
-export function MainLayout({ children }: { children: ReactNode }) {
+export function MainLayout({ children, rightSide }: { rightSide: ReactNode; children: ReactNode }) {
   const breakpoint = useBreakpoint({
     breakpoints: BREAKPOINTS as unknown as string[],
     fallback: BREAKPOINTS[0],
@@ -29,8 +29,8 @@ export function MainLayout({ children }: { children: ReactNode }) {
           h={BOTTOM_SIDE_HEIGHT}
           rightSide={
             <RightSideDrawer>
-              <Box asChild display="flex" h="full" overflow="scroll">
-                <RightSide />
+              <Box display="flex" h="full" overflow="scroll">
+                {rightSide}
               </Box>
             </RightSideDrawer>
           }
@@ -49,7 +49,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
             </Box>
 
             <SideLayout mb={BOTTOM_SIDE_HEIGHT + GAP} width={SIDE_WIDTH}>
-              <RightSide />
+              {rightSide}
             </SideLayout>
           </HStack>
         </Container>
@@ -62,7 +62,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
   return (
     <Container>
       <HStack gap={GAP} position="relative">
-        <SideLayout width={SIDE_WIDTH}>
+        <SideLayout asChild width={SIDE_WIDTH}>
           <LeftSide />
         </SideLayout>
 
@@ -70,9 +70,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
           {children}
         </Box>
 
-        <SideLayout width={SIDE_WIDTH}>
-          <RightSide />
-        </SideLayout>
+        <SideLayout width={SIDE_WIDTH}>{rightSide}</SideLayout>
       </HStack>
     </Container>
   );

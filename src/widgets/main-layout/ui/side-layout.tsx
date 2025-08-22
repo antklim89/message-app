@@ -5,7 +5,6 @@ export function SideLayout({ children, width, w, mb, ...props }: { children: Rea
   return (
     <Box flexShrink={0} w={w} width={width}>
       <Box
-        asChild
         bottom={0}
         flexShrink={0}
         mb={mb}
