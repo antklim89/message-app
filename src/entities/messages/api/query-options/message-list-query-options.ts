@@ -20,7 +20,7 @@ export function messageListQueryOptions({ answerId }: { answerId?: number } = {}
     initialPageParam: undefined as number | undefined,
     async queryFn({ client, pageParam: lastId }) {
       const { fail, error, result } = await getMessageList({ answerId, lastId });
-      if (fail) throw new Error(error.message);
+      if (fail) throw error;
 
       result.items.flat().forEach(message => {
         client.setQueryData(messageQueryOptions({ id: message.id }).queryKey, message);
