@@ -20,13 +20,8 @@
             ]
           }
         },
-        "useSortedAttributes": {
-          "level": "on",
-          "options": {
-            "sortOrder": "natural"
-          }
-        },
-        "useSortedKeys": "on",
+        "useSortedAttributes": "off",
+        "useSortedKeys": "off",
         "useSortedProperties": "on"
       }
     },
