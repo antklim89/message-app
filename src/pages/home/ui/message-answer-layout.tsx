@@ -1,4 +1,5 @@
 import { Box, Button, Skeleton } from '@chakra-ui/react';
+import { useRouter } from '@tanstack/react-router';
 
 import { MessageFallback, useMessageQuery } from '@/entities/messages';
 import { MessageCreateCollapsible } from '@/features/message-edit';
@@ -8,10 +9,16 @@ import { MessageCard } from '@/widgets/message-card';
 
 export const MessageAnswerLayout = withSuspenseErrorBoundary(
   ({ answerId }: { answerId: number }) => {
-    const { data } = useMessageQuery({ id: answerId });
+    const messageQuery = useMessageQuery({ id: answerId });
+    const { href: backHref } = useRouter().buildLocation(
+      messageQuery.data.answerId
+        ? { params: { answerId: messageQuery.data.answerId }, to: '/answers/$answerId' }
+        : { to: '/' },
+    );
+
     return (
       <>
-        <MessageCard message={data} />
+        <MessageCard message={messageQuery.data} deleteRedirectUrl={backHref} />
         <Protected
           fallback={<Skeleton h={30} />}
           privateElement={

@@ -3,7 +3,7 @@ import { Like } from '@/entities/likes';
 import { Message, type MessageType } from '@/entities/messages';
 import { MessageCardMenu } from './message-card-menu';
 
-export function MessageCard({ message }: { message: MessageType }) {
+export function MessageCard({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
   return (
     <Message
       footer={
@@ -12,7 +12,7 @@ export function MessageCard({ message }: { message: MessageType }) {
           <FavoriteButton isFavorite={message.isFavorite} messageId={message.id} />
         </>
       }
-      menuItems={<MessageCardMenu message={message} />}
+      menuItems={<MessageCardMenu deleteRedirectUrl={deleteRedirectUrl} message={message} />}
       message={message}
     />
   );
