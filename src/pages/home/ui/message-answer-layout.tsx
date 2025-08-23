@@ -1,5 +1,6 @@
 import { Box, Button, Skeleton } from '@chakra-ui/react';
-import { useRouter } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
+import { FaChevronLeft } from 'react-icons/fa6';
 
 import { MessageFallback, useMessageQuery } from '@/entities/messages';
 import { MessageCreateCollapsible } from '@/features/message-edit';
@@ -18,6 +19,12 @@ export const MessageAnswerLayout = withSuspenseErrorBoundary(
 
     return (
       <>
+        <Button my={4} variant="ghost" asChild>
+          <Link to={backHref}>
+            <FaChevronLeft />
+            BACK
+          </Link>
+        </Button>
         <MessageCard message={messageQuery.data} deleteRedirectUrl={backHref} />
         <Protected
           fallback={<Skeleton h={30} />}
