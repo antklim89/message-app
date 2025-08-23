@@ -1,33 +1,39 @@
 import { type ReactElement, type ReactNode, useId } from 'react';
-import { Button, CloseButton, Dialog, Portal, type UseDisclosureProps } from '@chakra-ui/react';
+import { Button, CloseButton, Dialog, Portal, type useDisclosure } from '@chakra-ui/react';
 
 export function FormDialog({
   formElement,
   openElement,
   submitElement,
   title,
-  onClose,
   onOpen,
+  setOpen,
   open,
 }: {
   formElement: ReactElement;
   openElement: ReactElement;
   submitElement: ReactElement;
   title?: ReactNode;
-} & UseDisclosureProps) {
+} & ReturnType<typeof useDisclosure>) {
   const id = useId();
   return (
-    <Dialog.Root motionPreset="slide-in-bottom" open={open} placement="center" size="lg">
-      <Dialog.Trigger asChild onClick={onOpen}>
+    <Dialog.Root
+      motionPreset="slide-in-bottom"
+      open={open}
+      onOpenChange={e => setOpen(e.open)}
+      placement="center"
+      size="lg"
+    >
+      <Button unstyled asChild onClick={onOpen}>
         {openElement}
-      </Dialog.Trigger>
+      </Button>
       <Portal>
         <Dialog.Positioner>
-          <Dialog.Backdrop onClick={onClose} />
+          <Dialog.Backdrop />
           <Dialog.Content>
             <Dialog.Header justifyContent="center">
               <Dialog.CloseTrigger asChild>
-                <CloseButton onClick={onClose} size="lg" />
+                <CloseButton size="lg" />
               </Dialog.CloseTrigger>
 
               {title != null && <Dialog.Title fontSize="xl">{title}</Dialog.Title>}
@@ -38,9 +44,9 @@ export function FormDialog({
             </Dialog.Body>
 
             <Dialog.Footer display="flex" justifyItems="flex-end">
-              <Button onClick={onClose} variant="ghost">
-                Close
-              </Button>
+              <Dialog.CloseTrigger position="static" asChild>
+                <Button variant="ghost">Close</Button>
+              </Dialog.CloseTrigger>
 
               <Button asChild form={id} type="submit">
                 {submitElement}
