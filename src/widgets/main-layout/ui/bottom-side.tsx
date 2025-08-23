@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Button, Container, HStack, Skeleton, type StackProps } from '@chakra-ui/react';
+import { Box, Button, Container, HStack, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
 import { FaDoorOpen, FaRightFromBracket } from 'react-icons/fa6';
 
 import { LoginDialog, LogoutButton } from '@/entities/auth';
@@ -29,7 +29,9 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
           fallback={<Skeleton h="60%" w={100} />}
           privateElement={
             <LogoutButton>
-              <FaRightFromBracket />
+              <IconButton aria-label="logout button">
+                <FaRightFromBracket />
+              </IconButton>
             </LogoutButton>
           }
           publicElement={

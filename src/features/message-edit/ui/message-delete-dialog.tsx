@@ -1,3 +1,4 @@
+import { type ReactElement } from 'react';
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from '@tanstack/react-router';
 
@@ -7,11 +8,11 @@ import { useMessageDeleteMutation } from '../api/hooks/use-message-delete-mutati
 
 export function MessageDeleteDialog({
   id: messageId,
-  trigger,
+  openElement,
   deleteRedirectUrl,
 }: {
   id: MessageType['id'];
-  trigger: React.ReactNode;
+  openElement: ReactElement;
   deleteRedirectUrl?: string;
 }) {
   const deleteMutation = useMessageDeleteMutation({ id: messageId });
@@ -40,7 +41,7 @@ export function MessageDeleteDialog({
         </Button>
       }
       text="Are you sure you want to delete this message?"
-      trigger={trigger}
+      openElement={openElement}
     />
   );
 }

@@ -1,58 +1,41 @@
 import type { ReactNode } from 'react';
-import { Button, CloseButton, Dialog, Portal, type UseDisclosureProps } from '@chakra-ui/react';
+import { Button, CloseButton, Dialog, Portal, type useDisclosure } from '@chakra-ui/react';
 
 export function ConfirmDialog({
-  trigger,
+  openElement,
   text,
-  onConfirm,
-  isConfirming,
-  confirmButtonText,
-  confirmButtonLoadingText,
   confirmElement,
   cancelButtonText,
-  onClose,
   onOpen,
+  setOpen,
   open,
 }: {
-  trigger: ReactNode;
+  openElement: ReactNode;
   text: ReactNode;
-  onConfirm?: () => void;
-  isConfirming?: boolean;
-  confirmButtonText?: string;
-  confirmButtonLoadingText?: string;
-  confirmElement?: ReactNode;
+  confirmElement: ReactNode;
   cancelButtonText?: string;
-} & UseDisclosureProps) {
+} & ReturnType<typeof useDisclosure>) {
   return (
-    <Dialog.Root open={open} placement="center" size="sm">
-      <Dialog.Trigger asChild onClick={onOpen}>
-        {trigger}
-      </Dialog.Trigger>
+    <Dialog.Root onOpenChange={e => setOpen(e.open)} open={open} placement="center" size="sm">
+      <Button unstyled asChild onClick={onOpen}>
+        {openElement}
+      </Button>
       <Portal>
-        <Dialog.Backdrop onClick={onClose} />
         <Dialog.Positioner>
+          <Dialog.Backdrop />
           <Dialog.Content display="flex">
             <Dialog.Header>
-              <Dialog.CloseTrigger asChild onClick={onClose}>
+              <Dialog.CloseTrigger asChild>
                 <CloseButton size="sm" />
               </Dialog.CloseTrigger>
             </Dialog.Header>
-            <Dialog.Body>{text}</Dialog.Body>
+            <Dialog.Body fontSize="lg">{text}</Dialog.Body>
             <Dialog.Footer>
-              <Dialog.CloseTrigger asChild onClick={onClose} position="static">
+              <Dialog.CloseTrigger asChild position="static">
                 <Button variant="ghost">{cancelButtonText ?? 'Cancel'}</Button>
               </Dialog.CloseTrigger>
-              {confirmElement ? (
-                confirmElement
-              ) : (
-                <Button
-                  loading={isConfirming}
-                  loadingText={confirmButtonLoadingText ?? 'Confirming'}
-                  onClick={() => onConfirm?.()}
-                >
-                  {confirmButtonText ?? 'Confirm'}
-                </Button>
-              )}
+
+              {confirmElement}
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

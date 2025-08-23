@@ -24,7 +24,9 @@ export function LeftSide(props: StackProps) {
         privateElement={
           <VStack>
             <Heading>Welcome!</Heading>
-            <LogoutButton>Logout</LogoutButton>
+            <LogoutButton>
+              <Button>Logout</Button>
+            </LogoutButton>
           </VStack>
         }
         publicElement={
