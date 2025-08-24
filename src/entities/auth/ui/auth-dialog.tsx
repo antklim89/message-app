@@ -1,12 +1,12 @@
 import { type ReactElement, useState } from 'react';
-import { Button, Text, useDisclosure } from '@chakra-ui/react';
+import { Button, Stack, Text, useDisclosure } from '@chakra-ui/react';
 
+import { useAppForm } from '@/share/lib/react-form';
 import { FormDialog } from '@/share/ui/form-dialog';
-import { LoginForm } from './login-form';
-import { RegisterForm } from './register-form';
+import { LoginForm, loginFormOptions } from './login-form';
+import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/hooks/use-login-mutation';
 import { useRegisterMutation } from '../api/hooks/use-register-mutation';
-import type { LoginSchema, RegisterSchema } from '../models/schemas';
 
 export function LoginDialog({ openElement }: { openElement: ReactElement }) {
   const [type, setType] = useState<'login' | 'register'>('login');
@@ -14,58 +14,67 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
   const loginMutation = useLoginMutation();
   const registerMutation = useRegisterMutation();
 
-  async function handleLogin(data: LoginSchema) {
-    const result = await loginMutation.mutateAsync(data);
-    if (result.success) disclosure.onClose();
-    return result;
-  }
-  async function handleRegister(data: RegisterSchema) {
-    const result = await registerMutation.mutateAsync(data);
-    if (result.success) disclosure.onClose();
-    return result;
-  }
+  const loginForm = useAppForm({
+    ...loginFormOptions,
+    async onSubmit({ value }) {
+      const result = await loginMutation.mutateAsync(value);
+      if (result.success) disclosure.onClose();
+    },
+  });
+
+  const registerForm = useAppForm({
+    ...registerFormOptions,
+    async onSubmit({ value }) {
+      const result = await registerMutation.mutateAsync(value);
+      if (result.success) disclosure.onClose();
+    },
+  });
 
   return (
     <FormDialog
       {...disclosure}
-      formElement={type === 'login' ? <LoginForm onSubmit={handleLogin} /> : <RegisterForm onSubmit={handleRegister} />}
+      formElement={type === 'login' ? <LoginForm form={loginForm} /> : <RegisterForm form={registerForm} />}
       openElement={openElement ?? <Button>Login</Button>}
       submitElement={
         type === 'login' ? (
-          <Button loading={loginMutation.isPending} loadingText="Saving...">
-            Save
+          <Button onClick={() => loginForm.handleSubmit()} loading={loginMutation.isPending} loadingText="Saving...">
+            Login
           </Button>
         ) : (
-          <Button loading={registerMutation.isPending} loadingText="Registering...">
+          <Button
+            onClick={() => registerForm.handleSubmit()}
+            loading={registerMutation.isPending}
+            loadingText="Registering..."
+          >
             Register
           </Button>
         )
       }
       title={
         type === 'login' ? (
-          <Text display="flex" flexDirection="column" textAlign="center">
+          <Stack textAlign="center">
             <Text as="span" fontSize="2xl">
               Login
             </Text>
             <Text as="span" fontSize="sm">
-              Doesn't have an account?{' '}
-              <Button onClick={() => setType('register')} p={1} variant="ghost">
-                Register
-              </Button>
+              Doesn't have an account?
             </Text>
-          </Text>
+            <Button onClick={() => setType('register')} p={1} variant="ghost">
+              Register
+            </Button>
+          </Stack>
         ) : (
-          <Text display="flex" flexDirection="column" textAlign="center">
+          <Stack textAlign="center">
             <Text as="span" fontSize="2xl">
               Register
             </Text>
             <Text as="span" fontSize="sm">
               Already have an account{' '}
-              <Button onClick={() => setType('login')} p={1} variant="ghost">
-                Login
-              </Button>
             </Text>
-          </Text>
+            <Button onClick={() => setType('login')} p={1} variant="ghost">
+              Login
+            </Button>
+          </Stack>
         )
       }
     />

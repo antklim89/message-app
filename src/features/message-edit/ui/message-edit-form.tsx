@@ -1,56 +1,27 @@
-import type { ComponentProps } from 'react';
-import { useForm } from 'react-hook-form';
-import { Alert, Field, Stack, Textarea } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { formOptions, revalidateLogic } from '@tanstack/react-form';
 
-import type { PromiseResult } from '@/share/lib/result';
+import { withForm } from '@/share/lib/react-form';
 import { MessageEditSchema } from '../model/schemas';
 
-export function MessageEditForm({
-  onSubmit,
-  values,
-  children,
-  ...props
-}: {
-  onSubmit: (data: MessageEditSchema) => PromiseResult<unknown>;
-  values?: MessageEditSchema;
-  children?: React.ReactNode;
-} & Omit<ComponentProps<'form'>, 'onSubmit'>) {
-  const form = useForm<MessageEditSchema>({
-    resolver: zodResolver(MessageEditSchema),
-    values,
-  });
+export const messageEditFormOptions = formOptions({
+  validators: {
+    onDynamic: MessageEditSchema,
+  },
+  validationLogic: revalidateLogic(),
+  defaultValues: undefined as undefined | { body: string },
+});
 
-  const handleSubmit = form.handleSubmit(async data => {
-    const { fail, error } = await onSubmit(data);
-    if (fail) form.setError('root', { message: error.message });
-    else form.reset();
-  });
-
-  return (
-    <Stack
-      asChild
-      onKeyDown={e => {
-        e.key === 'Enter' && e.ctrlKey && handleSubmit(e);
-      }}
-    >
-      <form onSubmit={handleSubmit} {...props}>
-        {form.formState.errors.root != null && (
-          <Alert.Root status="error">
-            <Alert.Indicator />
-            <Alert.Content>
-              <Alert.Description>{form.formState.errors.root.message}</Alert.Description>
-            </Alert.Content>
-          </Alert.Root>
-        )}
-
-        <Field.Root invalid={form.formState.errors.body != null}>
-          <Textarea autoresize placeholder="Enter you message" {...form.register('body')} />
-          <Field.ErrorText>{form.formState.errors.body?.message as string}</Field.ErrorText>
-        </Field.Root>
-
-        {children}
-      </form>
-    </Stack>
-  );
-}
+export const MessageEditForm = withForm({
+  ...messageEditFormOptions,
+  render({ form, ...props }) {
+    return (
+      <form.AppForm>
+        <form.Form {...props}>
+          <form.AppField name="body">
+            {field => <field.TextareaField autoresize placeholder="Enter you message" />}
+          </form.AppField>
+        </form.Form>
+      </form.AppForm>
+    );
+  },
+});

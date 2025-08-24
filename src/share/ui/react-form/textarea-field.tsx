@@ -1,0 +1,19 @@
+import { Textarea, type TextareaProps } from '@chakra-ui/react';
+
+import { useFieldContext } from '@/share/lib/react-form';
+import { BaseField } from './base-field';
+
+export function TextareaField({ label, ...props }: { label?: string } & TextareaProps) {
+  const field = useFieldContext<string>();
+
+  return (
+    <BaseField label={label}>
+      <Textarea
+        value={field.state.value}
+        onBlur={field.handleBlur}
+        onChange={e => field.handleChange(e.target.value)}
+        {...props}
+      />
+    </BaseField>
+  );
+}

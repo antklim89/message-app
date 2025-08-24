@@ -1,10 +1,10 @@
-import { type ReactElement, useId } from 'react';
+import { type ReactElement } from 'react';
 import { Box, Button, Card, Collapsible, HStack, useDisclosure, VStack } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
-import { MessageEditForm } from './message-edit-form';
+import { useAppForm } from '@/share/lib/react-form';
+import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
 import { useMessageCreateMutation } from '../api/hooks/use-message-create-mutation';
-import type { MessageEditType } from '../model/types';
 
 export function MessageCreateCollapsible({
   answerId,
@@ -14,14 +14,18 @@ export function MessageCreateCollapsible({
   trigger?: ReactElement;
 }) {
   const disclosure = useDisclosure();
-  const id = useId();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
-  async function handleSubmit(data: MessageEditType) {
-    const result = await messageCreateMutation.mutateAsync(data);
-    if (result.success) disclosure.onClose();
-    return result;
-  }
+  const messageEditForm = useAppForm({
+    ...messageEditFormOptions,
+    async onSubmit({ formApi, value }) {
+      const result = await messageCreateMutation.mutateAsync(value);
+      if (result.success) {
+        disclosure.onClose();
+        formApi.reset();
+      }
+    },
+  });
 
   return (
     <Collapsible.Root open={disclosure.open} unmountOnExit>
@@ -42,10 +46,15 @@ export function MessageCreateCollapsible({
           <Card.Body asChild>
             <HStack>
               <Box asChild w="full">
-                <MessageEditForm id={id} onSubmit={handleSubmit} />
+                <MessageEditForm form={messageEditForm} />
               </Box>
               <VStack>
-                <Button form={id} loading={messageCreateMutation.isPending} loadingText="Creating..." type="submit">
+                <Button
+                  onClick={messageEditForm.handleSubmit}
+                  loading={messageCreateMutation.isPending}
+                  loadingText="Creating..."
+                  type="submit"
+                >
                   Create
                 </Button>
                 <Button onClick={disclosure.onClose} variant="ghost">
