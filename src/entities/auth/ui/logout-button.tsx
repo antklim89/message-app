@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
+import type { ReactElement } from 'react';
 import { Button, useDisclosure } from '@chakra-ui/react';
 
 import { ConfirmDialog } from '@/share/ui/confirm-dialog';
 import { useLogoutMutation } from '../api/hooks/use-logout-mutation';
 
-export function LogoutButton({ children }: { children: ReactNode }) {
+export function LogoutButton({ children }: { children: ReactElement }) {
   const logoutMutation = useLogoutMutation();
   const disclosure = useDisclosure();
 
