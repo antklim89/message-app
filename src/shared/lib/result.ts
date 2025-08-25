@@ -1,28 +1,29 @@
-export interface Ok<T> {
+export interface Ok<T = unknown> {
   success: true;
   fail: false;
   result: T;
   error?: null;
 }
 
-export interface Err<T extends string = string> {
+export interface Err<T extends string = string, I extends Issues = Issues> {
   success: false;
   fail: true;
-  error: ErrVariant<T>;
+  error: ErrVariant<T, I>;
   result?: null;
 }
 
-export interface ErrVariant<T extends string = string> {
+export type Issues = Record<string, string | string[]>;
+
+export interface ErrVariant<T extends string = string, I extends Issues = Issues> {
   $$isErr: true;
   type: T;
   message: string;
   original?: unknown;
-  issues?: Record<string, string | string[]>;
+  issues?: I;
 }
 
-export type Result<T, E extends string = string> = Ok<T> | Err<E>;
-
-export type PromiseResult<T, E extends string = string> = Promise<Result<T, E>>;
+export type Result<T = unknown, E extends string = string, I extends Issues = Issues> = Ok<T> | Err<E, I>;
+export type PromiseResult<T = unknown, E extends string = string, I extends Issues = Issues> = Promise<Result<T, E, I>>;
 
 export function ok<const T>(result: T): Ok<T> {
   return {
@@ -33,7 +34,9 @@ export function ok<const T>(result: T): Ok<T> {
   };
 }
 
-export function err<const T extends string>(error: Omit<ErrVariant<T>, '$$isErr'>): Err<T> {
+export function err<const T extends string, const I extends Issues>(
+  error: Omit<ErrVariant<T, I>, '$$isErr'>,
+): Err<T, I> {
   return {
     error: { ...error, $$isErr: true },
     fail: true,
@@ -42,23 +45,25 @@ export function err<const T extends string>(error: Omit<ErrVariant<T>, '$$isErr'
   };
 }
 
-export function errMap<const OldErr extends string, const NewErr extends string, const R>(
-  result: Result<R, OldErr>,
-  errCb: (arg: ErrVariant<OldErr>) => ErrVariant<NewErr>,
-): Result<R, NewErr> {
+export function errMap<const OldErr extends string, const NewErr extends string, const R, I extends Issues = Issues>(
+  result: Result<R, OldErr, I>,
+  errCb: (arg: ErrVariant<OldErr, I>) => ErrVariant<NewErr, I>,
+): Result<R, NewErr, I> {
   if (result.success) return result;
   return err(errCb(result.error));
 }
 
-export function okMap<const OldResult, const NewResult, const E extends string>(
-  result: Result<OldResult, E>,
+export function okMap<const OldResult, const NewResult, const E extends string, I extends Issues = Issues>(
+  result: Result<OldResult, E, I>,
   okCb: (arg: OldResult) => NewResult,
-): Result<NewResult, E> {
+): Result<NewResult, E, I> {
   if (result.fail) return result;
   return ok(okCb(result.result));
 }
 
-export function isErr<T extends string = string>(result: unknown): result is ErrVariant<T> {
+export function isErr<T extends string = string, I extends Issues = Issues>(
+  result: unknown,
+): result is ErrVariant<T, I> {
   return typeof result === 'object' && result != null && '$$isErr' in result && result.$$isErr === true;
 }
 
@@ -91,7 +96,7 @@ export function errAuthentication(message?: string): Err<'authentication'> {
   });
 }
 
-export function errValidation(message?: string, issues?: ErrVariant['issues']): Err<'validation'> {
+export function errValidation<I extends Issues = Issues>(message?: string, issues?: I): Err<'validation', I> {
   return err({
     issues,
     message: message ?? 'Validation error. Please check your input.',

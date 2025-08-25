@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { Result } from '@/shared/lib/result';
 import { toaster } from '@/shared/lib/toaster';
-import type { AuthWithPasswordInput, UserType } from '../../models/types';
+import type { AuthWithPasswordInput } from '../../models/types';
 import { loginWithPassword } from '../repository/login-with-password';
 
 const TOAST_ID = 'LOGIN';
@@ -10,7 +9,7 @@ const TOAST_ID = 'LOGIN';
 export function useLoginMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation<Result<UserType>, Error, AuthWithPasswordInput>({
+  return useMutation<Awaited<ReturnType<typeof loginWithPassword>>, Error, AuthWithPasswordInput>({
     async mutationFn(input) {
       toaster.loading({ description: 'Log in...', id: TOAST_ID });
       const loginResult = await loginWithPassword(input);

@@ -18,7 +18,11 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
     ...loginFormOptions,
     async onSubmit({ value }) {
       const result = await loginMutation.mutateAsync(value);
-      if (result.success) disclosure.onClose();
+      if (result.success) return disclosure.onClose();
+
+      loginForm.setErrorMap({
+        onChange: { fields: result.error.issues ?? {}, form: 'ERROR' },
+      });
     },
   });
 
@@ -26,7 +30,7 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
     ...registerFormOptions,
     async onSubmit({ value }) {
       const result = await registerMutation.mutateAsync(value);
-      if (result.success) disclosure.onClose();
+      if (result.success) return disclosure.onClose();
     },
   });
 
