@@ -8,11 +8,17 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from '../../app/routes/__root'
-import { Route as AboutRouteImport } from '../../app/routes/about'
-import { Route as mainIndexRouteImport } from '../../app/routes/(main)/index'
-import { Route as mainAnswersAnswerIdRouteImport } from '../../app/routes/(main)/answers.$answerId'
+import { Route as rootRouteImport } from './../../app/routes/__root'
+import { Route as ProfileRouteImport } from './../../app/routes/profile'
+import { Route as AboutRouteImport } from './../../app/routes/about'
+import { Route as mainIndexRouteImport } from './../../app/routes/(main)/index'
+import { Route as mainAnswersAnswerIdRouteImport } from './../../app/routes/(main)/answers.$answerId'
 
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -31,36 +37,52 @@ const mainAnswersAnswerIdRoute = mainAnswersAnswerIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
+  '/profile': typeof ProfileRoute
   '/': typeof mainIndexRoute
   '/answers/$answerId': typeof mainAnswersAnswerIdRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof AboutRoute
+  '/profile': typeof ProfileRoute
   '/': typeof mainIndexRoute
   '/answers/$answerId': typeof mainAnswersAnswerIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/about': typeof AboutRoute
+  '/profile': typeof ProfileRoute
   '/(main)/': typeof mainIndexRoute
   '/(main)/answers/$answerId': typeof mainAnswersAnswerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/about' | '/' | '/answers/$answerId'
+  fullPaths: '/about' | '/profile' | '/' | '/answers/$answerId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/' | '/answers/$answerId'
-  id: '__root__' | '/about' | '/(main)/' | '/(main)/answers/$answerId'
+  to: '/about' | '/profile' | '/' | '/answers/$answerId'
+  id:
+    | '__root__'
+    | '/about'
+    | '/profile'
+    | '/(main)/'
+    | '/(main)/answers/$answerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
+  ProfileRoute: typeof ProfileRoute
   mainIndexRoute: typeof mainIndexRoute
   mainAnswersAnswerIdRoute: typeof mainAnswersAnswerIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -87,6 +109,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
+  ProfileRoute: ProfileRoute,
   mainIndexRoute: mainIndexRoute,
   mainAnswersAnswerIdRoute: mainAnswersAnswerIdRoute,
 }

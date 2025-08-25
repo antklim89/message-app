@@ -8,7 +8,7 @@ import { RightSideDrawer } from './right-side-drawer';
 import { SideLayout } from './side-layout';
 
 const BREAKPOINTS = ['md', 'lg', 'xl'] as const;
-const SIDE_WIDTH = '14rem';
+const SIDE_WIDTH = '20rem';
 const GAP = 4;
 const BOTTOM_SIDE_HEIGHT = 12;
 
