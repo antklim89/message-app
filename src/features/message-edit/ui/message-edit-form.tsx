@@ -20,6 +20,7 @@ export const MessageEditForm = withForm({
           <form.AppField name="body">
             {field => (
               <field.TextareaField
+                autoFocus
                 onKeyDown={e => {
                   if (e.ctrlKey && e.key === 'Enter') form.handleSubmit();
                 }}

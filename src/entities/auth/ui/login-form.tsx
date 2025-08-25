@@ -21,7 +21,7 @@ export const LoginForm = withForm({
       <form.AppForm>
         <form.Form {...props}>
           <form.AppField name="email">
-            {field => <field.InputField autoComplete="email" placeholder="name@mail.com" label="E-mail" />}
+            {field => <field.InputField autoFocus autoComplete="email" placeholder="name@mail.com" label="E-mail" />}
           </form.AppField>
           <form.AppField name="password">
             {field => (

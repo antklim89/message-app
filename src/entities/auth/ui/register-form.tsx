@@ -23,7 +23,7 @@ export const RegisterForm = withForm({
       <form.AppForm>
         <form.Form {...props}>
           <form.AppField name="username">
-            {field => <field.InputField autoComplete="username" placeholder="John" label="Username" />}
+            {field => <field.InputField autoFocus autoComplete="username" placeholder="John" label="Username" />}
           </form.AppField>
           <form.AppField name="email">
             {field => <field.InputField autoComplete="email" placeholder="name@mail.com" label="E-mail" />}
