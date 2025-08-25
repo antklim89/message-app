@@ -130,6 +130,14 @@
       "recommended": true,
       "security": "error",
       "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              { "group": ["**/entities/*/*/**", "**/pages/*/*/**", "**/features/*/*/**", "**/widgets/*/*/**"] }
+            ]
+          }
+        },
         "noCommonJs": "error",
         "noDefaultExport": "off",
         "noDoneCallback": "error",
