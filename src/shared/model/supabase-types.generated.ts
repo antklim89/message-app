@@ -7,10 +7,30 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -81,10 +101,9 @@ export type Database = {
           body: string
           created: string
           id: number
-          title: string
-          hasLiked: boolean | null
-          isFavorite: boolean | null
-          likesCount: number | null
+          message_has_liked: boolean | null
+          message_in_favorite: boolean | null
+          message_likes_count: number | null
         }
         Insert: {
           answerId?: number | null
@@ -92,7 +111,6 @@ export type Database = {
           body?: string
           created?: string
           id?: number
-          title?: string
         }
         Update: {
           answerId?: number | null
@@ -100,7 +118,6 @@ export type Database = {
           body?: string
           created?: string
           id?: number
-          title?: string
         }
         Relationships: [
           {
@@ -177,15 +194,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      hasLiked: {
+      message_has_liked: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: boolean
       }
-      isFavorite: {
+      message_in_favorite: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: boolean
       }
-      likesCount: {
+      message_likes_count: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: number
       }
@@ -317,7 +334,11 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
 } as const
+
