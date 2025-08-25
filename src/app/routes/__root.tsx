@@ -9,8 +9,8 @@ import {
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
-import { sessionQueryOptions } from '@/share/hooks/use-session';
-import { routeTree } from '@/share/model/route-tree-aside.generated';
+import { sessionQueryOptions } from '@/shared/hooks/use-session';
+import { routeTree } from '@/shared/model/route-tree-aside.generated';
 import { MainLayout } from '@/widgets/main-layout';
 import { queryClient } from '../providers/react-query';
 

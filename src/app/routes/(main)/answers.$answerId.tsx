@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { messageListQueryOptions, messageQueryOptions } from '@/entities/messages';
 import { MessageAnswerLayout, MessageListLayout, parseMessageParams } from '@/pages/home';
-import { ErrorComponent } from '@/share/ui/error-component';
+import { ErrorComponent } from '@/shared/ui/error-component';
 
 function RouteComponent() {
   const { answerId } = Route.useParams();

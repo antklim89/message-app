@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type MessageType, updateMessageQueryData } from '@/entities/messages';
-import { toaster } from '@/share/lib/toaster';
+import { toaster } from '@/shared/lib/toaster';
 import type { MessageEditType } from '../../model/types';
 import { updateMessage } from '../repository/update-message';
 

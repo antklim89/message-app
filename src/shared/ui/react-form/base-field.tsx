@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { Field as ChakraField } from '@chakra-ui/react';
 
-import { useFieldContext } from '@/share/lib/react-form';
+import { useFieldContext } from '@/shared/lib/react-form';
 
 export function BaseField({ label, children }: { label?: string; children: ReactNode }) {
   const field = useFieldContext<string>();

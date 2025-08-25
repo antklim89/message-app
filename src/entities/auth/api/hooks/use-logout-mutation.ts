@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { toaster } from '@/share/lib/toaster';
+import { toaster } from '@/shared/lib/toaster';
 import { logout } from '../repository/logout';
 
 const TOAST_ID = 'LOGOUT';

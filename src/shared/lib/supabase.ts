@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import type { Database } from '@/share/model/supabase-types.generated';
+import type { Database } from '@/shared/model/supabase-types.generated';
 import { env } from './env';
 
 const sbPromise = import('@supabase/supabase-js');

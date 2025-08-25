@@ -1,6 +1,6 @@
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
 
-import { withForm } from '@/share/lib/react-form';
+import { withForm } from '@/shared/lib/react-form';
 import { RegisterSchema } from '../models/schemas';
 
 export const registerFormOptions = formOptions({

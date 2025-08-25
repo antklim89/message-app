@@ -3,7 +3,7 @@ import { FaPencil, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { MessageDeleteDialog, MessageUpdateDialog } from '@/features/message-edit';
-import { Protected } from '@/share/ui/protected';
+import { Protected } from '@/shared/ui/protected';
 import { MessageCardMenuCopyUrl } from './message-card-menu-copy-url';
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {

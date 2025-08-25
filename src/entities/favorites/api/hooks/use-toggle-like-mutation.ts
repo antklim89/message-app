@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ErrType, type ErrVariant } from '@/share/lib/result';
-import { toaster } from '@/share/lib/toaster';
+import { ErrType, type ErrVariant } from '@/shared/lib/result';
+import { toaster } from '@/shared/lib/toaster';
 import { type MessageType, updateMessageQueryData } from '../../@x/entities/messages';
 import { addFavorite } from '../repository/add-favorite';
 import { removeLike } from '../repository/remove-favorite';

@@ -4,8 +4,8 @@ import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment, FaEllipsis } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
-import { FromNowDate } from '@/share/ui/from-now-date';
-import { Protected } from '@/share/ui/protected';
+import { FromNowDate } from '@/shared/ui/from-now-date';
+import { Protected } from '@/shared/ui/protected';
 import { wrapMessageHashTags } from '../lib/utils';
 
 export function Message({

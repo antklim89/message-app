@@ -1,5 +1,5 @@
-import { err, errAuthentication, errConflict, ok } from '@/share/lib/result';
-import { createSupabaseClient } from '@/share/lib/supabase';
+import { err, errAuthentication, errConflict, ok } from '@/shared/lib/result';
+import { createSupabaseClient } from '@/shared/lib/supabase';
 
 export async function addLike({ messageId }: { messageId: number }) {
   const supabase = await createSupabaseClient();

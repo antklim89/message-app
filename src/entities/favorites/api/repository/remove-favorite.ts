@@ -1,5 +1,5 @@
-import { errAuthentication, errConflict, errUnexpected, ok } from '@/share/lib/result';
-import { createSupabaseClient } from '@/share/lib/supabase';
+import { errAuthentication, errConflict, errUnexpected, ok } from '@/shared/lib/result';
+import { createSupabaseClient } from '@/shared/lib/supabase';
 
 export async function removeLike({ messageId }: { messageId: number }) {
   const supabase = await createSupabaseClient();

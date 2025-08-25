@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ErrType } from '@/share/lib/result';
-import { toaster } from '@/share/lib/toaster';
+import { ErrType } from '@/shared/lib/result';
+import { toaster } from '@/shared/lib/toaster';
 import { type MessageType, updateMessageQueryData } from '../../@x/entities/messages';
 import { addLike } from '../repository/add-like';
 import { removeLike } from '../repository/remove-like';

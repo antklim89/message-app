@@ -1,6 +1,6 @@
 import { Input, type InputProps } from '@chakra-ui/react';
 
-import { useFieldContext } from '@/share/lib/react-form';
+import { useFieldContext } from '@/shared/lib/react-form';
 import { BaseField } from './base-field';
 
 export function InputField({ label, ...props }: { label?: string } & InputProps) {

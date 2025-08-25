@@ -1,4 +1,4 @@
-import useInfiniteScroll from '@/share/hooks/use-infinity-scroll';
+import useInfiniteScroll from '@/shared/hooks/use-infinity-scroll';
 import { MessageFallback } from './message-fallback';
 import { MESSAGES_PER_PAGE } from '../config/constants';
 

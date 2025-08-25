@@ -1,5 +1,5 @@
-import { errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
-import { createSupabaseClient } from '@/share/lib/supabase';
+import { errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
+import { createSupabaseClient } from '@/shared/lib/supabase';
 import { MESSAGE_SELECT, MESSAGES_PER_PAGE } from '../../config/constants';
 import { messageDto } from '../../models/dto';
 import type { MessageType } from '../../models/types';

@@ -2,7 +2,7 @@ import { type ReactElement } from 'react';
 import { Box, Button, Card, Collapsible, HStack, useDisclosure, VStack } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
-import { useAppForm } from '@/share/lib/react-form';
+import { useAppForm } from '@/shared/lib/react-form';
 import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
 import { useMessageCreateMutation } from '../api/hooks/use-message-create-mutation';
 

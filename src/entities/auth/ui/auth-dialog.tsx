@@ -1,8 +1,8 @@
 import { type ReactElement, useState } from 'react';
 import { Button, Stack, Text, useDisclosure } from '@chakra-ui/react';
 
-import { useAppForm } from '@/share/lib/react-form';
-import { FormDialog } from '@/share/ui/form-dialog';
+import { useAppForm } from '@/shared/lib/react-form';
+import { FormDialog } from '@/shared/ui/form-dialog';
 import { LoginForm, loginFormOptions } from './login-form';
 import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/hooks/use-login-mutation';

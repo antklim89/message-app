@@ -1,7 +1,7 @@
 import { Box, Button, Skeleton } from '@chakra-ui/react';
 
 import { MessageCreateCollapsible } from '@/features/message-edit';
-import { Protected } from '@/share/ui/protected';
+import { Protected } from '@/shared/ui/protected';
 
 export const MessageNewLayout = ({ answerId }: { answerId?: number }) => {
   return (

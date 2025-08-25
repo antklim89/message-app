@@ -3,7 +3,7 @@ import { Box, Button, Container, HStack, IconButton, Skeleton, type StackProps }
 import { FaDoorOpen, FaRightFromBracket } from 'react-icons/fa6';
 
 import { LoginDialog, LogoutButton } from '@/entities/auth';
-import { Protected } from '@/share/ui/protected';
+import { Protected } from '@/shared/ui/protected';
 import { Logo } from './logo';
 
 export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & StackProps) {

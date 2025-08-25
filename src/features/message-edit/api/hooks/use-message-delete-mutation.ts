@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { MessageListQueryOptionsBaseKey, type MessageType, messageQueryOptions } from '@/entities/messages';
-import { toaster } from '@/share/lib/toaster';
+import { toaster } from '@/shared/lib/toaster';
 import { deleteMessage } from '../repository/delete-message';
 
 export function useMessageDeleteMutation({ id }: { id: MessageType['id'] }) {

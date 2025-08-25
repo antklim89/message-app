@@ -4,8 +4,8 @@ import { FaChevronLeft } from 'react-icons/fa6';
 
 import { MessageFallback, useMessageQuery } from '@/entities/messages';
 import { MessageCreateCollapsible } from '@/features/message-edit';
-import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-boundary';
-import { Protected } from '@/share/ui/protected';
+import { withSuspenseErrorBoundary } from '@/shared/ui/hoc/with-suspense-error-boundary';
+import { Protected } from '@/shared/ui/protected';
 import { MessageCard } from '@/widgets/message-card';
 
 export const MessageAnswerLayout = withSuspenseErrorBoundary(

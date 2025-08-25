@@ -1,6 +1,6 @@
 import { Textarea, type TextareaProps } from '@chakra-ui/react';
 
-import { useFieldContext } from '@/share/lib/react-form';
+import { useFieldContext } from '@/shared/lib/react-form';
 import { BaseField } from './base-field';
 
 export function TextareaField({ label, ...props }: { label?: string } & TextareaProps) {

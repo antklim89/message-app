@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { Result } from '@/share/lib/result';
-import { toaster } from '@/share/lib/toaster';
+import type { Result } from '@/shared/lib/result';
+import { toaster } from '@/shared/lib/toaster';
 import type { CreateUserInput, UserType } from '../../models/types';
 import { createUser } from '../repository/create-user';
 

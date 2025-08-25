@@ -1,7 +1,7 @@
 import { Button, Heading, Skeleton, SkeletonText, type StackProps, Text, VStack } from '@chakra-ui/react';
 
 import { LoginDialog, LogoutButton } from '@/entities/auth';
-import { Protected } from '@/share/ui/protected';
+import { Protected } from '@/shared/ui/protected';
 import { Logo } from './logo';
 
 export function LeftSide(props: StackProps) {

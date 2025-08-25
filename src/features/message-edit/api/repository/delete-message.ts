@@ -1,6 +1,6 @@
 import type { MessageType } from '@/entities/messages';
-import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
-import { createSupabaseClient, getSupabaseSession } from '@/share/lib/supabase';
+import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
+import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
 
 export async function deleteMessage(id: MessageType['id']): PromiseResult<null> {
   const supabase = await createSupabaseClient();

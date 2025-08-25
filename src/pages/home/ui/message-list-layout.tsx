@@ -1,5 +1,5 @@
 import { MessageInfinityScroll, MessageList, MessageListFallback, useMessageListQuery } from '@/entities/messages';
-import { withSuspenseErrorBoundary } from '@/share/ui/hoc/with-suspense-error-boundary';
+import { withSuspenseErrorBoundary } from '@/shared/ui/hoc/with-suspense-error-boundary';
 import { MessageCard } from '@/widgets/message-card';
 
 export const MessageListLayout = withSuspenseErrorBoundary(

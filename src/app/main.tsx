@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { Toaster } from '@/share/ui/toaster';
+import { Toaster } from '@/shared/ui/toaster';
 import { App } from './app';
 import { ChakraProvider } from './providers/chakra-provider';
 import { ReactQueryProvider } from './providers/react-query';

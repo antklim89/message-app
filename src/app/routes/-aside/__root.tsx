@@ -2,7 +2,7 @@ import { Box, VStack } from '@chakra-ui/react';
 import { type QueryClient } from '@tanstack/react-query';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 
-import { ColorModeButton } from '@/share/ui/color-mode';
+import { ColorModeButton } from '@/shared/ui/color-mode';
 
 export const Route = createRootRoute<undefined, { queryClient: QueryClient }>({
   component: () => (

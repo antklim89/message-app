@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { Stack } from '@chakra-ui/react';
 
-import { useFormContext } from '@/share/lib/react-form';
+import { useFormContext } from '@/shared/lib/react-form';
 
 export function Form({ onSubmit, children, ...props }: ComponentProps<'form'>) {
   const form = useFormContext();

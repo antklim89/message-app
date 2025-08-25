@@ -1,5 +1,5 @@
-import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
-import { createSupabaseClient } from '@/share/lib/supabase';
+import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
+import { createSupabaseClient } from '@/shared/lib/supabase';
 import type { ProfileType } from '../../models/types';
 
 export async function getProfile(): PromiseResult<ProfileType | null> {

@@ -1,6 +1,6 @@
 import { Box, type StackProps, VStack } from '@chakra-ui/react';
 
-import { ColorModeButton } from '@/share/ui/color-mode';
+import { ColorModeButton } from '@/shared/ui/color-mode';
 
 export function RightSide(props: StackProps) {
   return (

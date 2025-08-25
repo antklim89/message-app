@@ -1,6 +1,6 @@
 import { type MessageType } from '@/entities/messages';
-import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
-import { createSupabaseClient, getSupabaseSession } from '@/share/lib/supabase';
+import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
+import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
 import type { MessageEditType } from '../../model/types';
 
 export async function updateMessage(messageId: MessageType['id'], input: MessageEditType): PromiseResult<null> {

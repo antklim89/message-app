@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { ErrType, isErr } from '@/share/lib/result';
+import { ErrType, isErr } from '@/shared/lib/result';
 
 export const queryClient = new QueryClient({
   defaultOptions: {

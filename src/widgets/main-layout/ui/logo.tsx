@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 import { Flex } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
-import logoIcon from '@/share/assets/logo.svg';
+import logoIcon from '@/shared/assets/logo.svg';
 
 export function Logo(props: ComponentProps<'img'>) {
   return (

@@ -1,5 +1,5 @@
-import { err, errUnexpected, ok, type PromiseResult } from '@/share/lib/result';
-import { createSupabaseClient } from '@/share/lib/supabase';
+import { err, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
+import { createSupabaseClient } from '@/shared/lib/supabase';
 import type { CreateUserInput, UserType } from '../../models/types';
 
 export async function createUser({ email, password, username }: CreateUserInput): PromiseResult<UserType | null> {

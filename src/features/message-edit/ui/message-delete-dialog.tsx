@@ -3,7 +3,7 @@ import { Button, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from '@tanstack/react-router';
 
 import type { MessageType } from '@/entities/messages';
-import { ConfirmDialog } from '@/share/ui/confirm-dialog';
+import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
 import { useMessageDeleteMutation } from '../api/hooks/use-message-delete-mutation';
 
 export function MessageDeleteDialog({
