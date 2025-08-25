@@ -1,25 +1,13 @@
 import { z } from 'zod/v4-mini';
 
+import { checkLatinCharsNumberSymbols } from '@/shared/model/schema-checks';
+
 export const RegisterSchema = z
   .object({
     email: z.string().check(z.email()),
     repeat: z.string(),
-    password: z.string().check(
-      z.minLength(8, {
-        error: ({ minimum, input }) => `Field password should have ${minimum} characters. Now is ${input?.length ?? 0}`,
-      }),
-      z.regex(/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/, {
-        error: 'Password can contain only latin characters, numbers and symbols.',
-      }),
-    ),
-    username: z.string().check(
-      z.regex(/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/, {
-        error: 'Password can contain only latin characters, numbers and symbols.',
-      }),
-      z.minLength(4, {
-        error: ({ minimum, input }) => `Field password should have ${minimum} characters. Now is ${input?.length ?? 0}`,
-      }),
-    ),
+    password: z.string().check(z.minLength(8), z.maxLength(80), checkLatinCharsNumberSymbols),
+    username: z.string().check(z.minLength(4), z.maxLength(80), checkLatinCharsNumberSymbols),
   })
   .check(
     z.refine(data => data.password === data.repeat, {
