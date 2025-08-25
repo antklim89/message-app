@@ -1,8 +1,8 @@
-import { z } from 'zod';
+import { z } from 'zod/v4-mini';
 
 export const env = z
   .object({
-    SERVER_URL: z.string().default('/'),
+    SERVER_URL: z._default(z.string(), '/'),
     SUPABASE_ANON_KEY: z.string(),
     SUPABASE_URL: z.string(),
   })
