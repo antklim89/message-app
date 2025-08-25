@@ -13,7 +13,7 @@
     "start": "vite preview --host 0.0.0.0 --port 3000",
     "lint": "biome check",
     "typecheck": "tsc --noEmit -w --preserveWatchOutput -p tsconfig.app.json",
-    "typegen": "supabase gen types typescript --project-id fdckcddxtlaanwrwrtng > ./src/share/model/supabase-types.generated.ts"
+    "typegen": "supabase gen types --local > ./src/shared/model/supabase-types.generated.ts"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.24.2",
