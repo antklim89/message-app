@@ -20,10 +20,14 @@ export function MessageUpdateDialog({
   const messageEditForm = useAppForm({
     ...messageEditFormOptions,
     defaultValues: { body: message.body },
-    async onSubmit({ value }) {
+    async onSubmit({ value, formApi }) {
       const result = await messageUpdateMutation.mutateAsync(value);
       if (result.success) {
         disclosure.onClose();
+      } else {
+        formApi.setErrorMap({
+          onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
+        });
       }
     },
   });

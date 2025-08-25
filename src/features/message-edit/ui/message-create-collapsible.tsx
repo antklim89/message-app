@@ -23,6 +23,10 @@ export function MessageCreateCollapsible({
       if (result.success) {
         disclosure.onClose();
         formApi.reset();
+      } else {
+        formApi.setErrorMap({
+          onSubmit: { fields: result.error.issues ?? {} },
+        });
       }
     },
   });

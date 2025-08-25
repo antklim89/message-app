@@ -16,21 +16,25 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
 
   const loginForm = useAppForm({
     ...loginFormOptions,
-    async onSubmit({ value }) {
+    async onSubmit({ value, formApi }) {
       const result = await loginMutation.mutateAsync(value);
       if (result.success) return disclosure.onClose();
 
-      loginForm.setErrorMap({
-        onChange: { fields: result.error.issues ?? {}, form: 'ERROR' },
+      formApi.setErrorMap({
+        onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
       });
     },
   });
 
   const registerForm = useAppForm({
     ...registerFormOptions,
-    async onSubmit({ value }) {
+    async onSubmit({ value, formApi }) {
       const result = await registerMutation.mutateAsync(value);
       if (result.success) return disclosure.onClose();
+
+      formApi.setErrorMap({
+        onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
+      });
     },
   });
 

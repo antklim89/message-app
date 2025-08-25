@@ -24,6 +24,10 @@ export function MessageCreateDialog({
       if (result.success) {
         disclosure.onClose();
         formApi.reset();
+      } else {
+        formApi.setErrorMap({
+          onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
+        });
       }
     },
   });
