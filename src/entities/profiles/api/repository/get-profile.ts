@@ -1,8 +1,7 @@
-import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
+import { errAuthentication, errNotFound, ok } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
-import type { ProfileType } from '../../models/types';
 
-export async function getProfile(): PromiseResult<ProfileType | null> {
+export async function getProfile() {
   const supabase = await createSupabaseClient();
 
   const sessionResult = await supabase.auth.getSession();
@@ -10,10 +9,7 @@ export async function getProfile(): PromiseResult<ProfileType | null> {
   if (user == null) return errAuthentication();
 
   const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-  if (error) return errUnexpected(error.message);
+  if (error) return errNotFound('Profile not found.');
 
-  return ok({
-    id: profile.id,
-    username: profile.username,
-  });
+  return ok(profile);
 }
