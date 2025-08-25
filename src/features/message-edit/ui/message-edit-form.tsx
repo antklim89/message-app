@@ -18,7 +18,15 @@ export const MessageEditForm = withForm({
       <form.AppForm>
         <form.Form {...props}>
           <form.AppField name="body">
-            {field => <field.TextareaField autoresize placeholder="Enter you message" />}
+            {field => (
+              <field.TextareaField
+                onKeyDown={e => {
+                  if (e.ctrlKey && e.key === 'Enter') form.handleSubmit();
+                }}
+                autoresize
+                placeholder="Enter you message"
+              />
+            )}
           </form.AppField>
         </form.Form>
       </form.AppForm>
