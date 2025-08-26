@@ -1,4 +1,4 @@
-import { Avatar, Card, Link as ChakraLink, Heading, HStack, Text } from '@chakra-ui/react';
+import { Avatar, Card, Link as ChakraLink, Flex, Heading, HStack, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { FromNowDate } from '@/shared/ui/from-now-date';
@@ -23,9 +23,11 @@ export function ProfilePreview({ profile }: { profile: ProfileType }) {
           Created: <FromNowDate fontSize="sm" date={profile.created} />
         </Card.Description>
         <Text lineClamp={3}>{profile.bio}</Text>
-        <ChakraLink asChild>
-          <Link to="/profile">More</Link>
-        </ChakraLink>
+        <Flex justifyContent="end">
+          <ChakraLink asChild>
+            <Link to="/profile">More</Link>
+          </ChakraLink>
+        </Flex>
       </Card.Body>
     </Card.Root>
   );

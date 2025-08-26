@@ -1,2 +1,2 @@
-export { ProfileLayout } from './ui/profile-aside';
-export { ProfileTabs } from './ui/profile-tabs';
+export { ProfileAside } from './ui/profile-aside';
+export { ProfileRoot } from './ui/profile-root';

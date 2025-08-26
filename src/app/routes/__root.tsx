@@ -14,13 +14,13 @@ import { routeTree } from '@/shared/model/route-tree-aside.generated';
 import { MainLayout } from '@/widgets/main-layout';
 import { queryClient } from '../providers/react-query';
 
-const router2 = createRouter({ context: { queryClient }, routeTree });
+const router = createRouter({ context: { queryClient }, routeTree });
 
 function RootComponent() {
   return (
     <>
       <HeadContent />
-      <MainLayout rightSide={<AsideRouterProvider router={router2} />}>
+      <MainLayout rightSide={<AsideRouterProvider router={router} />}>
         <Outlet />
       </MainLayout>
       <TanStackRouterDevtools position="top-right" />

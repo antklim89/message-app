@@ -1,10 +1,11 @@
-import { ProfilePreview, ProfilePreviewFallback, useProfileQuery } from '@/entities/profiles';
-import { ErrorComponent } from '@/shared/ui/error-component';
+import { ProfilePreviewFallback } from '@/entities/profiles';
+import { SuspenseErrorBoundary } from '@/shared/ui/suspense-error-boundary';
+import { ProfileAsideLayout } from './profile-aside-layout';
 
-export function ProfileLayout() {
-  const profileQuery = useProfileQuery();
-  if (profileQuery.isPending) return <ProfilePreviewFallback />;
-  if (profileQuery.isError) return <ErrorComponent error={profileQuery.error} reset={profileQuery.refetch} />;
-
-  return <ProfilePreview profile={profileQuery.data} />;
+export function ProfileAside() {
+  return (
+    <SuspenseErrorBoundary fallback={<ProfilePreviewFallback />}>
+      <ProfileAsideLayout />
+    </SuspenseErrorBoundary>
+  );
 }

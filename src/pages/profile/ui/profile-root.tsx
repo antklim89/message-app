@@ -1,13 +1,14 @@
 import { Tabs } from '@chakra-ui/react';
-import { Link, Outlet, useNavigate } from '@tanstack/react-router';
+import { Link, Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 
 import { tabs } from '../config/tabs';
 
-export function ProfileTabs() {
+export function ProfileRoot() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
-    <Tabs.Root fitted defaultValue={tabs[0].to} navigate={({ value }) => navigate({ to: value })}>
+    <Tabs.Root fitted value={location.href} navigate={({ value }) => navigate({ to: value })}>
       <Tabs.List>
         {tabs.map(tab => (
           <Tabs.Trigger key={tab.label} value={tab.to} asChild>

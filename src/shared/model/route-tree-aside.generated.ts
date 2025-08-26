@@ -9,18 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './../../app/routes/-aside/__root'
-import { Route as ProfileRouteRouteImport } from './../../app/routes/-aside/profile/route'
-import { Route as IndexRouteImport } from './../../app/routes/-aside/index'
-import { Route as ProfileIndexRouteImport } from './../../app/routes/-aside/profile/index'
+import { Route as ProfileRouteRouteImport } from './../../app/routes/-aside/profile.route'
+import { Route as ProfileIndexRouteImport } from './../../app/routes/-aside/profile.index'
 
 const ProfileRouteRoute = ProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
@@ -30,30 +24,26 @@ const ProfileIndexRoute = ProfileIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/profile': typeof ProfileRouteRouteWithChildren
   '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/profile': typeof ProfileRouteRouteWithChildren
   '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/profile' | '/profile/'
+  fullPaths: '/profile' | '/profile/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile'
-  id: '__root__' | '/' | '/profile' | '/profile/'
+  to: '/profile'
+  id: '__root__' | '/profile' | '/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   ProfileRouteRoute: typeof ProfileRouteRouteWithChildren
 }
 
@@ -64,13 +54,6 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile/': {
@@ -96,7 +79,6 @@ const ProfileRouteRouteWithChildren = ProfileRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   ProfileRouteRoute: ProfileRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
