@@ -11,7 +11,3 @@ export { MESSAGE_SELECT, MESSAGES_PER_PAGE } from './config/constants';
 export { updateMessageQueryData } from './lib/utils';
 export type { MessageType } from './models/types';
 export { Message } from './ui/message';
-export { MessageFallback } from './ui/message-fallback';
-export { MessageInfinityScroll } from './ui/message-infinity-scroll';
-export { MessageList } from './ui/message-list';
-export { MessageListFallback } from './ui/message-list-fallback';
