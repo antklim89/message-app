@@ -1,4 +1,5 @@
 export { useProfileQuery } from './api/hooks/use-profile-query';
+export { getProfileQueryOptions } from './api/query-options/get-profile-query-options';
 export { getProfile } from './api/repository/get-profile';
 export type { ProfileType } from './models/types';
 export { Profile } from './ui/profile';
