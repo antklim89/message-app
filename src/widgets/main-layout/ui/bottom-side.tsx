@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
-import { Box, Button, Container, HStack, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
-import { FaDoorOpen, FaRightFromBracket } from 'react-icons/fa6';
+import { Container, HStack, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
+import { FaDoorOpen } from 'react-icons/fa6';
 
-import { LoginDialog, LogoutButton } from '@/entities/auth';
+import { LoginDialog } from '@/entities/auth';
 import { Protected } from '@/shared/ui/protected';
+import { BottomSideLinks } from './bottom-side-links';
 import { Logo } from './logo';
 
 export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & StackProps) {
@@ -11,6 +12,7 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
     <Container asChild>
       <HStack
         alignItems="center"
+        justifyContent="space-between"
         bg="bg"
         borderColor="border"
         borderTop="sm"
@@ -23,23 +25,16 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
       >
         <Logo height={32} width={32} />
 
-        <Box flex="1" />
+        <BottomSideLinks />
 
         <Protected
           fallback={<Skeleton h="60%" w={100} />}
-          privateElement={
-            <LogoutButton>
-              <IconButton aria-label="logout button">
-                <FaRightFromBracket />
-              </IconButton>
-            </LogoutButton>
-          }
           publicElement={
             <LoginDialog
               openElement={
-                <Button variant="outline">
+                <IconButton aria-label="login button" variant="subtle">
                   <FaDoorOpen />
-                </Button>
+                </IconButton>
               }
             />
           }

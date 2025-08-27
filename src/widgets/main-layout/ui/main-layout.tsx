@@ -3,7 +3,6 @@ import { Box, Container, HStack, useBreakpoint, VStack } from '@chakra-ui/react'
 
 import { BottomSide } from './bottom-side';
 import { LeftSide } from './left-side';
-// import { RightSide } from './right-side';
 import { RightSideDrawer } from './right-side-drawer';
 import { SideLayout } from './side-layout';
 
