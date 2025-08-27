@@ -1,17 +1,26 @@
+import { use } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/shared/model/supabase-types.generated';
 import { env } from './env';
 
 const sbPromise = import('@supabase/supabase-js');
-let sb: SupabaseClient<Database> | undefined;
+let supabaseClient: SupabaseClient<Database> | undefined;
 
-export async function createSupabaseClient() {
-  if (sb != null) return sb;
+export async function createSupabaseClient(): Promise<SupabaseClient<Database>> {
+  if (supabaseClient != null) return supabaseClient;
   const { createClient } = await sbPromise;
-  if (sb != null) return sb;
-  sb = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
-  return sb;
+  if (supabaseClient != null) return supabaseClient;
+  supabaseClient = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+  return supabaseClient;
+}
+
+export function useSupabase(): SupabaseClient<Database> {
+  if (supabaseClient != null) return supabaseClient;
+  const { createClient } = use(sbPromise);
+  if (supabaseClient != null) return supabaseClient;
+  supabaseClient = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+  return supabaseClient;
 }
 
 export async function getSupabaseSession() {
