@@ -1,5 +1,5 @@
 export interface ProfileType {
-  avatar: string;
+  avatar: string | null;
   bio: string;
   created: string;
   id: string;

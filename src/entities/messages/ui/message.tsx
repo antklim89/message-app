@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment, FaEllipsis } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
+import { useSupabasePublicUrl } from '@/shared/lib/supabase';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { wrapMessageHashTags } from '../lib/utils';
@@ -17,12 +18,14 @@ export function Message({
   footer?: ReactNode;
   menuItems: ReactNode;
 }) {
+  const avatarUrl = useSupabasePublicUrl(message.author.avatar);
+
   return (
     <Card.Root border="none" w="full">
       <Card.Header alignItems="center" asChild gap={4}>
         <HStack>
           <Avatar.Root>
-            <Avatar.Image src={message.author.avatar || undefined} />
+            <Avatar.Image src={avatarUrl} />
             <Avatar.Fallback />
           </Avatar.Root>
           <Card.Title display="flex" flexDirection="column">

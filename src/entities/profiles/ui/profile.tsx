@@ -1,15 +1,17 @@
 import { Avatar, Card, Heading, HStack, Text } from '@chakra-ui/react';
 
+import { useSupabasePublicUrl } from '@/shared/lib/supabase';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { type ProfileType } from '../models/types';
 
 export function Profile({ profile }: { profile: ProfileType }) {
+  const avatarUrl = useSupabasePublicUrl(profile.avatar);
   return (
     <Card.Root border="none" w="full">
       <Card.Header>
         <HStack>
           <Avatar.Root size="2xl">
-            <Avatar.Image src={profile.avatar || undefined} />
+            <Avatar.Image src={avatarUrl} />
             <Avatar.Fallback />
           </Avatar.Root>
           <Card.Title asChild>

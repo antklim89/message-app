@@ -29,3 +29,10 @@ export async function getSupabaseSession() {
 
   return sessionResult.data?.session;
 }
+
+export function useSupabasePublicUrl(avatarUrl?: string | null) {
+  const supabase = useSupabase();
+  if (!avatarUrl) return;
+  const { publicUrl } = supabase.storage.from('avatars').getPublicUrl(avatarUrl).data;
+  return publicUrl;
+}

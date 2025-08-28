@@ -138,21 +138,21 @@ export type Database = {
       }
       profiles: {
         Row: {
-          avatar: string
+          avatar: string | null
           bio: string
           created: string
           id: string
           username: string
         }
         Insert: {
-          avatar?: string
+          avatar?: string | null
           bio?: string
           created?: string
           id?: string
           username?: string
         }
         Update: {
-          avatar?: string
+          avatar?: string | null
           bio?: string
           created?: string
           id?: string
