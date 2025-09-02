@@ -3,5 +3,5 @@ import { ProfileAvatarUpdate } from '@/features/profile-edit';
 
 export function ProfileSettingsAvatarLayout() {
   const profileQuery = useProfileQuery();
-  return <ProfileAvatarUpdate avatarUrl={profileQuery.data.avatar} />;
+  return <ProfileAvatarUpdate username={profileQuery.data.username} avatarUrl={profileQuery.data.avatar} />;
 }

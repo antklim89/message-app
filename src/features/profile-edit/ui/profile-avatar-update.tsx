@@ -1,11 +1,22 @@
-import { Avatar, Box, Button, Card, FileUpload, useFileUpload } from '@chakra-ui/react';
+import { Box, Button, Card, FileUpload, useDisclosure, useFileUpload } from '@chakra-ui/react';
 
-import { useSupabasePublicUrl } from '@/shared/lib/supabase';
-import { ProfileAvatarDeleteButton } from './profile-avatar-delete-button';
+import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
+import { UserAvatar } from '@/shared/ui/user-avatar';
+import { useProfileAvatarDeleteMutation } from '../api/hooks/use-profile-avatar-delete-mutation';
 import { useProfileAvatarUpdateMutation } from '../api/hooks/use-profile-avatar-update-mutation';
 
-export function ProfileAvatarUpdate({ avatarUrl }: { avatarUrl: string | null }) {
+export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
+  const disclosure = useDisclosure();
   const avatarUpdateMutation = useProfileAvatarUpdateMutation();
+  const avatarDeleteMutation = useProfileAvatarDeleteMutation();
+
+  const isPending = avatarUpdateMutation.isPending || avatarDeleteMutation.isPending;
+
+  async function handleFileDelete() {
+    await avatarDeleteMutation.mutateAsync();
+    fileUpload.clearFiles();
+    disclosure.onClose();
+  }
   const fileUpload = useFileUpload({
     maxFiles: 1,
   });
@@ -14,33 +25,54 @@ export function ProfileAvatarUpdate({ avatarUrl }: { avatarUrl: string | null })
   async function handleFileUpload() {
     if (!file) return null;
     await avatarUpdateMutation.mutateAsync(file);
+    fileUpload.clearFiles();
   }
-
-  const fullAvatarUrl = useSupabasePublicUrl(avatarUrl);
 
   return (
     <Card.Root>
       <Card.Body>
         <FileUpload.RootProvider value={fileUpload}>
-          <FileUpload.HiddenInput />
+          <FileUpload.HiddenInput disabled={isPending} />
 
           <FileUpload.Dropzone cursor="pointer" width="full">
             <FileUpload.DropzoneContent>
-              <Avatar.Root w="12rem" h="12rem">
-                <Avatar.Image src={file ? URL.createObjectURL(file) : avatarUrl ? fullAvatarUrl : undefined} />
-                <Avatar.Fallback fontSize="6rem" />
-              </Avatar.Root>
+              <UserAvatar size={12} src={file ? URL.createObjectURL(file) : avatarUrl} username={username} />
               <Box>Drag and drop files or click here to upload your new avatar.</Box>
             </FileUpload.DropzoneContent>
           </FileUpload.Dropzone>
         </FileUpload.RootProvider>
       </Card.Body>
       <Card.Footer justifyContent="flex-end">
-        <Button variant="ghost" onClick={() => fileUpload.clearFiles()}>
+        <Button disabled={isPending || file == null} variant="ghost" onClick={() => fileUpload.clearFiles()}>
           Cancel
         </Button>
-        {avatarUrl != null && <ProfileAvatarDeleteButton onDelete={fileUpload.clearFiles} />}
-        <Button loading={avatarUpdateMutation.isPending} loadingText="Saving..." onClick={handleFileUpload}>
+
+        <ConfirmDialog
+          {...disclosure}
+          text="Are you sure you want to delete your avatar?"
+          openElement={
+            <Button disabled={isPending || file == null} colorPalette="red">
+              Delete
+            </Button>
+          }
+          confirmElement={
+            <Button
+              disabled={isPending || file == null}
+              colorPalette="red"
+              loading={avatarDeleteMutation.isPending}
+              loadingText="Deleting..."
+              onClick={handleFileDelete}
+            >
+              Delete
+            </Button>
+          }
+        />
+        <Button
+          disabled={isPending || file == null}
+          loading={avatarUpdateMutation.isPending}
+          loadingText="Saving..."
+          onClick={handleFileUpload}
+        >
           Save
         </Button>
       </Card.Footer>
