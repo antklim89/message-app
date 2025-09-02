@@ -1,21 +1,16 @@
-import { Avatar, Card, Link as ChakraLink, Flex, Heading, HStack, Text } from '@chakra-ui/react';
+import { Card, Link as ChakraLink, Flex, Heading, HStack, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
-import { useSupabasePublicUrl } from '@/shared/lib/supabase';
 import { FromNowDate } from '@/shared/ui/from-now-date';
+import { UserAvatar } from '@/shared/ui/user-avatar';
 import { type ProfileType } from '../models/types';
 
 export function ProfilePreview({ profile }: { profile: ProfileType }) {
-  const avatarUrl = useSupabasePublicUrl(profile.avatar);
-
   return (
     <Card.Root border="none" w="full">
       <Card.Header>
         <HStack>
-          <Avatar.Root>
-            <Avatar.Image src={avatarUrl} />
-            <Avatar.Fallback />
-          </Avatar.Root>
+          <UserAvatar username={profile.username} src={profile.avatar} />
           <Card.Title asChild>
             <Heading fontSize="xl">{profile.username}</Heading>
           </Card.Title>
