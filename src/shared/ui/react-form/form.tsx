@@ -8,7 +8,7 @@ export function Form({ onSubmit, children, ...props }: ComponentProps<'form'>) {
   const form = useFormContext();
 
   return (
-    <Stack asChild gap={4}>
+    <Stack asChild gap={4} width="full">
       <form
         {...props}
         onSubmit={e => {

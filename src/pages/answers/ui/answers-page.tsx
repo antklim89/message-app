@@ -13,10 +13,10 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
         fallback={
           <>
             <Skeleton asChild>
-              <Button my={4}>&larr; BACK</Button>
+              <Button>&larr; BACK</Button>
             </Skeleton>
             <MessageCardFallback />
-            <Skeleton h={30} my={4} />
+            <Skeleton h={30} />
           </>
         }
       >

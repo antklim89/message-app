@@ -17,7 +17,7 @@ export function AnswersCreateLayout({ answerId }: { answerId: number }) {
 
   return (
     <>
-      <Button my={4} variant="ghost" asChild>
+      <Button variant="ghost" asChild alignSelf="self-start">
         <Link to={backHref}>
           <FaChevronLeft />
           BACK
@@ -29,11 +29,7 @@ export function AnswersCreateLayout({ answerId }: { answerId: number }) {
         privateElement={
           <MessageCreateCollapsible
             answerId={answerId}
-            trigger={
-              <Button my={4} variant="outline">
-                Answer to this message.
-              </Button>
-            }
+            trigger={<Button variant="outline">Answer to this message.</Button>}
           />
         }
         publicElement={<Box h={30} />}

@@ -1,5 +1,5 @@
 import { type ReactElement } from 'react';
-import { Box, Button, Card, Collapsible, HStack, useDisclosure, VStack } from '@chakra-ui/react';
+import { Button, Card, Collapsible, HStack, Stack, useDisclosure } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
 import { useAppForm } from '@/shared/lib/react-form';
@@ -45,14 +45,12 @@ export function MessageCreateCollapsible({
       >
         {trigger ?? <Button variant="outline">Create new message</Button>}
       </Collapsible.Trigger>
-      <Collapsible.Content asChild mb={4}>
-        <Card.Root alignItems="center" display="flex" flexDirection="row">
+      <Collapsible.Content asChild mt={2}>
+        <Card.Root>
           <Card.Body asChild>
             <HStack>
-              <Box asChild w="full">
-                <MessageEditForm form={messageEditForm} />
-              </Box>
-              <VStack>
+              <MessageEditForm form={messageEditForm} />
+              <Stack>
                 <Button
                   onClick={messageEditForm.handleSubmit}
                   loading={messageCreateMutation.isPending}
@@ -64,7 +62,7 @@ export function MessageCreateCollapsible({
                 <Button onClick={disclosure.onClose} variant="ghost">
                   Cancel
                 </Button>
-              </VStack>
+              </Stack>
             </HStack>
           </Card.Body>
         </Card.Root>

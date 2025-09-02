@@ -1,5 +1,4 @@
 import { type ReactNode } from 'react';
-import { Stack } from '@chakra-ui/react';
 
 import { MESSAGES_PER_PAGE } from '@/entities/messages';
 import useInfiniteScroll from '@/shared/hooks/use-infinity-scroll';
@@ -23,10 +22,10 @@ export const MessageList = ({
   });
   return (
     <>
-      <Stack gap={4}>{children}</Stack>
-      {loadingNextFallBack != null && isFetchingNextPage && (
-        <Stack gap={4}>{Array.from({ length: MESSAGES_PER_PAGE }, () => loadingNextFallBack)}</Stack>
-      )}
+      {children}
+      {loadingNextFallBack != null &&
+        isFetchingNextPage &&
+        Array.from({ length: MESSAGES_PER_PAGE }, () => loadingNextFallBack)}
       {hasNextPage && <div ref={ref} />}
     </>
   );

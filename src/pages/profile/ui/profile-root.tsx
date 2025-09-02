@@ -1,4 +1,4 @@
-import { Tabs } from '@chakra-ui/react';
+import { Stack, Tabs } from '@chakra-ui/react';
 import { Link, Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 
 import { tabs } from '../config/tabs';
@@ -17,8 +17,10 @@ export function ProfileRoot() {
         ))}
       </Tabs.List>
 
-      <Tabs.ContentGroup>
-        <Outlet />
+      <Tabs.ContentGroup asChild>
+        <Stack as="section">
+          <Outlet />
+        </Stack>
       </Tabs.ContentGroup>
     </Tabs.Root>
   );
