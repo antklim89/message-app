@@ -1,18 +1,14 @@
-import { Box } from '@chakra-ui/react';
-
 import { ProfileUpdateFallback } from '@/features/profile-edit';
 import { SuspenseErrorBoundary } from '@/shared/ui/suspense-error-boundary';
 import { ProfileSettingsAvatarLayout } from './profile-settings-avatar-layout';
-import { ProfileSettingsLayout } from './profile-settings-layout';
+import { ProfileSettingsUpdateLayout } from './profile-settings-update-layout';
 
 export function ProfileSettingsPage() {
   return (
     <>
-      <Box>
-        <ProfileSettingsAvatarLayout />
-      </Box>
+      <ProfileSettingsAvatarLayout />
       <SuspenseErrorBoundary fallback={<ProfileUpdateFallback />}>
-        <ProfileSettingsLayout />
+        <ProfileSettingsUpdateLayout />
       </SuspenseErrorBoundary>
     </>
   );
