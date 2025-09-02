@@ -1,13 +1,13 @@
 import { Avatar, Box, Button, Card, FileUpload, useFileUpload } from '@chakra-ui/react';
 
 import { useSupabasePublicUrl } from '@/shared/lib/supabase';
+import { ProfileAvatarDeleteButton } from './profile-avatar-delete-button';
 import { useProfileAvatarUpdateMutation } from '../api/hooks/use-profile-avatar-update-mutation';
 
 export function ProfileAvatarUpdate({ avatarUrl }: { avatarUrl: string | null }) {
   const avatarUpdateMutation = useProfileAvatarUpdateMutation();
   const fileUpload = useFileUpload({
     maxFiles: 1,
-    // maxFileSize: 3000,
   });
   const file = fileUpload.acceptedFiles[0];
 
@@ -26,9 +26,9 @@ export function ProfileAvatarUpdate({ avatarUrl }: { avatarUrl: string | null })
 
           <FileUpload.Dropzone cursor="pointer" width="full">
             <FileUpload.DropzoneContent>
-              <Avatar.Root w={48} h={48}>
+              <Avatar.Root w="12rem" h="12rem">
                 <Avatar.Image src={file ? URL.createObjectURL(file) : avatarUrl ? fullAvatarUrl : undefined} />
-                <Avatar.Fallback />
+                <Avatar.Fallback fontSize="6rem" />
               </Avatar.Root>
               <Box>Drag and drop files or click here to upload your new avatar.</Box>
             </FileUpload.DropzoneContent>
@@ -39,6 +39,7 @@ export function ProfileAvatarUpdate({ avatarUrl }: { avatarUrl: string | null })
         <Button variant="ghost" onClick={() => fileUpload.clearFiles()}>
           Cancel
         </Button>
+        {avatarUrl != null && <ProfileAvatarDeleteButton onDelete={fileUpload.clearFiles} />}
         <Button loading={avatarUpdateMutation.isPending} loadingText="Saving..." onClick={handleFileUpload}>
           Save
         </Button>
