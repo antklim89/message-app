@@ -33,16 +33,23 @@ export function ProfileUpdate({ profileEditValues }: { profileEditValues: Profil
         <ProfileEditForm form={profileEditForm} />
       </Card.Body>
       <Card.Footer justifyContent="end">
-        <Button variant="ghost" onClick={() => profileEditForm.reset()}>
-          Cancel
-        </Button>
-        <Button
-          loadingText="Saving..."
-          loading={profileUpdateMutation.isPending}
-          onClick={profileEditForm.handleSubmit}
-        >
-          Save
-        </Button>
+        <profileEditForm.Subscribe selector={state => state.isDefaultValue || !state.canSubmit}>
+          {isDisabled => (
+            <>
+              <Button disabled={isDisabled} variant="ghost" onClick={() => profileEditForm.reset()}>
+                Cancel
+              </Button>
+              <Button
+                disabled={isDisabled}
+                loadingText="Saving..."
+                loading={profileUpdateMutation.isPending}
+                onClick={profileEditForm.handleSubmit}
+              >
+                Save
+              </Button>
+            </>
+          )}
+        </profileEditForm.Subscribe>
       </Card.Footer>
     </Card.Root>
   );
