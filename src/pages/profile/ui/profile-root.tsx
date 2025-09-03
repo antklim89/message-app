@@ -9,7 +9,7 @@ export function ProfileRoot() {
 
   return (
     <Tabs.Root fitted value={location.href} navigate={({ value }) => navigate({ to: value })}>
-      <Tabs.List>
+      <Tabs.List mb={2}>
         {tabs.map(tab => (
           <Tabs.Trigger key={tab.label} value={tab.to} asChild>
             <Link to={tab.to}>{tab.label}</Link>
