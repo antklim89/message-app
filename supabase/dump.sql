@@ -61,13 +61,16 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
-    AS $$
+    AS $_$
 begin
-  insert into public.profiles (id)
-  values (new.id);
+  insert into public.profiles (id, username)
+  values (
+    new.id,
+    json_value(new.raw_app_meta_data, '$.username' default 'anon' on empty)
+  );
   return new;
 end;
-$$;
+$_$;
 
 
 ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
@@ -253,7 +256,27 @@ ALTER TABLE ONLY "public"."reports"
 
 
 
+CREATE POLICY "Enable delete for authors only" ON "public"."favorites" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
+
+
+
+CREATE POLICY "Enable delete for authors only" ON "public"."likes" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
+
+
+
 CREATE POLICY "Enable delete for authors only" ON "public"."messages" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
+
+
+
+CREATE POLICY "Enable insert for all" ON "public"."reports" FOR INSERT WITH CHECK (true);
+
+
+
+CREATE POLICY "Enable insert for authors only" ON "public"."favorites" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
+
+
+
+CREATE POLICY "Enable insert for authors only" ON "public"."likes" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
 
 
 
@@ -265,11 +288,31 @@ CREATE POLICY "Enable read access for all users" ON "public"."messages" FOR SELE
 
 
 
+CREATE POLICY "Enable select for all" ON "public"."profiles" FOR SELECT USING (true);
+
+
+
 CREATE POLICY "Enable update for authors only" ON "public"."messages" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "authorId")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
 
 
 
+CREATE POLICY "Enable update for owners only" ON "public"."profiles" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "id"));
+
+
+
+ALTER TABLE "public"."favorites" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."likes" ENABLE ROW LEVEL SECURITY;
+
+
 ALTER TABLE "public"."messages" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."reports" ENABLE ROW LEVEL SECURITY;
 
 
 
