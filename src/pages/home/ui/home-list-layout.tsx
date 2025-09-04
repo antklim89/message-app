@@ -2,7 +2,7 @@ import { useMessageListQuery } from '@/entities/messages';
 import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
 import { MessageList } from '@/widgets/message-list';
 
-export function HomeLayout() {
+export function HomeListLayout() {
   const { data: messages, ...rest } = useMessageListQuery();
 
   return (
