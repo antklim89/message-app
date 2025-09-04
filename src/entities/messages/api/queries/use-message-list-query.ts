@@ -1,6 +1,6 @@
-import { type InferDataFromTag, infiniteQueryOptions } from '@tanstack/react-query';
+import { type InferDataFromTag, infiniteQueryOptions, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 
-import { messageQueryOptions } from './message-query-options';
+import { messageQueryOptions } from './use-message-query';
 import { MESSAGES_PER_PAGE } from '../../config/constants';
 import { type MessageType } from '../../models/types';
 import { getMessageList } from '../repository/get-message-list';
@@ -33,4 +33,8 @@ export function messageListQueryOptions({ answerId }: { answerId?: number } = {}
       return data.pages.flat();
     },
   });
+}
+
+export function useMessageListQuery(...args: Parameters<typeof messageListQueryOptions>) {
+  return useSuspenseInfiniteQuery(messageListQueryOptions(...args));
 }

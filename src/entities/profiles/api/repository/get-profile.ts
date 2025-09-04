@@ -9,7 +9,7 @@ export async function getProfile() {
   if (user == null) return errAuthentication();
 
   const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-  if (error) return errNotFound('Profile not found.');
+  if (error) return errNotFound('Failed to load profile. Try again later');
 
   return ok(profile);
 }

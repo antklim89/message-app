@@ -5,7 +5,7 @@ import type { MessageType } from '@/entities/messages';
 import { useAppForm } from '@/shared/lib/react-form';
 import { FormDialog } from '@/shared/ui/form-dialog';
 import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
-import { useMessageUpdateMutation } from '../api/hooks/use-message-update-mutation';
+import { useMessageUpdateMutation } from '../api/mutations/use-message-update-mutation';
 import type { MessageEditType } from '../model/types';
 
 export function MessageUpdateDialog({

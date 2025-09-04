@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 
 import type { MessageType } from '@/entities/messages';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
-import { useMessageDeleteMutation } from '../api/hooks/use-message-delete-mutation';
+import { useMessageDeleteMutation } from '../api/mutations/use-message-delete-mutation';
 
 export function MessageDeleteDialog({
   id: messageId,

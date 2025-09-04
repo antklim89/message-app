@@ -4,7 +4,7 @@ import { Button, Card, Collapsible, HStack, Stack, useDisclosure } from '@chakra
 import type { MessageType } from '@/entities/messages';
 import { useAppForm } from '@/shared/lib/react-form';
 import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
-import { useMessageCreateMutation } from '../api/hooks/use-message-create-mutation';
+import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
 
 export function MessageCreateCollapsible({
   answerId,

@@ -5,8 +5,8 @@ import { useAppForm } from '@/shared/lib/react-form';
 import { FormDialog } from '@/shared/ui/form-dialog';
 import { LoginForm, loginFormOptions } from './login-form';
 import { RegisterForm, registerFormOptions } from './register-form';
-import { useLoginMutation } from '../api/hooks/use-login-mutation';
-import { useRegisterMutation } from '../api/hooks/use-register-mutation';
+import { useLoginMutation } from '../api/mutations/use-login-mutation';
+import { useRegisterMutation } from '../api/mutations/use-register-mutation';
 
 export function LoginDialog({ openElement }: { openElement: ReactElement }) {
   const [type, setType] = useState<'login' | 'register'>('login');

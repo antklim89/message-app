@@ -1,5 +1,5 @@
-export { useMessageCreateMutation } from './api/hooks/use-message-create-mutation';
-export { useMessageUpdateMutation } from './api/hooks/use-message-update-mutation';
+export { useMessageCreateMutation } from './api/mutations/use-message-create-mutation';
+export { useMessageUpdateMutation } from './api/mutations/use-message-update-mutation';
 export type { MessageEditSchema } from './model/schemas';
 export type { MessageEditType } from './model/types';
 export { MessageCreateCollapsible } from './ui/message-create-collapsible';

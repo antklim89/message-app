@@ -2,8 +2,8 @@ import { Box, Button, Card, FileUpload, useDisclosure, useFileUpload } from '@ch
 
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { useProfileAvatarDeleteMutation } from '../api/hooks/use-profile-avatar-delete-mutation';
-import { useProfileAvatarUpdateMutation } from '../api/hooks/use-profile-avatar-update-mutation';
+import { useProfileAvatarDeleteMutation } from '../api/mutations/use-profile-avatar-delete-mutation';
+import { useProfileAvatarUpdateMutation } from '../api/mutations/use-profile-avatar-update-mutation';
 
 export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
   const disclosure = useDisclosure();

@@ -2,7 +2,7 @@ import { Icon, IconButton, Spinner } from '@chakra-ui/react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
-import { useToggleLikeMutation } from '../api/hooks/use-toggle-like-mutation';
+import { useToggleLikeMutation } from '../api/mutations/use-toggle-like-mutation';
 
 interface Props {
   messageId: MessageType['id'];

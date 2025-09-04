@@ -2,7 +2,7 @@ import { Button, Card, Heading } from '@chakra-ui/react';
 
 import { useAppForm } from '@/shared/lib/react-form';
 import { ProfileEditForm, profileEditFormOptions } from './profile-edit-form';
-import { useProfileUpdateMutation } from '../api/hooks/use-profile-update-mutation';
+import { useProfileUpdateMutation } from '../api/mutations/use-profile-update-mutation';
 import type { ProfileEditType } from '../model/types';
 
 export function ProfileUpdate({ profileEditValues }: { profileEditValues: ProfileEditType }) {

@@ -1,4 +1,4 @@
-import { type InferDataFromTag, queryOptions } from '@tanstack/react-query';
+import { type InferDataFromTag, queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import type { MessageType } from '../../models/types';
 import { getMessage } from '../repository/get-message';
@@ -18,4 +18,8 @@ export function messageQueryOptions({ id }: { id: MessageType['id'] }) {
     },
     queryKey: [MessageQueryOptionsBaseKey, { id }],
   });
+}
+
+export function useMessageQuery(...args: Parameters<typeof messageQueryOptions>) {
+  return useSuspenseQuery(messageQueryOptions(...args));
 }

@@ -4,8 +4,8 @@ import type { QueryClient } from '@tanstack/react-query';
 import {
   MessageListQueryOptionsBaseKey,
   type MessageListQueryOptionsReturnType,
-} from '../api/query-options/message-list-query-options';
-import { messageQueryOptions } from '../api/query-options/message-query-options';
+} from '../api/queries/use-message-list-query';
+import { messageQueryOptions } from '../api/queries/use-message-query';
 import type { MessageType } from '../models/types';
 
 export function updateMessageQueryData(
