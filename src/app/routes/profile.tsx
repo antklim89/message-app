@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { ProfileRoot } from '@/pages/profile';
+import { ProfileRoot, preloadProfilePage } from '@/pages/profile';
 
 export const Route = createFileRoute('/profile')({
   component: ProfileRoot,
+  loader: preloadProfilePage,
 });
