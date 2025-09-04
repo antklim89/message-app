@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
 import { Route as ProfileIndexRouteImport } from './../../app/routes/profile.index'
 import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile.settings'
+import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
 
 const ProfileRoute = ProfileRouteImport.update({
@@ -41,6 +42,11 @@ const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => ProfileRoute,
 } as any)
+const HashtagHashtagRoute = HashtagHashtagRouteImport.update({
+  id: '/hashtag/$hashtag',
+  path: '/hashtag/$hashtag',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
   id: '/answers/$answerId',
   path: '/answers/$answerId',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/profile': typeof ProfileRouteWithChildren
   '/answers/$answerId': typeof AnswersAnswerIdRoute
+  '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/': typeof ProfileIndexRoute
 }
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
+  '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile': typeof ProfileIndexRoute
 }
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/profile': typeof ProfileRouteWithChildren
   '/answers/$answerId': typeof AnswersAnswerIdRoute
+  '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/': typeof ProfileIndexRoute
 }
@@ -78,16 +87,24 @@ export interface FileRouteTypes {
     | '/about'
     | '/profile'
     | '/answers/$answerId'
+    | '/hashtag/$hashtag'
     | '/profile/settings'
     | '/profile/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/answers/$answerId' | '/profile/settings' | '/profile'
+  to:
+    | '/'
+    | '/about'
+    | '/answers/$answerId'
+    | '/hashtag/$hashtag'
+    | '/profile/settings'
+    | '/profile'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/profile'
     | '/answers/$answerId'
+    | '/hashtag/$hashtag'
     | '/profile/settings'
     | '/profile/'
   fileRoutesById: FileRoutesById
@@ -97,6 +114,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   AnswersAnswerIdRoute: typeof AnswersAnswerIdRoute
+  HashtagHashtagRoute: typeof HashtagHashtagRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -136,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileSettingsRouteImport
       parentRoute: typeof ProfileRoute
     }
+    '/hashtag/$hashtag': {
+      id: '/hashtag/$hashtag'
+      path: '/hashtag/$hashtag'
+      fullPath: '/hashtag/$hashtag'
+      preLoaderRoute: typeof HashtagHashtagRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/answers/$answerId': {
       id: '/answers/$answerId'
       path: '/answers/$answerId'
@@ -164,6 +189,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ProfileRoute: ProfileRouteWithChildren,
   AnswersAnswerIdRoute: AnswersAnswerIdRoute,
+  HashtagHashtagRoute: HashtagHashtagRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -55,8 +55,10 @@ export function Message({
         <Card.Body>
           <Text textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
             {wrapMessageHashTags(message.body, (word, key) => (
-              <Span color="blue.200" key={key}>
-                {word}
+              <Span color="blue.200" key={key} asChild>
+                <Link to="/hashtag/$hashtag" params={{ hashtag: word }}>
+                  {word}
+                </Link>
               </Span>
             ))}
           </Text>

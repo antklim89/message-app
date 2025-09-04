@@ -7,9 +7,11 @@ import type { MessageType } from '../../models/types';
 export async function getMessageList({
   answerId,
   lastId,
+  search,
 }: {
   answerId?: MessageType['answerId'];
   lastId?: MessageType['id'];
+  search?: string;
 } = {}): PromiseResult<{ items: MessageType[] }> {
   const supabase = await createSupabaseClient();
 
@@ -21,6 +23,8 @@ export async function getMessageList({
 
   if (answerId == null) query.is('answerId', null);
   else query.eq('answerId', answerId);
+
+  if (search) query.textSearch('body', search);
 
   if (lastId != null) query.lt('id', lastId);
 
