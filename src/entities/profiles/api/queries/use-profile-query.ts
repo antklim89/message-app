@@ -8,11 +8,11 @@ export type ProfileQueryOptionsReturnType = InferDataFromTag<
   ReturnType<typeof getProfileQueryOptions>['queryKey']
 >;
 
-export function getProfileQueryOptions() {
+export function getProfileQueryOptions({ profileId }: { profileId?: string } = {}) {
   return queryOptions({
-    queryKey: [ProfileQueryOptionsBaseKey],
+    queryKey: [ProfileQueryOptionsBaseKey, { profileId }],
     async queryFn() {
-      const { fail, error, result } = await getProfile();
+      const { fail, error, result } = await getProfile({ profileId });
       if (fail) throw error;
       return result;
     },
