@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './../../app/routes/__root'
+import { Route as SearchRouteImport } from './../../app/routes/search'
 import { Route as ProfileRouteImport } from './../../app/routes/profile'
 import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
@@ -18,6 +19,11 @@ import { Route as ProfileFavoriteMessagesRouteImport } from './../../app/routes/
 import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/profile': typeof ProfileRouteWithChildren
+  '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/favorite-messages': typeof ProfileFavoriteMessagesRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/favorite-messages': typeof ProfileFavoriteMessagesRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/profile': typeof ProfileRouteWithChildren
+  '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/favorite-messages': typeof ProfileFavoriteMessagesRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/profile'
+    | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
     | '/profile/favorite-messages'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
     | '/profile/favorite-messages'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/profile'
+    | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
     | '/profile/favorite-messages'
@@ -125,12 +137,20 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ProfileRoute: typeof ProfileRouteWithChildren
+  SearchRoute: typeof SearchRoute
   AnswersAnswerIdRoute: typeof AnswersAnswerIdRoute
   HashtagHashtagRoute: typeof HashtagHashtagRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -209,6 +229,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ProfileRoute: ProfileRouteWithChildren,
+  SearchRoute: SearchRoute,
   AnswersAnswerIdRoute: AnswersAnswerIdRoute,
   HashtagHashtagRoute: HashtagHashtagRoute,
 }
