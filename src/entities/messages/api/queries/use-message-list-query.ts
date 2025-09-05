@@ -11,16 +11,24 @@ export type MessageListQueryOptionsReturnType = InferDataFromTag<
   ReturnType<typeof messageListQueryOptions>['queryKey']
 >;
 
-export function messageListQueryOptions({ answerId, search }: { answerId?: number; search?: string } = {}) {
+export function messageListQueryOptions({
+  answerId,
+  search,
+  isFavorites,
+}: {
+  answerId?: number;
+  search?: string;
+  isFavorites?: boolean;
+} = {}) {
   return infiniteQueryOptions({
-    queryKey: [MessageListQueryOptionsBaseKey, { answerId, search }],
+    queryKey: [MessageListQueryOptionsBaseKey, { answerId, search, isFavorites }],
     getNextPageParam(data: MessageType[]) {
       if (data.length < MESSAGES_PER_PAGE) return;
       return data.at(-1)?.id ?? undefined;
     },
     initialPageParam: undefined as number | undefined,
     async queryFn({ client, pageParam: lastId }) {
-      const { fail, error, result } = await getMessageList({ answerId, lastId, search });
+      const { fail, error, result } = await getMessageList({ answerId, lastId, search, isFavorites });
       if (fail) throw error;
 
       result.items.flat().forEach(message => {
