@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "run-p dev:**",
     "dev:next": "bunx --bun vite --host 0.0.0.0 --port 3000",
-    "dev:typecheck": "yarn typecheck",
+    "dev:typecheck": "bun run typecheck",
     "build": "bunx --bun vite build",
     "start": "vite preview --host 0.0.0.0 --port 3000",
     "lint": "biome check",
