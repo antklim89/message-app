@@ -1,8 +1,8 @@
 import { Button, Heading, Skeleton, SkeletonText, type StackProps, Text, VStack } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
 
 import { LoginDialog } from '@/entities/auth';
 import { Protected } from '@/shared/ui/protected';
-import { LiftSideLinks } from './lift-side-links';
 import { Logo } from './logo';
 
 export function LeftSide(props: StackProps) {
@@ -22,12 +22,17 @@ export function LeftSide(props: StackProps) {
               </Skeleton>
             </>
           }
-          privateElement={
+          privateElement={user => (
             <>
               <Heading>Welcome!</Heading>
-              <LiftSideLinks />
+              <Button width="full" asChild variant="solid">
+                {/** biome-ignore lint/style/noNonNullAssertion: <// TODO: refactor Protected component> */}
+                <Link to="/profile/$profileId" params={{ profileId: user?.id! }}>
+                  Profile
+                </Link>
+              </Button>
             </>
-          }
+          )}
           publicElement={
             <>
               <Heading as="h4" fontSize="2xl" textWrap="balance">
@@ -43,10 +48,13 @@ export function LeftSide(props: StackProps) {
                   </Button>
                 }
               />
-              <LiftSideLinks />
             </>
           }
         />
+
+        <Button width="full" asChild variant="solid">
+          <Link to="/about">About</Link>
+        </Button>
       </VStack>
     </VStack>
   );

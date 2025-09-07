@@ -1,7 +1,7 @@
 import { errAuthentication, errNotFound, ok } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
 
-export async function getProfile({ profileId }: { profileId?: string } = {}) {
+export async function getProfile({ profileId }: { profileId: string }) {
   const supabase = await createSupabaseClient();
 
   const id = profileId ? profileId : await supabase.auth.getSession().then(({ data }) => data.session?.user.id);

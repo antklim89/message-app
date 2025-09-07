@@ -10,12 +10,12 @@
 
 import { Route as rootRouteImport } from './../../app/routes/__root'
 import { Route as SearchRouteImport } from './../../app/routes/search'
+import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile-settings'
 import { Route as ProfileRouteImport } from './../../app/routes/profile'
+import { Route as FavoriteMessagesRouteImport } from './../../app/routes/favorite-messages'
 import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
-import { Route as ProfileIndexRouteImport } from './../../app/routes/profile.index'
-import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile.settings'
-import { Route as ProfileFavoriteMessagesRouteImport } from './../../app/routes/profile.favorite-messages'
+import { Route as ProfileProfileIdRouteImport } from './../../app/routes/profile.$profileId'
 import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
 
@@ -24,9 +24,19 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
+  id: '/profile-settings',
+  path: '/profile-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoriteMessagesRoute = FavoriteMessagesRouteImport.update({
+  id: '/favorite-messages',
+  path: '/favorite-messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -39,19 +49,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfileFavoriteMessagesRoute = ProfileFavoriteMessagesRouteImport.update({
-  id: '/favorite-messages',
-  path: '/favorite-messages',
+const ProfileProfileIdRoute = ProfileProfileIdRouteImport.update({
+  id: '/$profileId',
+  path: '/$profileId',
   getParentRoute: () => ProfileRoute,
 } as any)
 const HashtagHashtagRoute = HashtagHashtagRouteImport.update({
@@ -68,75 +68,79 @@ const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/favorite-messages': typeof FavoriteMessagesRoute
   '/profile': typeof ProfileRouteWithChildren
+  '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
-  '/profile/favorite-messages': typeof ProfileFavoriteMessagesRoute
-  '/profile/settings': typeof ProfileSettingsRoute
-  '/profile/': typeof ProfileIndexRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/favorite-messages': typeof FavoriteMessagesRoute
+  '/profile': typeof ProfileRouteWithChildren
+  '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
-  '/profile/favorite-messages': typeof ProfileFavoriteMessagesRoute
-  '/profile/settings': typeof ProfileSettingsRoute
-  '/profile': typeof ProfileIndexRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/favorite-messages': typeof FavoriteMessagesRoute
   '/profile': typeof ProfileRouteWithChildren
+  '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
-  '/profile/favorite-messages': typeof ProfileFavoriteMessagesRoute
-  '/profile/settings': typeof ProfileSettingsRoute
-  '/profile/': typeof ProfileIndexRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/favorite-messages'
     | '/profile'
+    | '/profile-settings'
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
-    | '/profile/favorite-messages'
-    | '/profile/settings'
-    | '/profile/'
+    | '/profile/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/favorite-messages'
+    | '/profile'
+    | '/profile-settings'
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
-    | '/profile/favorite-messages'
-    | '/profile/settings'
-    | '/profile'
+    | '/profile/$profileId'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/favorite-messages'
     | '/profile'
+    | '/profile-settings'
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
-    | '/profile/favorite-messages'
-    | '/profile/settings'
-    | '/profile/'
+    | '/profile/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  FavoriteMessagesRoute: typeof FavoriteMessagesRoute
   ProfileRoute: typeof ProfileRouteWithChildren
+  ProfileSettingsRoute: typeof ProfileSettingsRoute
   SearchRoute: typeof SearchRoute
   AnswersAnswerIdRoute: typeof AnswersAnswerIdRoute
   HashtagHashtagRoute: typeof HashtagHashtagRoute
@@ -151,11 +155,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile-settings': {
+      id: '/profile-settings'
+      path: '/profile-settings'
+      fullPath: '/profile-settings'
+      preLoaderRoute: typeof ProfileSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorite-messages': {
+      id: '/favorite-messages'
+      path: '/favorite-messages'
+      fullPath: '/favorite-messages'
+      preLoaderRoute: typeof FavoriteMessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -172,25 +190,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/': {
-      id: '/profile/'
-      path: '/'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/settings': {
-      id: '/profile/settings'
-      path: '/settings'
-      fullPath: '/profile/settings'
-      preLoaderRoute: typeof ProfileSettingsRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/favorite-messages': {
-      id: '/profile/favorite-messages'
-      path: '/favorite-messages'
-      fullPath: '/profile/favorite-messages'
-      preLoaderRoute: typeof ProfileFavoriteMessagesRouteImport
+    '/profile/$profileId': {
+      id: '/profile/$profileId'
+      path: '/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdRouteImport
       parentRoute: typeof ProfileRoute
     }
     '/hashtag/$hashtag': {
@@ -211,15 +215,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProfileRouteChildren {
-  ProfileFavoriteMessagesRoute: typeof ProfileFavoriteMessagesRoute
-  ProfileSettingsRoute: typeof ProfileSettingsRoute
-  ProfileIndexRoute: typeof ProfileIndexRoute
+  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
-  ProfileFavoriteMessagesRoute: ProfileFavoriteMessagesRoute,
-  ProfileSettingsRoute: ProfileSettingsRoute,
-  ProfileIndexRoute: ProfileIndexRoute,
+  ProfileProfileIdRoute: ProfileProfileIdRoute,
 }
 
 const ProfileRouteWithChildren =
@@ -228,7 +228,9 @@ const ProfileRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  FavoriteMessagesRoute: FavoriteMessagesRoute,
   ProfileRoute: ProfileRouteWithChildren,
+  ProfileSettingsRoute: ProfileSettingsRoute,
   SearchRoute: SearchRoute,
   AnswersAnswerIdRoute: AnswersAnswerIdRoute,
   HashtagHashtagRoute: HashtagHashtagRoute,

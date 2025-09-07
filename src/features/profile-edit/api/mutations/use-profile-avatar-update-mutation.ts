@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getProfileQueryOptions } from '@/entities/profiles';
+import { getSupabaseSession } from '@/shared/lib/supabase';
 import { toaster } from '@/shared/lib/toaster';
 import { updateAvatar } from '../repository/update-profile-avatar';
 
@@ -15,12 +16,14 @@ export function useProfileAvatarUpdateMutation() {
       const updateAvatarResult = await updateAvatar(file);
       return updateAvatarResult;
     },
-    onSuccess({ fail, success, error, result }) {
-      queryClient.setQueryData(
-        getProfileQueryOptions().queryKey,
-        oldData => oldData && { ...oldData, avatar: result ?? null },
-      );
-
+    async onSuccess({ fail, success, error, result }) {
+      const session = await getSupabaseSession();
+      if (session?.user.id) {
+        queryClient.setQueryData(
+          getProfileQueryOptions({ profileId: session.user.id }).queryKey,
+          oldData => oldData && { ...oldData, avatar: result ?? null },
+        );
+      }
       if (fail) toaster.error({ description: error.message, id: TOAST_ID });
       if (success) toaster.success({ description: 'Avatar updated successfully!', id: TOAST_ID });
     },

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getProfileQueryOptions } from '@/entities/profiles';
+import { getSupabaseSession } from '@/shared/lib/supabase';
 import { toaster } from '@/shared/lib/toaster';
 import type { ProfileEditType } from '../../model/types';
 import { updateProfile } from '../repository/update-profile';
@@ -16,9 +17,14 @@ export function useProfileUpdateMutation() {
       const updateProfileResult = await updateProfile(data);
       return updateProfileResult;
     },
-    onSuccess({ fail, success, error }, variables) {
-      queryClient.setQueryData(getProfileQueryOptions().queryKey, oldData => oldData && { ...oldData, ...variables });
-
+    async onSuccess({ fail, success, error }, variables) {
+      const session = await getSupabaseSession();
+      if (session?.user.id) {
+        queryClient.setQueryData(
+          getProfileQueryOptions({ profileId: session.user.id }).queryKey,
+          oldData => oldData && { ...oldData, ...variables },
+        );
+      }
       if (fail) toaster.error({ description: error.message, id: TOAST_ID });
       if (success) toaster.success({ description: 'Profile updated successfully!', id: TOAST_ID });
     },

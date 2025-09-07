@@ -1,5 +1,7 @@
-import { Box, Card, HStack, Span, Text } from '@chakra-ui/react';
+import { Box, Button, Card, HStack, Span, Text } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
 
+import { LogoutButton } from '@/entities/auth';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { type ProfileType } from '../models/types';
@@ -17,6 +19,17 @@ export function Profile({ profile }: { profile: ProfileType }) {
             </Span>
           </Box>
         </HStack>
+        <Button w="full" asChild>
+          <Link to="/profile-settings">Settings</Link>
+        </Button>
+        <Button w="full" asChild>
+          <Link to="/favorite-messages">Favorites</Link>
+        </Button>
+        <LogoutButton>
+          <Button colorPalette="red" w="full">
+            Logout
+          </Button>
+        </LogoutButton>
       </Card.Header>
       <Card.Body>
         <Text my={8} whiteSpace="pre-wrap">

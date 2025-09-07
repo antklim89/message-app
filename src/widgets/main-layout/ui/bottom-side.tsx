@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { Container, HStack, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
-import { FaDoorOpen } from 'react-icons/fa6';
+import { Container, HStack, Icon, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
+import { FaCircleQuestion, FaDoorOpen, FaUser } from 'react-icons/fa6';
 
 import { LoginDialog } from '@/entities/auth';
 import { Protected } from '@/shared/ui/protected';
-import { BottomSideLinks } from './bottom-side-links';
 import { Logo } from './logo';
 
 export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & StackProps) {
@@ -25,10 +25,16 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
       >
         <Logo height={32} width={32} />
 
-        <BottomSideLinks />
-
         <Protected
           fallback={<Skeleton h="60%" w={100} />}
+          privateElement={user => (
+            <IconButton aria-label="link to profile page" variant="subtle" asChild>
+              {/** biome-ignore lint/style/noNonNullAssertion: <// TODO: refactor Protected component> */}
+              <Link to="/profile/$profileId" params={{ profileId: user?.id! }}>
+                <Icon as={FaUser} />
+              </Link>
+            </IconButton>
+          )}
           publicElement={
             <LoginDialog
               openElement={
@@ -39,6 +45,12 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
             />
           }
         />
+
+        <IconButton aria-label="link to about page" variant="subtle" asChild>
+          <Link to="/about">
+            <Icon as={FaCircleQuestion} />
+          </Link>
+        </IconButton>
 
         {rightSide}
       </HStack>
