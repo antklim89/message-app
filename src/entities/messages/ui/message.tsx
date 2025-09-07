@@ -22,14 +22,18 @@ export function Message({
     <Card.Root border="none" w="full">
       <Card.Header alignItems="center" asChild gap={4}>
         <HStack>
-          <UserAvatar username={message.author.username} src={message.author.avatar} />
+          <Link to="/profile/$profileId" params={{ profileId: message.author.id }}>
+            <UserAvatar username={message.author.username} src={message.author.avatar} />
+          </Link>
           <Card.Title display="flex" flexDirection="column">
-            <Span alignItems="baseline" display="flex" fontSize="xl" gap={4}>
-              {message.author.username}
-              <Protected
-                privateElement={<FaCircleCheck size={12} title="This is your message." />}
-                authorId={message.authorId}
-              />
+            <Span alignItems="baseline" display="flex" fontSize="xl" gap={4} asChild>
+              <Link to="/profile/$profileId" params={{ profileId: message.author.id }}>
+                {message.author.username}
+                <Protected
+                  privateElement={<FaCircleCheck size={12} title="This is your message." />}
+                  authorId={message.authorId}
+                />
+              </Link>
             </Span>
             <Span fontSize="xs" fontWeight="normal">
               <FromNowDate date={message.created} />
