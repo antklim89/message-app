@@ -1,12 +1,13 @@
-import { Box, type StackProps, VStack } from '@chakra-ui/react';
+import { Stack, type StackProps } from '@chakra-ui/react';
 
+import { Search } from '@/features/search';
 import { ColorModeButton } from '@/shared/ui/color-mode';
 
 export function RightSide(props: StackProps) {
   return (
-    <VStack {...props}>
-      <Box flexGrow={1} />
-      <ColorModeButton alignSelf="flex-end" />
-    </VStack>
+    <Stack {...props}>
+      <Search />
+      <ColorModeButton mt="auto" alignSelf="flex-end" />
+    </Stack>
   );
 }

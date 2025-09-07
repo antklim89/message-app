@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Container, HStack, Stack, useBreakpoint } from '@chakra-ui/react';
+import { Container, HStack, Stack, useBreakpoint } from '@chakra-ui/react';
 
 import { BottomSide } from './bottom-side';
 import { LeftSide } from './left-side';
@@ -29,9 +29,9 @@ export function MainLayout({ children }: { children: ReactNode }) {
           h={BOTTOM_SIDE_HEIGHT}
           rightSide={
             <RightSideDrawer>
-              <Box display="flex" h="full" overflow="scroll">
+              <Stack h="full" overflow="scroll">
                 <RightSide />
-              </Box>
+              </Stack>
             </RightSideDrawer>
           }
         />
@@ -70,7 +70,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
           {children}
         </Stack>
 
-        <SideLayout width={SIDE_WIDTH}>
+        <SideLayout asChild width={SIDE_WIDTH}>
           <RightSide />
         </SideLayout>
       </HStack>
