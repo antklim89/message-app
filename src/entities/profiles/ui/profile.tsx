@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 
 import { LogoutButton } from '@/entities/auth';
 import { FromNowDate } from '@/shared/ui/from-now-date';
+import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { type ProfileType } from '../models/types';
 
@@ -19,23 +20,28 @@ export function Profile({ profile }: { profile: ProfileType }) {
             </Span>
           </Box>
         </HStack>
-        <Button w="full" asChild>
-          <Link to="/profile-settings">Settings</Link>
-        </Button>
-        <Button w="full" asChild>
-          <Link to="/favorite-messages">Favorites</Link>
-        </Button>
-        <LogoutButton>
-          <Button colorPalette="red" w="full">
-            Logout
-          </Button>
-        </LogoutButton>
       </Card.Header>
       <Card.Body>
         <Text my={8} whiteSpace="pre-wrap">
           {profile.bio}
         </Text>
       </Card.Body>
+      <Protected
+        authorId={profile.id}
+        privateElement={
+          <Card.Footer justifyContent="flex-end">
+            <Button asChild>
+              <Link to="/profile-settings">Settings</Link>
+            </Button>
+            <Button asChild>
+              <Link to="/favorite-messages">Favorites</Link>
+            </Button>
+            <LogoutButton>
+              <Button colorPalette="red">Logout</Button>
+            </LogoutButton>
+          </Card.Footer>
+        }
+      />
     </Card.Root>
   );
 }
