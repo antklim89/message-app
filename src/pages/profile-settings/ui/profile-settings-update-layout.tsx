@@ -4,8 +4,8 @@ import { useSession } from '@/shared/hooks/use-session';
 import { errAuthentication } from '@/shared/lib/result';
 
 export function ProfileSettingsUpdateLayout() {
-  const session = useSession();
-  if (!session.data?.id) throw errAuthentication().error;
-  const profileQuery = useProfileQuery({ profileId: session.data.id });
+  const { user } = useSession();
+  if (!user?.id) throw errAuthentication().error;
+  const profileQuery = useProfileQuery({ profileId: user.id });
   return <ProfileUpdate profileEditValues={profileQuery.data} />;
 }

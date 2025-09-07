@@ -18,5 +18,6 @@ export function sessionQueryOptions() {
 }
 
 export function useSession() {
-  return useSuspenseQuery(sessionQueryOptions());
+  const { data } = useSuspenseQuery(sessionQueryOptions());
+  return { user: data };
 }
