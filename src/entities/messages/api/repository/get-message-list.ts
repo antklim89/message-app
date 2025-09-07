@@ -9,11 +9,13 @@ export async function getMessageList({
   lastId,
   search,
   isFavorites,
+  authorId,
 }: {
   answerId?: MessageType['answerId'];
   lastId?: MessageType['id'];
   search?: string;
   isFavorites?: boolean;
+  authorId?: MessageType['authorId'];
 } = {}): PromiseResult<{ items: MessageType[] }> {
   const supabase = await createSupabaseClient();
   const session = await supabase.auth.getSession();
@@ -21,9 +23,7 @@ export async function getMessageList({
 
   const query =
     isFavorites && user
-      ? supabase
-          .from('messages')
-          .select(MESSAGE_SELECT_FAVORITES) //.eq('favorites.authorId', user?.id)
+      ? supabase.from('messages').select(MESSAGE_SELECT_FAVORITES).eq('favorites.authorId', user?.id)
       : supabase.from('messages').select(MESSAGE_SELECT);
 
   query.order('id', { ascending: false }).limit(MESSAGES_PER_PAGE);
@@ -31,8 +31,8 @@ export async function getMessageList({
   if (answerId == null) query.is('answerId', null);
   else query.eq('answerId', answerId);
 
+  if (authorId) query.eq('authorId', authorId);
   if (search) query.textSearch('body', search);
-
   if (lastId != null) query.lt('id', lastId);
 
   const { data, error } = await query;

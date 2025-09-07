@@ -15,20 +15,22 @@ export function messageListQueryOptions({
   answerId,
   search,
   isFavorites,
+  authorId,
 }: {
   answerId?: number;
   search?: string;
   isFavorites?: boolean;
+  authorId?: MessageType['authorId'];
 } = {}) {
   return infiniteQueryOptions({
-    queryKey: [MessageListQueryOptionsBaseKey, { answerId, search, isFavorites }],
+    queryKey: [MessageListQueryOptionsBaseKey, { answerId, search, isFavorites, authorId }],
     getNextPageParam(data: MessageType[]) {
       if (data.length < MESSAGES_PER_PAGE) return;
       return data.at(-1)?.id ?? undefined;
     },
     initialPageParam: undefined as number | undefined,
     async queryFn({ client, pageParam: lastId }) {
-      const { fail, error, result } = await getMessageList({ answerId, lastId, search, isFavorites });
+      const { fail, error, result } = await getMessageList({ answerId, lastId, search, isFavorites, authorId });
       if (fail) throw error;
 
       result.items.flat().forEach(message => {

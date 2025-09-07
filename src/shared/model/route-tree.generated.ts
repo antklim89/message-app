@@ -15,9 +15,10 @@ import { Route as ProfileRouteImport } from './../../app/routes/profile'
 import { Route as FavoriteMessagesRouteImport } from './../../app/routes/favorite-messages'
 import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
-import { Route as ProfileProfileIdRouteImport } from './../../app/routes/profile.$profileId'
 import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
+import { Route as ProfileProfileIdIndexRouteImport } from './../../app/routes/profile.$profileId.index'
+import { Route as ProfileProfileIdMessagesRouteImport } from './../../app/routes/profile.$profileId.messages'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -49,11 +50,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileProfileIdRoute = ProfileProfileIdRouteImport.update({
-  id: '/$profileId',
-  path: '/$profileId',
-  getParentRoute: () => ProfileRoute,
-} as any)
 const HashtagHashtagRoute = HashtagHashtagRouteImport.update({
   id: '/hashtag/$hashtag',
   path: '/hashtag/$hashtag',
@@ -64,6 +60,17 @@ const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
   path: '/answers/$answerId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileProfileIdIndexRoute = ProfileProfileIdIndexRouteImport.update({
+  id: '/$profileId/',
+  path: '/$profileId/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileProfileIdMessagesRoute =
+  ProfileProfileIdMessagesRouteImport.update({
+    id: '/$profileId/messages',
+    path: '/$profileId/messages',
+    getParentRoute: () => ProfileRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,7 +81,8 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
-  '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
+  '/profile/$profileId': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,7 +93,8 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
-  '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
+  '/profile/$profileId': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,7 +106,8 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
-  '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
+  '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/messages'
     | '/profile/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/messages'
     | '/profile/$profileId'
   id:
     | '__root__'
@@ -132,7 +144,8 @@ export interface FileRouteTypes {
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
-    | '/profile/$profileId'
+    | '/profile/$profileId/messages'
+    | '/profile/$profileId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -190,13 +203,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/$profileId': {
-      id: '/profile/$profileId'
-      path: '/$profileId'
-      fullPath: '/profile/$profileId'
-      preLoaderRoute: typeof ProfileProfileIdRouteImport
-      parentRoute: typeof ProfileRoute
-    }
     '/hashtag/$hashtag': {
       id: '/hashtag/$hashtag'
       path: '/hashtag/$hashtag'
@@ -211,15 +217,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnswersAnswerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/$profileId/': {
+      id: '/profile/$profileId/'
+      path: '/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/$profileId/messages': {
+      id: '/profile/$profileId/messages'
+      path: '/$profileId/messages'
+      fullPath: '/profile/$profileId/messages'
+      preLoaderRoute: typeof ProfileProfileIdMessagesRouteImport
+      parentRoute: typeof ProfileRoute
+    }
   }
 }
 
 interface ProfileRouteChildren {
-  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
+  ProfileProfileIdMessagesRoute: typeof ProfileProfileIdMessagesRoute
+  ProfileProfileIdIndexRoute: typeof ProfileProfileIdIndexRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
-  ProfileProfileIdRoute: ProfileProfileIdRoute,
+  ProfileProfileIdMessagesRoute: ProfileProfileIdMessagesRoute,
+  ProfileProfileIdIndexRoute: ProfileProfileIdIndexRoute,
 }
 
 const ProfileRouteWithChildren =

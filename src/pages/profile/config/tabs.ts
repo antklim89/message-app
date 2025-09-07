@@ -1,8 +1,12 @@
-import type { FileRoutesById } from '@/shared/model/route-tree.generated';
+import type { FileRoutesByTo } from '@/shared/model/route-tree.generated';
 
 export const tabs = [
   {
-    to: '/profile',
+    to: '/profile/$profileId',
     label: 'Profile',
   },
-] as const satisfies { label: string; to: keyof FileRoutesById }[];
+  {
+    to: '/profile/$profileId/messages',
+    label: 'Messages',
+  },
+] as const satisfies { label: string; to: keyof FileRoutesByTo }[];
