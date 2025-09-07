@@ -11,12 +11,6 @@ export default defineConfig({
       routesDirectory: 'src/app/routes',
       generatedRouteTree: './src/shared/model/route-tree.generated.ts',
     }),
-    tanstackRouter({
-      target: 'react',
-      autoCodeSplitting: true,
-      routesDirectory: 'src/app/routes/-aside',
-      generatedRouteTree: './src/shared/model/route-tree-aside.generated.ts',
-    }),
     react(),
     tsconfigPaths(),
   ],

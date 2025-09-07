@@ -1,26 +1,16 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import {
-  RouterProvider as AsideRouterProvider,
-  createRootRoute,
-  createRouter,
-  HeadContent,
-  Outlet,
-} from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { sessionQueryOptions } from '@/shared/hooks/use-session';
-import { routeTree } from '@/shared/model/route-tree-aside.generated';
 import { MainLayout } from '@/widgets/main-layout';
-import { queryClient } from '../providers/react-query';
-
-const router = createRouter({ context: { queryClient }, routeTree });
 
 function RootComponent() {
   return (
     <>
       <HeadContent />
-      <MainLayout rightSide={<AsideRouterProvider router={router} />}>
+      <MainLayout>
         <Outlet />
       </MainLayout>
       <TanStackRouterDevtools position="top-right" />
