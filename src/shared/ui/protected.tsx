@@ -8,20 +8,16 @@ export function Protected({
   fallback,
   privateElement,
   publicElement,
-  checkIsPublic,
+  authorId,
 }: {
   publicElement?: ReactNode;
-  privateElement?: ReactNode;
-  checkIsPublic?: (userId: User | null) => boolean;
+  privateElement?: ReactNode | ((userId: User) => ReactNode);
+  authorId?: User['id'];
   fallback?: ReactNode;
 }) {
   return (
     <SuspenseErrorBoundary fallback={fallback}>
-      <ProtectedContent
-        checkIsPublic={checkIsPublic ?? (userId => userId == null)}
-        privateElement={privateElement}
-        publicElement={publicElement}
-      />
+      <ProtectedContent authorId={authorId} privateElement={privateElement} publicElement={publicElement} />
     </SuspenseErrorBoundary>
   );
 }
@@ -29,14 +25,15 @@ export function Protected({
 export function ProtectedContent({
   privateElement,
   publicElement,
-  checkIsPublic,
+  authorId,
 }: {
   publicElement: ReactNode | undefined;
-  privateElement: ReactNode | undefined;
-  checkIsPublic: (userId: User | null) => boolean;
+  privateElement: ReactNode | ((userId: User) => ReactNode) | undefined;
+  authorId?: User['id'];
 }) {
-  const { data: user } = useSession();
+  const { user } = useSession();
 
-  if (checkIsPublic(user)) return publicElement;
-  return privateElement;
+  if (user == null) return publicElement;
+  if (authorId != null && authorId !== user.id) return publicElement;
+  return typeof privateElement === 'function' ? privateElement(user) : privateElement;
 }

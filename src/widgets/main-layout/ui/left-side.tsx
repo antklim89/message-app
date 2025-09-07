@@ -26,8 +26,7 @@ export function LeftSide(props: StackProps) {
             <>
               <Heading>Welcome!</Heading>
               <Button width="full" asChild variant="solid">
-                {/** biome-ignore lint/style/noNonNullAssertion: <// TODO: refactor Protected component> */}
-                <Link to="/profile/$profileId" params={{ profileId: user?.id! }}>
+                <Link to="/profile/$profileId" params={{ profileId: user.id }}>
                   Profile
                 </Link>
               </Button>

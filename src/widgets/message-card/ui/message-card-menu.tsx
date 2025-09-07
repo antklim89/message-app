@@ -12,7 +12,7 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
       <MessageCardMenuCopyUrl answerId={message.id} />
 
       <Protected
-        checkIsPublic={user => user?.id !== message.authorId}
+        authorId={message.authorId}
         privateElement={
           <>
             <Menu.Separator />

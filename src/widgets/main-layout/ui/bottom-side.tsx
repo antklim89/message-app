@@ -29,8 +29,7 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
           fallback={<Skeleton h="60%" w={100} />}
           privateElement={user => (
             <IconButton aria-label="link to profile page" variant="subtle" asChild>
-              {/** biome-ignore lint/style/noNonNullAssertion: <// TODO: refactor Protected component> */}
-              <Link to="/profile/$profileId" params={{ profileId: user?.id! }}>
+              <Link to="/profile/$profileId" params={{ profileId: user.id }}>
                 <Icon as={FaUser} />
               </Link>
             </IconButton>

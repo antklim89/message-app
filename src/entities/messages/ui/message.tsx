@@ -27,8 +27,8 @@ export function Message({
             <Span alignItems="baseline" display="flex" fontSize="xl" gap={4}>
               {message.author.username}
               <Protected
-                checkIsPublic={user => user?.id !== message.authorId}
                 privateElement={<FaCircleCheck size={12} title="This is your message." />}
+                authorId={message.authorId}
               />
             </Span>
             <Span fontSize="xs" fontWeight="normal">
