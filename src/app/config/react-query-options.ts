@@ -4,6 +4,7 @@ import { ErrType, isErr } from '@/shared/lib/result';
 
 export const reactQueryOptions: DefaultOptions<Error> = {
   queries: {
+    experimental_prefetchInRender: true,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     retryDelay: 1000 * 10,

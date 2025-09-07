@@ -1,22 +1,45 @@
-import { SuspenseErrorBoundary } from '@/shared/ui/suspense-error-boundary';
-import { MessageCardFallback } from '@/widgets/message-card';
-import { MessageListFallback } from '@/widgets/message-list';
-import { HomeListLayout } from './home-list-layout';
-import { HomeNewLayout } from './home-new-layout';
+import { Box, Button, Skeleton } from '@chakra-ui/react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+
+import { messageListQueryOptions } from '@/entities/messages';
+import { MessageCreateCollapsible } from '@/features/message-edit';
+import { AwaitErrorBoundary } from '@/shared/ui/await-error-boundary';
+import { Protected } from '@/shared/ui/protected';
+import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
+import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
 export function HomePage() {
+  const messageQuery = useInfiniteQuery(messageListQueryOptions());
+
   return (
     <>
-      <HomeNewLayout />
-      <SuspenseErrorBoundary
+      <Protected
+        fallback={<Skeleton h={30} />}
+        privateElement={
+          <MessageCreateCollapsible
+            answerId={undefined}
+            trigger={<Button variant="outline">Add New Message.</Button>}
+          />
+        }
+        publicElement={<Box h={30} />}
+      />
+
+      <AwaitErrorBoundary
+        query={messageQuery}
         fallback={
           <MessageListFallback>
             <MessageCardFallback />
           </MessageListFallback>
         }
       >
-        <HomeListLayout />
-      </SuspenseErrorBoundary>
+        {messages => (
+          <MessageList {...messageQuery} loadingNextFallBack={<MessageCardFallback />}>
+            {messages.map(message => (
+              <MessageCard key={message.id} message={message} />
+            ))}
+          </MessageList>
+        )}
+      </AwaitErrorBoundary>
     </>
   );
 }
