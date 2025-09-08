@@ -9,7 +9,7 @@ export function LeftSide(props: StackProps) {
   return (
     <VStack {...props}>
       <Logo />
-      <VStack my={4} w="full" textAlign="center">
+      <VStack my={4} w="full">
         <Protected
           fallback={
             <>
@@ -42,7 +42,7 @@ export function LeftSide(props: StackProps) {
               </Text>
               <LoginDialog
                 openElement={
-                  <Button textTransform="uppercase" mb={8} width="full">
+                  <Button mb={8} width="full">
                     Enter
                   </Button>
                 }
