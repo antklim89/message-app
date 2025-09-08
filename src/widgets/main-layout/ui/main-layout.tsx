@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Container, HStack, Stack, useBreakpoint } from '@chakra-ui/react';
 
 import { BottomSide } from './bottom-side';
+import { Center } from './center';
 import { LeftSide } from './left-side';
 import { RightSide } from './right-side';
 import { RightSideDrawer } from './right-side-drawer';
@@ -22,8 +23,8 @@ export function MainLayout({ children }: { children: ReactNode }) {
   if (breakpoint === 'md') {
     return (
       <Stack gap={GAP} position="relative">
-        <Container flexGrow={1} py={4} asChild>
-          <Stack>{children}</Stack>
+        <Container mb={BOTTOM_SIDE_HEIGHT + GAP} asChild>
+          <Center>{children}</Center>
         </Container>
         <BottomSide
           h={BOTTOM_SIDE_HEIGHT}
@@ -44,9 +45,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
       <Stack gap={GAP}>
         <Container asChild>
           <HStack gap={GAP} position="relative">
-            <Stack flexGrow={1} mb={BOTTOM_SIDE_HEIGHT + GAP} py={4}>
-              {children}
-            </Stack>
+            <Center mb={BOTTOM_SIDE_HEIGHT + GAP}>{children}</Center>
 
             <SideLayout mb={BOTTOM_SIDE_HEIGHT + GAP} width={SIDE_WIDTH}>
               <RightSide />
@@ -66,9 +65,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
           <LeftSide />
         </SideLayout>
 
-        <Stack flexGrow={1} py={4}>
-          {children}
-        </Stack>
+        <Center>{children}</Center>
 
         <SideLayout asChild width={SIDE_WIDTH}>
           <RightSide />
