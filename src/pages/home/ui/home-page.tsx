@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { messageListQueryOptions } from '@/entities/messages';
 import { MessageCreateCollapsible } from '@/features/message-edit';
-import { AwaitErrorBoundary } from '@/shared/ui/await-error-boundary';
+import { AwaitQuery } from '@/shared/ui/await-query';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
@@ -24,7 +24,7 @@ export function HomePage() {
         publicElement={<Box h={30} />}
       />
 
-      <AwaitErrorBoundary query={messageQuery} fallback={<MessageListFallback />}>
+      <AwaitQuery query={messageQuery} fallback={<MessageListFallback />}>
         {messages => (
           <MessageList {...messageQuery} loadingNextFallBack={<MessageCardFallback />}>
             {messages.map(message => (
@@ -32,7 +32,7 @@ export function HomePage() {
             ))}
           </MessageList>
         )}
-      </AwaitErrorBoundary>
+      </AwaitQuery>
     </>
   );
 }

@@ -1,11 +1,22 @@
-import { SuspenseErrorBoundary } from '@/shared/ui/suspense-error-boundary';
-import { MessageListFallback } from '@/widgets/message-list';
-import { SearchLayout } from './search-layout';
+import { useInfiniteQuery } from '@tanstack/react-query';
+
+import { messageListQueryOptions } from '@/entities/messages';
+import { AwaitQuery } from '@/shared/ui/await-query';
+import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
+import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
 export function SearchPage({ searchParams }: { searchParams: { s: string } }) {
+  const messageListQuery = useInfiniteQuery(messageListQueryOptions({ search: searchParams.s }));
+
   return (
-    <SuspenseErrorBoundary fallback={<MessageListFallback />}>
-      <SearchLayout search={searchParams.s} />
-    </SuspenseErrorBoundary>
+    <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
+      {messages => (
+        <MessageList {...messageListQuery} loadingNextFallBack={<MessageCardFallback />}>
+          {messages.map(message => (
+            <MessageCard key={message.id} message={message} />
+          ))}
+        </MessageList>
+      )}
+    </AwaitQuery>
   );
 }
