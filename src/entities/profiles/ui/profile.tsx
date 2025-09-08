@@ -1,4 +1,4 @@
-import { Box, Button, Card, HStack, Span, Text } from '@chakra-ui/react';
+import { Button, ButtonGroup, Card, HStack, Span, Stack, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { LogoutButton } from '@/entities/auth';
@@ -11,14 +11,43 @@ export function Profile({ profile }: { profile: ProfileType }) {
   return (
     <Card.Root border="none" w="full">
       <Card.Header>
-        <HStack gap={8}>
-          <UserAvatar size={12} username={profile.username} src={profile.avatar} />
-          <Box>
-            <Card.Title fontSize="4xl">{profile.username}</Card.Title>
+        <HStack gap={4}>
+          <UserAvatar
+            w={{ base: '12rem', mdDown: '6rem' }}
+            h={{ base: '12rem', mdDown: '6rem' }}
+            fontSize={{ base: '6rem', mdDown: '3rem' }}
+            username={profile.username}
+            src={profile.avatar}
+          />
+          <Stack>
+            <Card.Title fontSize={{ base: '4xl', mdDown: '2xl' }}>{profile.username}</Card.Title>
             <Span color="gray.200" fontWeight="normal">
-              Created: <FromNowDate fontSize="sm" date={profile.created} />
+              Created: <FromNowDate fontSize={{ base: 'sm', mdDown: 'xs' }} date={profile.created} />
             </Span>
-          </Box>
+            <Protected
+              authorId={profile.id}
+              privateElement={
+                <ButtonGroup>
+                  <Button rounded="full" size={{ mdDown: 'sm', base: 'md' }} p={{ mdDown: 2, base: 'md' }} asChild>
+                    <Link to="/profile-settings">Settings</Link>
+                  </Button>
+                  <Button rounded="full" size={{ mdDown: 'sm', base: 'md' }} p={{ mdDown: 2, base: 'md' }} asChild>
+                    <Link to="/favorite-messages">Favorites</Link>
+                  </Button>
+                  <LogoutButton>
+                    <Button
+                      rounded="full"
+                      size={{ mdDown: 'sm', base: 'md' }}
+                      p={{ mdDown: 2, base: 'md' }}
+                      colorPalette="red"
+                    >
+                      Logout
+                    </Button>
+                  </LogoutButton>
+                </ButtonGroup>
+              }
+            />
+          </Stack>
         </HStack>
       </Card.Header>
       <Card.Body>
@@ -26,22 +55,6 @@ export function Profile({ profile }: { profile: ProfileType }) {
           {profile.bio}
         </Text>
       </Card.Body>
-      <Protected
-        authorId={profile.id}
-        privateElement={
-          <Card.Footer justifyContent="flex-end">
-            <Button asChild>
-              <Link to="/profile-settings">Settings</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/favorite-messages">Favorites</Link>
-            </Button>
-            <LogoutButton>
-              <Button colorPalette="red">Logout</Button>
-            </LogoutButton>
-          </Card.Footer>
-        }
-      />
     </Card.Root>
   );
 }
