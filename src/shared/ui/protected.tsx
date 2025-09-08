@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { SuspenseErrorBoundary } from './suspense-error-boundary';
-import { useSession } from '../hooks/use-session';
+import { AwaitQuery } from './await-query';
+import { sessionQueryOptions } from '../hooks/use-session';
 import { type User } from '../model/user';
 
 export function Protected({
@@ -15,25 +16,15 @@ export function Protected({
   authorId?: User['id'];
   fallback?: ReactNode;
 }) {
+  const sessionQuery = useQuery(sessionQueryOptions());
+
   return (
-    <SuspenseErrorBoundary fallback={fallback}>
-      <ProtectedContent authorId={authorId} privateElement={privateElement} publicElement={publicElement} />
-    </SuspenseErrorBoundary>
+    <AwaitQuery query={sessionQuery} fallback={fallback}>
+      {user => {
+        if (user == null) return publicElement;
+        if (authorId != null && authorId !== user.id) return publicElement;
+        return typeof privateElement === 'function' ? privateElement(user) : privateElement;
+      }}
+    </AwaitQuery>
   );
-}
-
-export function ProtectedContent({
-  privateElement,
-  publicElement,
-  authorId,
-}: {
-  publicElement: ReactNode | undefined;
-  privateElement: ReactNode | ((userId: User) => ReactNode) | undefined;
-  authorId?: User['id'];
-}) {
-  const { user } = useSession();
-
-  if (user == null) return publicElement;
-  if (authorId != null && authorId !== user.id) return publicElement;
-  return typeof privateElement === 'function' ? privateElement(user) : privateElement;
 }
