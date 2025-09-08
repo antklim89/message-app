@@ -24,14 +24,7 @@ export function HomePage() {
         publicElement={<Box h={30} />}
       />
 
-      <AwaitErrorBoundary
-        query={messageQuery}
-        fallback={
-          <MessageListFallback>
-            <MessageCardFallback />
-          </MessageListFallback>
-        }
-      >
+      <AwaitErrorBoundary query={messageQuery} fallback={<MessageListFallback />}>
         {messages => (
           <MessageList {...messageQuery} loadingNextFallBack={<MessageCardFallback />}>
             {messages.map(message => (

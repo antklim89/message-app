@@ -23,13 +23,7 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
         <AnswersCreateLayout answerId={params.answerId} />
       </SuspenseErrorBoundary>
 
-      <SuspenseErrorBoundary
-        fallback={
-          <MessageListFallback>
-            <MessageCardFallback />
-          </MessageListFallback>
-        }
-      >
+      <SuspenseErrorBoundary fallback={<MessageListFallback />}>
         <AnswersListLayout answerId={params.answerId} />
       </SuspenseErrorBoundary>
     </>
