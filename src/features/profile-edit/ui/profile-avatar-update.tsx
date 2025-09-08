@@ -36,7 +36,13 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
 
           <FileUpload.Dropzone cursor="pointer" width="full">
             <FileUpload.DropzoneContent>
-              <UserAvatar size={12} src={file ? URL.createObjectURL(file) : avatarUrl} username={username} />
+              <UserAvatar
+                w="12rem"
+                h="12rem"
+                fontSize="6rem"
+                src={file ? URL.createObjectURL(file) : avatarUrl}
+                username={username}
+              />
               <Box>Drag and drop files or click here to upload your new avatar.</Box>
             </FileUpload.DropzoneContent>
           </FileUpload.Dropzone>
