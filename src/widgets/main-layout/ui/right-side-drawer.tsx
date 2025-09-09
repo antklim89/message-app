@@ -12,11 +12,11 @@ export function RightSideDrawer({ children }: { children: ReactNode }) {
       </Drawer.Trigger>
       <Drawer.Backdrop />
       <Drawer.Positioner>
-        <Drawer.Content>
+        <Drawer.Content bg="bg/40">
           <Drawer.Body>{children}</Drawer.Body>
           <Drawer.Footer>
             <Drawer.CloseTrigger asChild position="static">
-              <IconButton aria-label="toggle right side drawer" variant="outline">
+              <IconButton aria-label="toggle right side drawer" colorPalette="red" variant="solid">
                 <FaXmark />
               </IconButton>
             </Drawer.CloseTrigger>

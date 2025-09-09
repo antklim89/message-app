@@ -5,9 +5,9 @@ import { ColorModeButton } from '@/shared/ui/color-mode';
 
 export function RightSide(props: StackProps) {
   return (
-    <Stack {...props}>
+    <Stack h="full" {...props}>
       <Search />
-      <ColorModeButton mt="auto" alignSelf="flex-end" />
+      <ColorModeButton variant="solid" mt="auto" alignSelf="flex-end" />
     </Stack>
   );
 }
