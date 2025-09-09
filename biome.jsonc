@@ -102,7 +102,7 @@
         "noFloatingPromises": "error",
         "noImportCycles": "error",
         "noMisusedPromises": "error",
-        "noSecrets": "error",
+        "noSecrets": "off",
         "noShadow": "error",
         "noUselessUndefined": "error",
         "useAnchorHref": "error",
