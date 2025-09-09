@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './../../app/routes/__root'
 import { Route as SearchRouteImport } from './../../app/routes/search'
 import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile-settings'
 import { Route as ProfileRouteImport } from './../../app/routes/profile'
+import { Route as FollowingsRouteImport } from './../../app/routes/followings'
+import { Route as FollowersRouteImport } from './../../app/routes/followers'
 import { Route as FavoriteMessagesRouteImport } from './../../app/routes/favorite-messages'
 import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
@@ -33,6 +35,16 @@ const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FollowingsRoute = FollowingsRouteImport.update({
+  id: '/followings',
+  path: '/followings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FollowersRoute = FollowersRouteImport.update({
+  id: '/followers',
+  path: '/followers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoriteMessagesRoute = FavoriteMessagesRouteImport.update({
@@ -76,6 +88,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/favorite-messages': typeof FavoriteMessagesRoute
+  '/followers': typeof FollowersRoute
+  '/followings': typeof FollowingsRoute
   '/profile': typeof ProfileRouteWithChildren
   '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
@@ -88,6 +102,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/favorite-messages': typeof FavoriteMessagesRoute
+  '/followers': typeof FollowersRoute
+  '/followings': typeof FollowingsRoute
   '/profile': typeof ProfileRouteWithChildren
   '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
@@ -101,6 +117,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/favorite-messages': typeof FavoriteMessagesRoute
+  '/followers': typeof FollowersRoute
+  '/followings': typeof FollowingsRoute
   '/profile': typeof ProfileRouteWithChildren
   '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
@@ -115,6 +133,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/favorite-messages'
+    | '/followers'
+    | '/followings'
     | '/profile'
     | '/profile-settings'
     | '/search'
@@ -127,6 +147,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/favorite-messages'
+    | '/followers'
+    | '/followings'
     | '/profile'
     | '/profile-settings'
     | '/search'
@@ -139,6 +161,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/favorite-messages'
+    | '/followers'
+    | '/followings'
     | '/profile'
     | '/profile-settings'
     | '/search'
@@ -152,6 +176,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   FavoriteMessagesRoute: typeof FavoriteMessagesRoute
+  FollowersRoute: typeof FollowersRoute
+  FollowingsRoute: typeof FollowingsRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   SearchRoute: typeof SearchRoute
@@ -180,6 +206,20 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/followings': {
+      id: '/followings'
+      path: '/followings'
+      fullPath: '/followings'
+      preLoaderRoute: typeof FollowingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/followers': {
+      id: '/followers'
+      path: '/followers'
+      fullPath: '/followers'
+      preLoaderRoute: typeof FollowersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorite-messages': {
@@ -251,6 +291,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   FavoriteMessagesRoute: FavoriteMessagesRoute,
+  FollowersRoute: FollowersRoute,
+  FollowingsRoute: FollowingsRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ProfileSettingsRoute: ProfileSettingsRoute,
   SearchRoute: SearchRoute,

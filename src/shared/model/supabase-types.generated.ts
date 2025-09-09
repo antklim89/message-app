@@ -64,6 +64,39 @@ export type Database = {
           },
         ]
       }
+      followers: {
+        Row: {
+          authorId: string
+          followerId: string
+          is_follower_x: boolean | null
+          is_following_x: boolean | null
+          test: string | null
+        }
+        Insert: {
+          authorId: string
+          followerId: string
+        }
+        Update: {
+          authorId?: string
+          followerId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscribe_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscribe_subscribeId_fkey"
+            columns: ["followerId"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       likes: {
         Row: {
           authorId: string
@@ -79,7 +112,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "likes_authorId_fkey1"
+            foreignKeyName: "likes_authorId_fkey"
             columns: ["authorId"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -101,6 +134,7 @@ export type Database = {
           body: string
           created: string
           id: number
+          updated: string
           message_has_liked: boolean | null
           message_in_favorite: boolean | null
           message_likes_count: number | null
@@ -111,6 +145,7 @@ export type Database = {
           body?: string
           created?: string
           id?: number
+          updated?: string
         }
         Update: {
           answerId?: number | null
@@ -118,6 +153,7 @@ export type Database = {
           body?: string
           created?: string
           id?: number
+          updated?: string
         }
         Relationships: [
           {
@@ -128,7 +164,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "messages_authorId_fkey1"
+            foreignKeyName: "Messages_authorId_fkey"
             columns: ["authorId"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -143,12 +179,14 @@ export type Database = {
           created: string
           id: string
           username: string
+          is_follower: boolean | null
+          is_following: boolean | null
         }
         Insert: {
           avatar?: string | null
           bio?: string
           created?: string
-          id?: string
+          id: string
           username?: string
         }
         Update: {
@@ -163,21 +201,21 @@ export type Database = {
       reports: {
         Row: {
           body: string
-          createdAt: string
+          created: string
           id: number
-          messageId: number | null
+          messageId: number
         }
         Insert: {
           body?: string
-          createdAt?: string
+          created?: string
           id?: number
-          messageId?: number | null
+          messageId: number
         }
         Update: {
           body?: string
-          createdAt?: string
+          created?: string
           id?: number
-          messageId?: number | null
+          messageId?: number
         }
         Relationships: [
           {
@@ -194,6 +232,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      compare_uuid: {
+        Args: { uuid: string }
+        Returns: boolean
+      }
+      is_follower: {
+        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: boolean
+      }
+      is_follower_x: {
+        Args: { "": Database["public"]["Tables"]["followers"]["Row"] }
+        Returns: boolean
+      }
+      is_following: {
+        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: boolean
+      }
+      is_following_x: {
+        Args: { "": Database["public"]["Tables"]["followers"]["Row"] }
+        Returns: boolean
+      }
       message_has_liked: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: boolean
@@ -205,6 +263,10 @@ export type Database = {
       message_likes_count: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: number
+      }
+      test: {
+        Args: { "": Database["public"]["Tables"]["followers"]["Row"] }
+        Returns: string
       }
     }
     Enums: {

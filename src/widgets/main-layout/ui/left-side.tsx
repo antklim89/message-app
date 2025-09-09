@@ -30,6 +30,12 @@ export function LeftSide(props: StackProps) {
                   Profile
                 </Link>
               </Button>
+              <Button width="full" asChild variant="solid">
+                <Link to="/followers">Followers</Link>
+              </Button>
+              <Button width="full" asChild variant="solid">
+                <Link to="/followings">Followings</Link>
+              </Button>
             </>
           )}
           publicElement={
