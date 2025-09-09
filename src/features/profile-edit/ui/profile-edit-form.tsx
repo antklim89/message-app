@@ -17,8 +17,8 @@ export const ProfileEditForm = withForm({
     return (
       <form.AppForm>
         <form.Form {...props}>
-          <form.AppField name="username">{field => <field.InputField label="Username" autoFocus />}</form.AppField>
-          <form.AppField name="bio">{field => <field.TextareaField label="Bio" autoFocus autoresize />}</form.AppField>
+          <form.AppField name="username">{field => <field.InputField label="Username" />}</form.AppField>
+          <form.AppField name="bio">{field => <field.TextareaField label="Bio" autoresize />}</form.AppField>
         </form.Form>
       </form.AppForm>
     );
