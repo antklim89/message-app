@@ -38,7 +38,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["src/**/*", "!**/*.generated.*"]
+    "includes": ["src/**/*", "supabase/seed.ts", "!**/*.generated.*"]
   },
   "formatter": {
     "attributePosition": "auto",
