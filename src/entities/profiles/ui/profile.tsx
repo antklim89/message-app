@@ -2,6 +2,7 @@ import { Button, ButtonGroup, Card, HStack, Span, Stack, Text } from '@chakra-ui
 import { Link } from '@tanstack/react-router';
 
 import { LogoutButton } from '@/entities/auth';
+import { FollowToggleButton } from '@/features/follow-toggle';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
@@ -47,6 +48,7 @@ export function Profile({ profile }: { profile: ProfileType }) {
                 </ButtonGroup>
               }
             />
+            <FollowToggleButton followerId={profile.id} isFollowing={profile.isFollowing} />
           </Stack>
         </HStack>
       </Card.Header>

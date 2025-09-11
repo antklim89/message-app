@@ -1,14 +1,20 @@
-import { errAuthentication, errNotFound, ok } from '@/shared/lib/result';
+import { errAuthentication, errNotFound, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
+import { profileDto } from '../../models/dto';
+import { type ProfileType } from '../../models/types';
 
-export async function getProfile({ profileId }: { profileId: string }) {
+export async function getProfile({ profileId }: { profileId: string }): PromiseResult<ProfileType> {
   const supabase = await createSupabaseClient();
 
   const id = profileId ? profileId : await supabase.auth.getSession().then(({ data }) => data.session?.user.id);
   if (id == null) return errAuthentication();
 
-  const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', id).single();
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*, isFollowing:is_following')
+    .eq('id', id)
+    .single();
   if (error) return errNotFound('Failed to load profile. Try again later');
 
-  return ok(profile);
+  return ok(profileDto(profile));
 }

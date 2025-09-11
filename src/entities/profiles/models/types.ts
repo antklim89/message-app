@@ -4,4 +4,5 @@ export interface ProfileType {
   created: string;
   id: string;
   username: string;
+  isFollowing: boolean;
 }
