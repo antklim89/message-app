@@ -1,5 +1,7 @@
+import { Button, Card } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 
+import { LogoutButton } from '@/entities/auth';
 import { getProfileQueryOptions } from '@/entities/profiles';
 import {
   ProfileAvatarUpdate,
@@ -18,12 +20,20 @@ export function ProfileSettingsPage() {
 
   return (
     <>
-      <AwaitQuery query={profileQuery} fallback={<ProfileAvatarUpdateFallback />}>
-        {profile => <ProfileUpdate profileEditValues={profile} />}
-      </AwaitQuery>
       <AwaitQuery query={profileQuery} fallback={<ProfileUpdateFallback />}>
         {profile => <ProfileAvatarUpdate username={profile.username} avatarUrl={profile.avatar} />}
       </AwaitQuery>
+      <AwaitQuery query={profileQuery} fallback={<ProfileAvatarUpdateFallback />}>
+        {profile => <ProfileUpdate profileEditValues={profile} />}
+      </AwaitQuery>
+
+      <Card.Root justifyContent="flex-end">
+        <Card.Body>
+          <LogoutButton>
+            <Button colorPalette="red">Logout</Button>
+          </LogoutButton>
+        </Card.Body>
+      </Card.Root>
     </>
   );
 }

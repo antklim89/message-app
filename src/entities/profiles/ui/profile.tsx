@@ -1,17 +1,14 @@
-import { Button, ButtonGroup, Card, HStack, Span, Stack, Text } from '@chakra-ui/react';
-import { Link } from '@tanstack/react-router';
+import { Card, HStack, Span, Stack, Text } from '@chakra-ui/react';
 
-import { LogoutButton } from '@/entities/auth';
 import { FollowToggleButton } from '@/features/follow-toggle';
 import { FromNowDate } from '@/shared/ui/from-now-date';
-import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { type ProfileType } from '../models/types';
 
 export function Profile({ profile }: { profile: ProfileType }) {
   return (
-    <Card.Root border="none" w="full">
-      <Card.Header>
+    <Card.Root border="none">
+      <Card.Header asChild>
         <HStack gap={4}>
           <UserAvatar
             w={{ base: '12rem', mdDown: '6rem' }}
@@ -20,36 +17,13 @@ export function Profile({ profile }: { profile: ProfileType }) {
             username={profile.username}
             src={profile.avatar}
           />
-          <Stack>
+          <Stack w="full">
             <Card.Title fontSize={{ base: '4xl', mdDown: '2xl' }}>{profile.username}</Card.Title>
             <Span color="gray.200" fontWeight="normal">
               Created: <FromNowDate fontSize={{ base: 'sm', mdDown: 'xs' }} date={profile.created} />
             </Span>
-            <Protected
-              authorId={profile.id}
-              privateElement={
-                <ButtonGroup>
-                  <Button rounded="full" size={{ mdDown: 'sm', base: 'md' }} p={{ mdDown: 2, base: 'md' }} asChild>
-                    <Link to="/profile-settings">Settings</Link>
-                  </Button>
-                  <Button rounded="full" size={{ mdDown: 'sm', base: 'md' }} p={{ mdDown: 2, base: 'md' }} asChild>
-                    <Link to="/favorite-messages">Favorites</Link>
-                  </Button>
-                  <LogoutButton>
-                    <Button
-                      rounded="full"
-                      size={{ mdDown: 'sm', base: 'md' }}
-                      p={{ mdDown: 2, base: 'md' }}
-                      colorPalette="red"
-                    >
-                      Logout
-                    </Button>
-                  </LogoutButton>
-                </ButtonGroup>
-              }
-            />
-            <FollowToggleButton followerId={profile.id} isFollowing={profile.isFollowing} />
           </Stack>
+          <FollowToggleButton alignSelf="flex-start" followerId={profile.id} isFollowing={profile.isFollowing} />
         </HStack>
       </Card.Header>
       <Card.Body>
