@@ -7,6 +7,14 @@ const customConfig = defineConfig({
     },
   },
   theme: {
+    recipes: {
+      button: {
+        variants: {
+          variant: { outline: { color: 'white' } },
+        },
+        defaultVariants: {},
+      },
+    },
     semanticTokens: {
       colors: {
         bg: {
