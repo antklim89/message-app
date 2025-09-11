@@ -13,3 +13,4 @@ export {
 export type { FollowerProfileType } from './models/types';
 export { FollowersList } from './ui/followers-list';
 export { FollowersListFallback } from './ui/followers-list-fallback';
+export { FollowersListItem } from './ui/followers-list-item';

@@ -13,7 +13,7 @@ export function FollowToggleButton({
   return (
     <Button
       {...props}
-      variant={isFollowing ? 'solid' : 'outline'}
+      variant={isFollowing ? 'outline' : 'solid'}
       loading={followToggleMutation.isPending}
       loadingText={isFollowing ? 'Stopping follow ...' : 'Starting follow...'}
       onClick={() => followToggleMutation.mutateAsync()}
