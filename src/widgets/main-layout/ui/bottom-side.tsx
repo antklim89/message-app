@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Container, HStack, Icon, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { FaCircleQuestion, FaDoorOpen, FaUser } from 'react-icons/fa6';
+import { FaCircleQuestion, FaDoorOpen, FaGear, FaUser } from 'react-icons/fa6';
 
 import { LoginDialog } from '@/entities/auth';
 import { Protected } from '@/shared/ui/protected';
@@ -28,11 +28,18 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
         <Protected
           fallback={<Skeleton h="60%" w={100} />}
           privateElement={user => (
-            <IconButton aria-label="link to profile page" variant="subtle" asChild>
-              <Link to="/profile/$profileId" params={{ profileId: user.id }}>
-                <Icon as={FaUser} />
-              </Link>
-            </IconButton>
+            <>
+              <IconButton aria-label="link to profile page" variant="subtle" asChild>
+                <Link to="/profile/$profileId" params={{ profileId: user.id }}>
+                  <Icon as={FaUser} />
+                </Link>
+              </IconButton>
+              <IconButton aria-label="link to profile settings" variant="subtle" asChild>
+                <Link to="/profile-settings">
+                  <Icon as={FaGear} />
+                </Link>
+              </IconButton>
+            </>
           )}
           publicElement={
             <LoginDialog
