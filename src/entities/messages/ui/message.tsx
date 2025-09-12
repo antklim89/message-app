@@ -7,7 +7,7 @@ import type { MessageType } from '@/entities/messages';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { wrapMessageHashTags } from '../lib/utils';
+import { wrapMessage } from '../lib/utils';
 
 export function Message({
   message,
@@ -58,13 +58,23 @@ export function Message({
       <Card.Body>
         <Card.Body>
           <Text textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
-            {wrapMessageHashTags(message.body, (word, key) => (
-              <Span color="blue.200" key={key} asChild>
-                <Link to="/hashtag/$hashtag" params={{ hashtag: word }}>
-                  {word}
-                </Link>
-              </Span>
-            ))}
+            {wrapMessage({
+              text: message.body,
+              hashtag: (hashtag, key) => (
+                <Span color="blue.200" key={key} asChild>
+                  <Link to="/hashtag/$hashtag" params={{ hashtag: hashtag.slice(1) }}>
+                    {hashtag}
+                  </Link>
+                </Span>
+              ),
+              username: (username, key) => (
+                <Span color="blue.200" key={key} asChild>
+                  <Link to="/profile/$profileId" params={{ profileId: username.slice(1) }}>
+                    {username}
+                  </Link>
+                </Span>
+              ),
+            })}
           </Text>
         </Card.Body>
       </Card.Body>
