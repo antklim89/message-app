@@ -5,7 +5,7 @@ import { messageListQueryOptions } from '@/entities/messages';
 import { MessageCreateCollapsible } from '@/features/message-edit';
 import { AwaitQuery } from '@/shared/ui/await-query';
 import { Protected } from '@/shared/ui/protected';
-import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
+import { MessageCard } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
 export function HomePage() {
@@ -26,7 +26,7 @@ export function HomePage() {
 
       <AwaitQuery query={messageQuery} fallback={<MessageListFallback />}>
         {messages => (
-          <MessageList {...messageQuery} loadingNextFallBack={<MessageCardFallback />}>
+          <MessageList {...messageQuery} loadingNextFallBack={<MessageListFallback />}>
             {messages.map(message => (
               <MessageCard key={message.id} message={message} />
             ))}

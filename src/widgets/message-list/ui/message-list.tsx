@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react';
 
-import { MESSAGES_PER_PAGE } from '@/entities/messages';
 import useInfiniteScroll from '@/shared/hooks/use-infinity-scroll';
 
 export const MessageList = ({
@@ -23,9 +22,7 @@ export const MessageList = ({
   return (
     <>
       {children}
-      {loadingNextFallBack != null &&
-        isFetchingNextPage &&
-        Array.from({ length: MESSAGES_PER_PAGE }, () => loadingNextFallBack)}
+      {loadingNextFallBack != null && isFetchingNextPage && loadingNextFallBack}
       {hasNextPage && <div ref={ref} />}
     </>
   );

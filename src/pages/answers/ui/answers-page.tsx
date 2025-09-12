@@ -60,7 +60,7 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
 
       <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
         {messages => (
-          <MessageList {...messageListQuery} loadingNextFallBack={<MessageCardFallback />}>
+          <MessageList {...messageListQuery} loadingNextFallBack={<MessageListFallback />}>
             {messages.map(message => (
               <MessageCard key={message.id} message={message} />
             ))}
