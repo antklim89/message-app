@@ -31,6 +31,9 @@ export function LeftSide(props: StackProps) {
                 </Link>
               </Button>
               <Button width="full" asChild variant="solid">
+                <Link to="/favorite-messages">Favorites</Link>
+              </Button>
+              <Button width="full" asChild variant="solid">
                 <Link to="/followers">Followers</Link>
               </Button>
               <Button width="full" asChild variant="solid">

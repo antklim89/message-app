@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Container, HStack, Icon, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { FaCircleQuestion, FaDoorOpen, FaGear, FaUser } from 'react-icons/fa6';
+import { FaCircleQuestion, FaDoorOpen, FaGear, FaRegBookmark, FaUser } from 'react-icons/fa6';
 
 import { LoginDialog } from '@/entities/auth';
 import { Protected } from '@/shared/ui/protected';
@@ -17,7 +17,7 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
         borderColor="border"
         borderTop="sm"
         bottom={0}
-        gap={4}
+        gap={2}
         left={0}
         position="fixed"
         right={0}
@@ -37,6 +37,11 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
               <IconButton aria-label="link to profile settings" variant="subtle" asChild>
                 <Link to="/profile-settings">
                   <Icon as={FaGear} />
+                </Link>
+              </IconButton>
+              <IconButton aria-label="link to favorite messages" variant="subtle" asChild>
+                <Link to="/favorite-messages">
+                  <Icon as={FaRegBookmark} />
                 </Link>
               </IconButton>
             </>
