@@ -60,7 +60,7 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
 
       <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
         {messages => (
-          <MessageList {...messageListQuery} loadingNextFallBack={<MessageListFallback />}>
+          <MessageList emptyMessage="There are no answers to this message yet" {...messageListQuery}>
             {messages.map(message => (
               <MessageCard key={message.id} message={message} />
             ))}

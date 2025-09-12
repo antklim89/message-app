@@ -11,7 +11,7 @@ export function ProfileMessagesPage({ params }: { params: { profileId: string } 
   return (
     <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
       {messages => (
-        <MessageList {...messageListQuery} loadingNextFallBack={<MessageListFallback />}>
+        <MessageList emptyMessage="You have not added any messages" {...messageListQuery}>
           {messages.map(message => (
             <MessageCard key={message.id} message={message} />
           ))}

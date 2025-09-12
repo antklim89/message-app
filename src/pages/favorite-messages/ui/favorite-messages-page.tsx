@@ -11,7 +11,7 @@ export function FavoriteMessagesPage() {
   return (
     <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
       {messages => (
-        <MessageList {...messageListQuery} loadingNextFallBack={<MessageListFallback />}>
+        <MessageList emptyMessage="You have not added any favorite message yet" {...messageListQuery}>
           {messages.map(message => (
             <MessageCard key={message.id} message={message} />
           ))}

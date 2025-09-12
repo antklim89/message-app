@@ -11,7 +11,7 @@ export function HashtagPage({ params }: { params: { hashtag: string } }) {
   return (
     <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
       {messages => (
-        <MessageList {...messageListQuery} loadingNextFallBack={<MessageListFallback />}>
+        <MessageList emptyMessage={`No messages with hashtag "${params.hashtag}" were found`} {...messageListQuery}>
           {messages.map(message => (
             <MessageCard key={message.id} message={message} />
           ))}

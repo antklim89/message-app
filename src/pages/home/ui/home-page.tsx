@@ -26,7 +26,7 @@ export function HomePage() {
 
       <AwaitQuery query={messageQuery} fallback={<MessageListFallback />}>
         {messages => (
-          <MessageList {...messageQuery} loadingNextFallBack={<MessageListFallback />}>
+          <MessageList {...messageQuery}>
             {messages.map(message => (
               <MessageCard key={message.id} message={message} />
             ))}

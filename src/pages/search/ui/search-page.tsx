@@ -11,7 +11,7 @@ export function SearchPage({ searchParams }: { searchParams: { s: string } }) {
   return (
     <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
       {messages => (
-        <MessageList {...messageListQuery} loadingNextFallBack={<MessageListFallback />}>
+        <MessageList emptyMessage={`No messages with search term "${searchParams.s}" were found`} {...messageListQuery}>
           {messages.map(message => (
             <MessageCard key={message.id} message={message} />
           ))}
