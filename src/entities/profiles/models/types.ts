@@ -5,4 +5,8 @@ export interface ProfileType {
   id: string;
   username: string;
   isFollowing: boolean;
+  followersCount: number;
+  followingsCount: number;
+  favoritesCount: number;
+  messagesCount: number;
 }

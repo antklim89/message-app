@@ -11,9 +11,12 @@ export async function getProfile({ profileId }: { profileId: string }): PromiseR
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('*, isFollowing:is_following')
+    .select(
+      '*, isFollowing:is_following, followersCount:followers_count, followingsCount:followings_count, favoritesCount:favorites_count, messagesCount:messages_count',
+    )
     .eq('id', id)
     .single();
+
   if (error) return errNotFound('Failed to load profile. Try again later');
 
   return ok(profileDto(profile));

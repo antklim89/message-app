@@ -68,9 +68,6 @@ export type Database = {
         Row: {
           authorId: string
           followerId: string
-          is_follower_x: boolean | null
-          is_following_x: boolean | null
-          test: string | null
         }
         Insert: {
           authorId: string
@@ -179,8 +176,12 @@ export type Database = {
           created: string
           id: string
           username: string
+          favorites_count: number | null
+          followers_count: number | null
+          followings_count: number | null
           is_follower: boolean | null
           is_following: boolean | null
+          messages_count: number | null
         }
         Insert: {
           avatar?: string | null
@@ -232,24 +233,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      compare_uuid: {
-        Args: { uuid: string }
-        Returns: boolean
+      favorites_count: {
+        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: number
+      }
+      followers_count: {
+        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: number
+      }
+      followings_count: {
+        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: number
       }
       is_follower: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
         Returns: boolean
       }
-      is_follower_x: {
-        Args: { "": Database["public"]["Tables"]["followers"]["Row"] }
-        Returns: boolean
-      }
       is_following: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: boolean
-      }
-      is_following_x: {
-        Args: { "": Database["public"]["Tables"]["followers"]["Row"] }
         Returns: boolean
       }
       message_has_liked: {
@@ -264,9 +265,9 @@ export type Database = {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
         Returns: number
       }
-      test: {
-        Args: { "": Database["public"]["Tables"]["followers"]["Row"] }
-        Returns: string
+      messages_count: {
+        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: number
       }
     }
     Enums: {

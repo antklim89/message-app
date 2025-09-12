@@ -34,11 +34,27 @@ select count(1) from likes where "messageId" = $1.id
 $$ language sql stable security definer;
 
 
--- followers helper functions
+-- profile helper functions
 create or replace function "is_following" (profiles) returns boolean as $$
 select auth.uid() = (select "authorId" from followers where "authorId" = auth.uid() and "followerId" = $1.id)
 $$ language sql stable security definer;
 
 create or replace function "is_follower" (profiles) returns boolean as $$
 select auth.uid() = (select "followerId" from followers where "followerId" = auth.uid() and "authorId" = $1.id)
+$$ language sql stable security definer;
+
+create or replace function "followers_count" (profiles) returns bigint as $$
+select count(1) from followers where "followerId" = $1.id
+$$ language sql stable security definer;
+
+create or replace function "followings_count" (profiles) returns bigint as $$
+select count(1) from followers where "authorId" = $1.id
+$$ language sql stable security definer;
+
+create or replace function "favorites_count" (profiles) returns bigint as $$
+select count(1) from favorites where "authorId" = auth.uid()
+$$ language sql stable security definer;
+
+create or replace function "messages_count" (profiles) returns bigint as $$
+select count(1) from messages where "authorId" = $1.id
 $$ language sql stable security definer;
