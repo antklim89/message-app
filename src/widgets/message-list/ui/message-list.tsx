@@ -17,8 +17,9 @@ export const MessageList = ({
 }) => {
   const ref = useInfiniteScroll({
     loadMore: hasNextPage ? fetchNextPage : undefined,
-    rootMargin: '100px',
+    rootMargin: '2000px',
   });
+
   return (
     <>
       {children}
