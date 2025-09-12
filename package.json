@@ -13,7 +13,8 @@
     "lint": "biome check",
     "typecheck": "tsc --noEmit -w --preserveWatchOutput -p tsconfig.app.json",
     "typegen": "supabase gen types --local > ./src/shared/model/supabase-types.generated.ts",
-    "dump": "supabase db dump --local > ./supabase/dump.sql"
+    "dump": "bun run supabase db dump --local -s public,storage > supabase/dump.sql",
+    "pull": "bun run supabase db pull --local -s public,storage"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.26.0",
