@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Container, HStack, Icon, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
+import { Box, Button, Container, HStack, Icon, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleQuestion, FaDoorOpen, FaGear, FaRegBookmark, FaUser } from 'react-icons/fa6';
 
@@ -17,29 +17,31 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
         borderColor="border"
         borderTop="sm"
         bottom={0}
-        gap={2}
+        gap={[2, 4]}
         left={0}
         position="fixed"
         right={0}
         {...props}
       >
-        <Logo height={32} width={32} />
+        <Box flex="1 0 auto">
+          <Logo height={32} width={32} />
+        </Box>
 
         <Protected
           fallback={<Skeleton h="60%" w={100} />}
           privateElement={user => (
             <>
-              <IconButton aria-label="link to profile page" variant="subtle" asChild>
+              <IconButton flex="1 1 100%" aria-label="link to profile page" variant="subtle" asChild>
                 <Link to="/profile/$profileId" params={{ profileId: user.id }}>
                   <Icon as={FaUser} />
                 </Link>
               </IconButton>
-              <IconButton aria-label="link to profile settings" variant="subtle" asChild>
+              <IconButton flex="1 1 100%" aria-label="link to profile settings" variant="subtle" asChild>
                 <Link to="/profile-settings">
                   <Icon as={FaGear} />
                 </Link>
               </IconButton>
-              <IconButton aria-label="link to favorite messages" variant="subtle" asChild>
+              <IconButton flex="1 1 100%" aria-label="link to favorite messages" variant="subtle" asChild>
                 <Link to="/favorite-messages">
                   <Icon as={FaRegBookmark} />
                 </Link>
@@ -49,15 +51,15 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
           publicElement={
             <LoginDialog
               openElement={
-                <IconButton aria-label="login button" variant="subtle">
-                  <FaDoorOpen />
-                </IconButton>
+                <Button flex="1 1 100%">
+                  <FaDoorOpen /> Login or Register
+                </Button>
               }
             />
           }
         />
 
-        <IconButton aria-label="link to about page" variant="subtle" asChild>
+        <IconButton flex="1 1 100%" aria-label="link to about page" variant="subtle" asChild>
           <Link to="/about">
             <Icon as={FaCircleQuestion} />
           </Link>
