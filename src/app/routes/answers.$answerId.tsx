@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { AnswersPage, AnswersPageParamsSchema, preloadAnswersPage } from '@/pages/answers';
+import { PageErrorComponent } from '@/shared/ui/page-error-component';
 
 export const Route = createFileRoute('/answers/$answerId')({
   component() {
@@ -9,4 +10,5 @@ export const Route = createFileRoute('/answers/$answerId')({
   },
   loader: preloadAnswersPage,
   params: AnswersPageParamsSchema,
+  errorComponent: PageErrorComponent,
 });
