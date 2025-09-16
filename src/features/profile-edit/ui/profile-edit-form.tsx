@@ -6,6 +6,7 @@ import { ProfileEditSchema } from '../model/schemas';
 export const profileEditFormOptions = formOptions({
   validators: {
     onDynamic: ProfileEditSchema,
+    onSubmit: ProfileEditSchema,
   },
   validationLogic: revalidateLogic(),
   defaultValues: undefined as undefined | ProfileEditSchema,

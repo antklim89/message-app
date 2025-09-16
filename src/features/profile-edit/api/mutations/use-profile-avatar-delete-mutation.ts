@@ -17,10 +17,10 @@ export function useProfileAvatarDeleteMutation() {
       return deleteAvatarResult;
     },
     async onSuccess({ fail, success, error }) {
-      const session = await getSupabaseSession();
-      if (session?.user.id) {
+      const user = await getSupabaseSession();
+      if (user) {
         queryClient.setQueryData(
-          getProfileQueryOptions({ profileId: session?.user.id }).queryKey,
+          getProfileQueryOptions({ profileId: user.id }).queryKey,
           oldData => oldData && { ...oldData, avatar: null },
         );
       }

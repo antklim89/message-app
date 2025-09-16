@@ -4,10 +4,14 @@ import type { ProfileEditType } from '../../model/types';
 
 export async function updateProfile(input: ProfileEditType): PromiseResult<null> {
   const supabase = await createSupabaseClient();
-  const session = await getSupabaseSession();
-  if (session == null) return errAuthentication();
+  const user = await getSupabaseSession();
+  if (user == null) return errAuthentication();
 
-  const { count, error } = await supabase.from('profiles').update(input, { count: 'exact' }).eq('id', session.user.id);
+  const { count, error } = await supabase
+    .from('profiles')
+    .update(input, { count: 'exact' })
+    .eq('id', user.id)
+    .select('id');
 
   if (count == null || count <= 0) return errNotFound('The profile has not been updated.');
   if (error != null) return errUnexpected('Failed to update profile.');

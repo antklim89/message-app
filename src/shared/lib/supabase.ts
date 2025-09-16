@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/shared/model/supabase-types.generated';
 import { env } from './env';
+import { type User } from '../model/user';
 
 const sbPromise = import('@supabase/supabase-js');
 let supabaseClient: SupabaseClient<Database> | undefined;
@@ -23,11 +24,16 @@ export function useSupabase(): SupabaseClient<Database> {
   return supabaseClient;
 }
 
-export async function getSupabaseSession() {
+export async function getSupabaseSession(): Promise<User | null> {
   const supabase = await createSupabaseClient();
-  const sessionResult = await supabase.auth.getSession();
+  const { data } = await supabase.auth.getSession();
 
-  return sessionResult.data?.session;
+  if (!data?.session) return null;
+  return {
+    id: data.session.user.id,
+    email: data.session.user.email,
+    username: data.session.user.user_metadata.username,
+  };
 }
 
 export function useSupabasePublicUrl(avatarUrl?: string | null) {

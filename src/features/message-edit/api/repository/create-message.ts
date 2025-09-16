@@ -5,12 +5,12 @@ import type { MessageEditType } from '../../model/types';
 
 export async function createMessage(answerId: MessageType['answerId'], input: MessageEditType): PromiseResult<null> {
   const supabase = await createSupabaseClient();
-  const session = await getSupabaseSession();
-  if (session == null) return errAuthentication();
+  const user = await getSupabaseSession();
+  if (user == null) return errAuthentication();
 
   const { error } = await supabase
     .from('messages')
-    .insert({ ...input, answerId, authorId: session.user.id })
+    .insert({ ...input, answerId, authorId: user.id })
     .select(MESSAGE_SELECT);
 
   if (error != null) return errUnexpected('Failed to create message.');

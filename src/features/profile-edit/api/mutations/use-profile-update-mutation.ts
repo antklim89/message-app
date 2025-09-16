@@ -18,10 +18,10 @@ export function useProfileUpdateMutation() {
       return updateProfileResult;
     },
     async onSuccess({ fail, success, error }, variables) {
-      const session = await getSupabaseSession();
-      if (session?.user.id) {
+      const user = await getSupabaseSession();
+      if (user) {
         queryClient.setQueryData(
-          getProfileQueryOptions({ profileId: session.user.id }).queryKey,
+          getProfileQueryOptions({ profileId: user.id }).queryKey,
           oldData => oldData && { ...oldData, ...variables },
         );
       }

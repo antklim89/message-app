@@ -5,13 +5,13 @@ import type { MessageEditType } from '../../model/types';
 
 export async function updateMessage(messageId: MessageType['id'], input: MessageEditType): PromiseResult<null> {
   const supabase = await createSupabaseClient();
-  const session = await getSupabaseSession();
-  if (session == null) return errAuthentication();
+  const user = await getSupabaseSession();
+  if (user == null) return errAuthentication();
 
   const { count, error } = await supabase
     .from('messages')
     .update(input, { count: 'exact' })
-    .eq('authorId', session.user.id)
+    .eq('authorId', user.id)
     .eq('id', messageId);
 
   if (count == null || count <= 0) return errNotFound('The message has not been updated.');
