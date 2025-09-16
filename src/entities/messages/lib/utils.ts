@@ -35,19 +35,26 @@ export function updateMessageQueryData(
   );
 }
 
-type WrapperType = (word: string, key: number) => ReactNode;
+const usernameRegex = /\[(.+)\]/i;
+const wordRegex = /(#\w+|@\w+\[.+\]+)/gi;
 export function wrapMessage({
   text,
-  hashtag,
-  username,
+  hashtagRender,
+  usernameRender,
 }: {
   text: string;
-  hashtag: WrapperType;
-  username: WrapperType;
+  hashtagRender: (word: string, key: number) => ReactNode;
+  usernameRender: (word: string, id: string, key: number) => ReactNode;
 }): ReactNode {
-  return text.split(/(#\w+|@\w+)/gi).map((word, idx) => {
-    if (word.startsWith('#')) return hashtag(word, idx);
-    if (word.startsWith('@')) return username(word, idx);
+  return text.split(wordRegex).map((word, idx) => {
+    if (word.startsWith('#')) {
+      return hashtagRender(word, idx);
+    }
+    if (word.startsWith('@')) {
+      const [username, id] = word.split(usernameRegex);
+      if (!(username && id)) return word;
+      return usernameRender(username, id, idx);
+    }
     return word;
   });
 }

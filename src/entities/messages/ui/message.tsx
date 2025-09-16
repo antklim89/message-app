@@ -60,16 +60,16 @@ export function Message({
           <Text textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
             {wrapMessage({
               text: message.body,
-              hashtag: (hashtag, key) => (
+              hashtagRender: (hashtag, key) => (
                 <Span color="blue.200" key={key} asChild>
                   <Link to="/hashtag/$hashtag" params={{ hashtag: hashtag.slice(1) }}>
                     {hashtag}
                   </Link>
                 </Span>
               ),
-              username: (username, key) => (
+              usernameRender: (username, id, key) => (
                 <Span color="blue.200" key={key} asChild>
-                  <Link to="/profile/$profileId" params={{ profileId: username.slice(1) }}>
+                  <Link to="/profile/$profileId" params={{ profileId: id }}>
                     {username}
                   </Link>
                 </Span>
