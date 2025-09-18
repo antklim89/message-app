@@ -1,20 +1,19 @@
-import type { ReactElement } from 'react';
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, type useDisclosure } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
 import { useAppForm } from '@/shared/lib/react-form';
-import { FormDialog } from '@/shared/ui/form-dialog';
+import { Modal } from '@/shared/ui/form-dialog';
 import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
 
 export function MessageCreateDialog({
   answerId,
-  trigger,
+  disclosure,
 }: {
   answerId: MessageType['answerId'];
-  trigger: ReactElement;
+  disclosure: ReturnType<typeof useDisclosure>;
 }) {
-  const disclosure = useDisclosure();
+  // const disclosure = useDisclosure();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
   const messageEditForm = useAppForm({
@@ -33,10 +32,9 @@ export function MessageCreateDialog({
   });
 
   return (
-    <FormDialog
-      {...disclosure}
-      formElement={<MessageEditForm form={messageEditForm} />}
-      openElement={trigger}
+    <Modal
+      disclosure={disclosure}
+      // openElement={trigger}
       submitElement={
         <Button
           onClick={messageEditForm.handleSubmit}
@@ -47,6 +45,8 @@ export function MessageCreateDialog({
         </Button>
       }
       title="Create New Message"
-    />
+    >
+      <MessageEditForm form={messageEditForm} />
+    </Modal>
   );
 }

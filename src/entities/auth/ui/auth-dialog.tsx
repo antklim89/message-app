@@ -1,16 +1,15 @@
-import { type ReactElement, useState } from 'react';
-import { Button, Stack, Text, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Button, Stack, Text, type useDisclosure } from '@chakra-ui/react';
 
 import { useAppForm } from '@/shared/lib/react-form';
-import { FormDialog } from '@/shared/ui/form-dialog';
+import { Modal } from '@/shared/ui/form-dialog';
 import { LoginForm, loginFormOptions } from './login-form';
 import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/mutations/use-login-mutation';
 import { useRegisterMutation } from '../api/mutations/use-register-mutation';
 
-export function LoginDialog({ openElement }: { openElement: ReactElement }) {
+export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useDisclosure> }) {
   const [type, setType] = useState<'login' | 'register'>('login');
-  const disclosure = useDisclosure();
   const loginMutation = useLoginMutation();
   const registerMutation = useRegisterMutation();
 
@@ -39,10 +38,9 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
   });
 
   return (
-    <FormDialog
-      {...disclosure}
-      formElement={type === 'login' ? <LoginForm form={loginForm} /> : <RegisterForm form={registerForm} />}
-      openElement={openElement ?? <Button>Login</Button>}
+    <Modal
+      disclosure={disclosure}
+      // openElement={openElement ?? <Button>Login</Button>}
       submitElement={
         type === 'login' ? (
           <Button onClick={() => loginForm.handleSubmit()} loading={loginMutation.isPending} loadingText="Saving...">
@@ -85,6 +83,8 @@ export function LoginDialog({ openElement }: { openElement: ReactElement }) {
           </Stack>
         )
       }
-    />
+    >
+      {type === 'login' ? <LoginForm form={loginForm} /> : <RegisterForm form={registerForm} />}
+    </Modal>
   );
 }

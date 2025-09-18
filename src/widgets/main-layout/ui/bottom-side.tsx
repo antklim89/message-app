@@ -1,5 +1,15 @@
 import type { ReactNode } from 'react';
-import { Box, Button, Container, HStack, Icon, IconButton, Skeleton, type StackProps } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Container,
+  HStack,
+  Icon,
+  IconButton,
+  Skeleton,
+  type StackProps,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleQuestion, FaDoorOpen, FaGear, FaRegBookmark, FaUser } from 'react-icons/fa6';
 
@@ -8,6 +18,7 @@ import { Protected } from '@/shared/ui/protected';
 import { Logo } from './logo';
 
 export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & StackProps) {
+  const disclosure = useDisclosure();
   return (
     <Container asChild>
       <HStack
@@ -49,13 +60,12 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
             </>
           )}
           publicElement={
-            <LoginDialog
-              openElement={
-                <Button flex="1 1 100%">
-                  <FaDoorOpen /> Login or Register
-                </Button>
-              }
-            />
+            <>
+              <LoginDialog disclosure={disclosure} />
+              <Button onClick={disclosure.onOpen} flex="1 1 100%">
+                <FaDoorOpen /> Login or Register
+              </Button>
+            </>
           }
         />
 
