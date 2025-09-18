@@ -13,7 +13,6 @@ export function MessageCreateDialog({
   answerId: MessageType['answerId'];
   disclosure: ReturnType<typeof useDisclosure>;
 }) {
-  // const disclosure = useDisclosure();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
   const messageEditForm = useAppForm({
@@ -34,7 +33,6 @@ export function MessageCreateDialog({
   return (
     <Modal
       disclosure={disclosure}
-      // openElement={trigger}
       submitElement={
         <Button
           onClick={messageEditForm.handleSubmit}
