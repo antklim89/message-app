@@ -174,6 +174,7 @@ export type Database = {
           avatar: string | null
           bio: string
           created: string
+          displayname: string
           id: string
           username: string
           favorites_count: number | null
@@ -187,6 +188,7 @@ export type Database = {
           avatar?: string | null
           bio?: string
           created?: string
+          displayname?: string
           id: string
           username?: string
         }
@@ -194,6 +196,7 @@ export type Database = {
           avatar?: string | null
           bio?: string
           created?: string
+          displayname?: string
           id?: string
           username?: string
         }

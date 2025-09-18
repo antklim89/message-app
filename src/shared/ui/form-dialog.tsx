@@ -7,7 +7,7 @@ export function Modal({
   title,
   disclosure,
 }: {
-  children: ReactElement;
+  children: ReactNode;
   submitElement: ReactElement;
   title?: ReactNode;
   disclosure: ReturnType<typeof useDisclosure>;
