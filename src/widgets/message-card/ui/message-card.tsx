@@ -12,7 +12,7 @@ export function MessageCard({ message, deleteRedirectUrl }: { message: MessageTy
           <FavoriteButton isFavorite={message.isFavorite} messageId={message.id} />
         </>
       }
-      menuItems={<MessageCardMenu deleteRedirectUrl={deleteRedirectUrl} message={message} />}
+      menu={<MessageCardMenu deleteRedirectUrl={deleteRedirectUrl} message={message} />}
       message={message}
     />
   );
