@@ -35,8 +35,12 @@ export function updateMessageQueryData(
   );
 }
 
-const usernameRegex = /\[(.+)\]/i;
-const wordRegex = /(#\w+|@\w+\[.+\]+)/gi;
+const hashtagSearchRegex = '#[\\w\\d._-]+';
+const usernameSearchRegex = '@[\\w\\d._-]+\\[[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\]';
+
+const usernameSplitWordRegex = /\[(.+)\]/i;
+const wordRegex = new RegExp(`(${hashtagSearchRegex}|${usernameSearchRegex})`, 'gi');
+
 export function wrapMessage({
   text,
   hashtagRender,
@@ -51,7 +55,7 @@ export function wrapMessage({
       return hashtagRender(word, idx);
     }
     if (word.startsWith('@')) {
-      const [username, id] = word.split(usernameRegex);
+      const [username, id] = word.split(usernameSplitWordRegex);
       if (!(username && id)) return word;
       return usernameRender(username, id, idx);
     }
