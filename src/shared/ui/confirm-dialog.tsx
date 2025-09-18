@@ -2,31 +2,25 @@ import { type ReactElement, type ReactNode, useRef } from 'react';
 import { Button, CloseButton, Dialog, Portal, type useDisclosure } from '@chakra-ui/react';
 
 export function ConfirmDialog({
-  openElement,
   text,
   confirmElement,
   cancelButtonText,
-  onOpen,
-  setOpen,
-  open,
+  disclosure,
 }: {
-  openElement: ReactElement;
   text: ReactNode;
   confirmElement: ReactElement;
   cancelButtonText?: string;
-} & ReturnType<typeof useDisclosure>) {
+  disclosure: ReturnType<typeof useDisclosure>;
+}) {
   const confirmRef = useRef<HTMLButtonElement>(null);
   return (
     <Dialog.Root
       initialFocusEl={() => confirmRef.current}
-      onOpenChange={e => setOpen(e.open)}
-      open={open}
+      onOpenChange={e => disclosure.setOpen(e.open)}
+      open={disclosure.open}
       placement="center"
       size="sm"
     >
-      <Button asChild unstyled onClick={onOpen}>
-        {openElement}
-      </Button>
       <Portal>
         <Dialog.Positioner>
           <Dialog.Backdrop />

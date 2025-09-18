@@ -4,4 +4,4 @@ export { logout } from './api/repository/logout';
 export type { LoginSchema, RegisterSchema } from './models/schemas';
 export type { AuthWithPasswordInput, CreateUserInput, UserType } from './models/types';
 export { LoginDialog } from './ui/auth-dialog';
-export { LogoutButton } from './ui/logout-button';
+export { LogoutDialog } from './ui/logout-dialog';

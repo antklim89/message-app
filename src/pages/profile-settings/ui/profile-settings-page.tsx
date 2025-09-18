@@ -1,7 +1,7 @@
-import { Button, Card } from '@chakra-ui/react';
+import { Button, Card, useDisclosure } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 
-import { LogoutButton } from '@/entities/auth';
+import { LogoutDialog } from '@/entities/auth';
 import { getProfileQueryOptions } from '@/entities/profiles';
 import {
   ProfileAvatarUpdate,
@@ -14,6 +14,7 @@ import { errAuthentication } from '@/shared/lib/result';
 import { AwaitQuery } from '@/shared/ui/await-query';
 
 export function ProfileSettingsPage() {
+  const logoutDisclosure = useDisclosure();
   const { user } = useSession();
   if (!user?.id) throw errAuthentication().error;
   const profileQuery = useQuery(getProfileQueryOptions({ profileId: user?.id }));
@@ -29,9 +30,10 @@ export function ProfileSettingsPage() {
 
       <Card.Root justifyContent="flex-end">
         <Card.Body>
-          <LogoutButton>
-            <Button colorPalette="red">Logout</Button>
-          </LogoutButton>
+          <LogoutDialog disclosure={logoutDisclosure} />
+          <Button onClick={logoutDisclosure.onOpen} colorPalette="red">
+            Logout
+          </Button>
         </Card.Body>
       </Card.Root>
     </>

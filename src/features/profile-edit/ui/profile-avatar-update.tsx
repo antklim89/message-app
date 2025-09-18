@@ -6,7 +6,7 @@ import { useProfileAvatarDeleteMutation } from '../api/mutations/use-profile-ava
 import { useProfileAvatarUpdateMutation } from '../api/mutations/use-profile-avatar-update-mutation';
 
 export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
-  const disclosure = useDisclosure();
+  const deleteAvatarDisclosure = useDisclosure();
   const avatarUpdateMutation = useProfileAvatarUpdateMutation();
   const avatarDeleteMutation = useProfileAvatarDeleteMutation();
 
@@ -15,7 +15,7 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
   async function handleFileDelete() {
     await avatarDeleteMutation.mutateAsync();
     fileUpload.clearFiles();
-    disclosure.onClose();
+    deleteAvatarDisclosure.onClose();
   }
   const fileUpload = useFileUpload({
     maxFiles: 1,
@@ -30,6 +30,21 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
 
   return (
     <Card.Root>
+      <ConfirmDialog
+        text="Are you sure you want to delete your avatar?"
+        disclosure={deleteAvatarDisclosure}
+        confirmElement={
+          <Button
+            disabled={isPending || file == null}
+            colorPalette="red"
+            loading={avatarDeleteMutation.isPending}
+            loadingText="Deleting..."
+            onClick={handleFileDelete}
+          >
+            Delete
+          </Button>
+        }
+      />
       <Card.Body>
         <FileUpload.RootProvider value={fileUpload}>
           <FileUpload.HiddenInput disabled={isPending} />
@@ -52,27 +67,9 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
         <Button disabled={isPending || file == null} variant="ghost" onClick={() => fileUpload.clearFiles()}>
           Cancel
         </Button>
-
-        <ConfirmDialog
-          {...disclosure}
-          text="Are you sure you want to delete your avatar?"
-          openElement={
-            <Button disabled={isPending || file == null} colorPalette="red">
-              Delete
-            </Button>
-          }
-          confirmElement={
-            <Button
-              disabled={isPending || file == null}
-              colorPalette="red"
-              loading={avatarDeleteMutation.isPending}
-              loadingText="Deleting..."
-              onClick={handleFileDelete}
-            >
-              Delete
-            </Button>
-          }
-        />
+        <Button onClick={deleteAvatarDisclosure.onOpen} disabled={isPending || file == null} colorPalette="red">
+          Delete
+        </Button>
         <Button
           disabled={isPending || file == null}
           loading={avatarUpdateMutation.isPending}

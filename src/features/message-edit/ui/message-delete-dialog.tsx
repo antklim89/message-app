@@ -1,5 +1,4 @@
-import { type ReactElement } from 'react';
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, type useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from '@tanstack/react-router';
 
 import type { MessageType } from '@/entities/messages';
@@ -8,15 +7,14 @@ import { useMessageDeleteMutation } from '../api/mutations/use-message-delete-mu
 
 export function MessageDeleteDialog({
   id: messageId,
-  openElement,
+  disclosure,
   deleteRedirectUrl,
 }: {
   id: MessageType['id'];
-  openElement: ReactElement;
+  disclosure: ReturnType<typeof useDisclosure>;
   deleteRedirectUrl?: string;
 }) {
   const deleteMutation = useMessageDeleteMutation({ id: messageId });
-  const disclosure = useDisclosure();
   const navigate = useNavigate();
 
   async function handleDelete() {
@@ -29,7 +27,7 @@ export function MessageDeleteDialog({
 
   return (
     <ConfirmDialog
-      {...disclosure}
+      disclosure={disclosure}
       confirmElement={
         <Button
           colorPalette="red"
@@ -41,7 +39,6 @@ export function MessageDeleteDialog({
         </Button>
       }
       text="Are you sure you want to delete this message?"
-      openElement={openElement}
     />
   );
 }

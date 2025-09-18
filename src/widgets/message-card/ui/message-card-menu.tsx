@@ -7,11 +7,14 @@ import { Protected } from '@/shared/ui/protected';
 import { MessageCardMenuCopyUrl } from './message-card-menu-copy-url';
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
-  const disclosure = useDisclosure();
+  const updateMessageDisclosure = useDisclosure();
+  const deleteMessageDisclosure = useDisclosure();
 
   return (
     <>
-      <MessageUpdateDialog message={message} disclosure={disclosure} />
+      <MessageUpdateDialog message={message} disclosure={updateMessageDisclosure} />
+      <MessageDeleteDialog id={message.id} deleteRedirectUrl={deleteRedirectUrl} disclosure={deleteMessageDisclosure} />
+
       <Menu.ItemGroup cursor="pointer">
         <MessageCardMenuCopyUrl answerId={message.id} />
 
@@ -21,24 +24,18 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
             <>
               <Menu.Separator />
 
-              <Menu.Item onClick={disclosure.onOpen} as="button" value="update-message">
+              <Menu.Item onClick={updateMessageDisclosure.onOpen} as="button" value="update-message">
                 <FaPencil /> Update
               </Menu.Item>
 
-              <MessageDeleteDialog
-                id={message.id}
-                deleteRedirectUrl={deleteRedirectUrl}
-                openElement={
-                  <Menu.Item
-                    color="fg.error"
-                    _hover={{ bg: 'bg.error', color: 'fg.error' }}
-                    as="button"
-                    value="delete-message"
-                  >
-                    <FaTrash /> Delete
-                  </Menu.Item>
-                }
-              />
+              <Menu.Item
+                color="fg.error"
+                _hover={{ bg: 'bg.error', color: 'fg.error' }}
+                as="button"
+                value="delete-message"
+              >
+                <FaTrash /> Delete
+              </Menu.Item>
             </>
           }
         />
