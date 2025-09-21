@@ -2,6 +2,12 @@
 /** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: <ttt> */
 import { faker } from '@faker-js/faker';
 import { createClient, type User } from '@supabase/supabase-js';
+import type {
+  SerializedEditorState,
+  SerializedLexicalNode,
+  SerializedParagraphNode,
+  SerializedTextNode,
+} from 'lexical';
 
 import type { Database } from '../src/shared/model/supabase-types.generated';
 
@@ -12,8 +18,8 @@ const sb = createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
 const PASSWORD = 'qwer1234';
 const USERS_QTY = 0;
-const MESSAGES_QTY = 0;
-const MESSAGES_LOOP_QTY = 0;
+const MESSAGES_QTY = 5;
+const MESSAGES_LOOP_QTY = 1;
 
 /** USERS */
 async function getUsers() {
@@ -53,10 +59,41 @@ async function getUsers() {
 async function getMessages(users: User[], answers?: { id: number }[]) {
   for (let index = 0; index < MESSAGES_QTY; index++) {
     const updated = faker.date.recent({ days: 9000 }).toISOString();
+    const body: SerializedEditorState<SerializedLexicalNode> = {
+      root: {
+        direction: 'ltr',
+        format: 'start',
+        indent: 0,
+        type: 'root',
+        version: 1,
+        children: [
+          {
+            direction: 'ltr',
+            format: 'start',
+            indent: 0,
+            textFormat: 0,
+            textStyle: '',
+            type: 'paragraph',
+            version: 1,
+            children: [
+              {
+                type: 'text',
+                version: 1,
+                detail: 0,
+                format: 0,
+                mode: 'normal',
+                style: '',
+                text: faker.lorem.paragraph({ min: 1, max: 10 }),
+              } as SerializedTextNode,
+            ],
+          } as SerializedParagraphNode,
+        ],
+      },
+    };
     await sb
       .from('messages')
       .insert({
-        body: faker.lorem.sentence({ min: 3, max: 50 }),
+        body,
         authorId: users[faker.number.int({ min: 0, max: users.length - 1 })].id,
         updated,
         created: faker.date.recent({ days: 600, refDate: updated }).toISOString(),

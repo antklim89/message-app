@@ -15,6 +15,7 @@ export function ConfirmDialog({
   const confirmRef = useRef<HTMLButtonElement>(null);
   return (
     <Dialog.Root
+      role="alertdialog"
       initialFocusEl={() => confirmRef.current}
       onOpenChange={e => disclosure.setOpen(e.open)}
       open={disclosure.open}

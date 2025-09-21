@@ -128,7 +128,7 @@ export type Database = {
         Row: {
           answerId: number | null
           authorId: string
-          body: string
+          body: Json
           created: string
           id: number
           updated: string
@@ -139,7 +139,7 @@ export type Database = {
         Insert: {
           answerId?: number | null
           authorId?: string
-          body?: string
+          body: Json
           created?: string
           id?: number
           updated?: string
@@ -147,7 +147,7 @@ export type Database = {
         Update: {
           answerId?: number | null
           authorId?: string
-          body?: string
+          body?: Json
           created?: string
           id?: number
           updated?: string

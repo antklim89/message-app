@@ -1,47 +1,51 @@
-import { formOptions, revalidateLogic } from '@tanstack/react-form';
+import { type ComponentProps, type ReactNode, useRef } from 'react';
+import { Box, HStack, Stack } from '@chakra-ui/react';
+import type { LexicalEditor, SerializedEditorState, SerializedLexicalNode } from 'lexical';
 
-import { ProfileSelect } from '@/entities/profiles';
-import { withForm } from '@/shared/lib/react-form';
-import { MessageEditSchema } from '../model/schemas';
+import { Editor } from '@/shared/ui/editor';
+import { FormatButtonsPlugin } from './message-format-buttons-plugin';
+import { MessageLinkPlugin } from './message-link-plugin';
+import { MessageSelectUserPlugin } from './message-select-user-plugin';
 
-export const messageEditFormOptions = formOptions({
-  validators: {
-    onDynamic: MessageEditSchema,
-  },
-  validationLogic: revalidateLogic(),
-  defaultValues: { body: '' },
-});
+export const MessageEditForm = ({
+  onSubmit,
+  value,
+  children,
+  ...props
+}: {
+  children?: ReactNode;
+  value?: SerializedEditorState<SerializedLexicalNode>;
+  onSubmit: (v?: SerializedEditorState<SerializedLexicalNode>) => Promise<void>;
+} & Omit<ComponentProps<'form'>, 'onSubmit'>) => {
+  const ref = useRef<LexicalEditor>(null);
 
-export const MessageEditForm = withForm({
-  ...messageEditFormOptions,
-  render({ form, ...props }) {
-    return (
-      <form.AppForm>
-        <form.Form {...props}>
-          <form.AppField name="body">
-            {field => (
-              <>
-                <field.TextareaField
-                  autoFocus
-                  onKeyDown={e => {
-                    if (e.ctrlKey && e.key === 'Enter') form.handleSubmit();
-                  }}
-                  autoresize
-                  placeholder="Enter you message"
-                />
-              </>
-            )}
-          </form.AppField>
-
-          <ProfileSelect
-            onSelect={v =>
-              form
-                .getFieldInfo('body')
-                .instance?.handleChange(`${form.getFieldValue('body').trim()} @${v.username}[${v.id}]`)
-            }
-          />
-        </form.Form>
-      </form.AppForm>
-    );
-  },
-});
+  return (
+    <Box
+      asChild
+      w="full"
+      onSubmit={e => {
+        e.preventDefault();
+        onSubmit(ref.current?.toJSON().editorState);
+      }}
+    >
+      <form {...props}>
+        <Editor
+          ref={ref}
+          value={value}
+          plugins={
+            <Stack>
+              <HStack mt={2}>
+                <MessageSelectUserPlugin />
+                <MessageLinkPlugin />
+              </HStack>
+              <HStack mt={2}>
+                <FormatButtonsPlugin />
+              </HStack>
+            </Stack>
+          }
+        />
+        {children}
+      </form>
+    </Box>
+  );
+};
