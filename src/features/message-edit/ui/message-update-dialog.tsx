@@ -14,6 +14,7 @@ export function MessageUpdateDialog({
   message: MessageEditType & { id: MessageType['id'] };
   disclosure: ReturnType<typeof useDisclosure>;
 }) {
+  // console.log('🚀 ~ message: \n', message.body);
   const messageUpdateMutation = useMessageUpdateMutation({ messageId: message.id });
   const messageEditForm = useAppForm({
     ...messageEditFormOptions,

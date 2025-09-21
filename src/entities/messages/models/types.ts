@@ -1,6 +1,10 @@
+import { type SerializedEditorState, type SerializedLexicalNode } from 'lexical';
+
+export type MessageBody = SerializedEditorState<SerializedLexicalNode>;
+
 export interface MessageType {
   id: number;
-  body: string;
+  body: MessageBody;
   created: string;
   answerId?: number;
   authorId: string;

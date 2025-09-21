@@ -19,7 +19,8 @@ export function MessageCreateCollapsible({
   const messageEditForm = useAppForm({
     ...messageEditFormOptions,
     async onSubmit({ formApi, value }) {
-      const result = await messageCreateMutation.mutateAsync(value);
+      if (value.body == null) return;
+      const result = await messageCreateMutation.mutateAsync({ body: value.body });
       if (result.success) {
         disclosure.onClose();
         formApi.reset();
@@ -32,7 +33,7 @@ export function MessageCreateCollapsible({
   });
 
   return (
-    <Collapsible.Root open={disclosure.open} unmountOnExit>
+    <Collapsible.Root lazyMount open={disclosure.open} unmountOnExit>
       <Collapsible.Trigger
         asChild
         cursor="pointer"
