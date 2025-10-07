@@ -1,17 +1,18 @@
-import { type ReactElement, type ReactNode } from 'react';
-import { Button, CloseButton, Dialog, Portal, type useDisclosure } from '@chakra-ui/react';
+import type { ReactElement, ReactNode } from 'react';
+import { Button, CloseButton, Dialog, type DialogRootProps, Portal, type useDisclosure } from '@chakra-ui/react';
 
 export function Modal({
   children,
   submitElement,
   title,
   disclosure,
+  ...props
 }: {
   children: ReactNode;
   submitElement: ReactElement;
   title?: ReactNode;
   disclosure: ReturnType<typeof useDisclosure>;
-}) {
+} & DialogRootProps) {
   return (
     <Dialog.Root
       motionPreset="slide-in-bottom"
@@ -19,6 +20,7 @@ export function Modal({
       onOpenChange={e => disclosure.setOpen(e.open)}
       placement="center"
       size="lg"
+      {...props}
     >
       <Portal>
         <Dialog.Positioner>
@@ -39,7 +41,7 @@ export function Modal({
                 <Button variant="ghost">Close</Button>
               </Dialog.CloseTrigger>
 
-              <Button asChild>{submitElement}</Button>
+              {submitElement}
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

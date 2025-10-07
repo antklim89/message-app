@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Stack, Text, type useDisclosure } from '@chakra-ui/react';
 
 import { useAppForm } from '@/shared/lib/react-form';
-import { Modal } from '@/shared/ui/form-dialog';
+import { Modal } from '@/shared/ui/modal';
 import { LoginForm, loginFormOptions } from './login-form';
 import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/mutations/use-login-mutation';
@@ -40,7 +40,6 @@ export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useD
   return (
     <Modal
       disclosure={disclosure}
-      // openElement={openElement ?? <Button>Login</Button>}
       submitElement={
         type === 'login' ? (
           <Button onClick={() => loginForm.handleSubmit()} loading={loginMutation.isPending} loadingText="Saving...">

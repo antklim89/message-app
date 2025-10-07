@@ -1,4 +1,4 @@
-import type { QueryClient } from '@tanstack/react-query';
+import { type QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
@@ -20,7 +20,7 @@ function RootComponent() {
   );
 }
 
-export const Route = createRootRoute<undefined, { queryClient: QueryClient }>({
+export const Route = createRootRoute<undefined, undefined, { queryClient: QueryClient }>({
   component: RootComponent,
   head() {
     return {
