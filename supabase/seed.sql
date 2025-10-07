@@ -58,3 +58,33 @@ $$ language sql stable security definer;
 create or replace function "messages_count" (profiles) returns bigint as $$
 select count(1) from messages where "authorId" = $1.id
 $$ language sql stable security definer;
+
+-- lexical node helper functions
+create or replace function process_lexical_node_with_children (lexical_node jsonb, result_length int = 0) RETURNS int as $$
+DECLARE
+    lexical_node_child jsonb;
+BEGIN
+  FOR lexical_node_child IN SELECT * FROM jsonb_array_elements((lexical_node -> 'children'))
+  LOOP
+      result_length := result_length + calculate_lexical_text_length(lexical_node_child, result_length);
+  END LOOP;
+
+  return result_length;
+END;
+$$ LANGUAGE plpgsql;
+
+create or replace function calculate_lexical_text_length (lexical_node jsonb, result_length int = 0) RETURNS int as $$
+DECLARE
+  result int;
+BEGIN
+  return CASE lexical_node ->> 'type'
+      WHEN 'root' THEN process_lexical_node_with_children(lexical_node, result_length)
+      WHEN 'paragraph' THEN process_lexical_node_with_children(lexical_node, result_length)
+      WHEN 'link' THEN process_lexical_node_with_children(lexical_node, result_length)
+      WHEN 'text' THEN length(lexical_node ->> 'text')
+      WHEN 'user' THEN length(lexical_node ->> 'text')
+      WHEN 'hashtag' THEN length(lexical_node ->> 'text')
+      ELSE 0
+  END;
+END;
+$$ LANGUAGE plpgsql;
