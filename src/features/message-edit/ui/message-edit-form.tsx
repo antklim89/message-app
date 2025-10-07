@@ -1,47 +1,60 @@
-import { formOptions, revalidateLogic } from '@tanstack/react-form';
+import { type ComponentProps, type ReactNode, useRef, useState } from 'react';
+import { Box, HStack, Stack } from '@chakra-ui/react';
+import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
-import { ProfileSelect } from '@/entities/profiles';
-import { withForm } from '@/shared/lib/react-form';
-import { MessageEditSchema } from '../model/schemas';
+import { RichTextEditor } from '@/shared/ui/rich-text-editor';
+import { MessageBodyLengthPlugin } from './lexcical-plugins/message-body-length-plugin';
+import { FormatButtonsPlugin } from './lexcical-plugins/message-format-buttons-plugin';
+import { MessageLinkPlugin } from './lexcical-plugins/message-link-plugin';
+import { MessageSelectUserPlugin } from './lexcical-plugins/message-select-user-plugin';
 
-export const messageEditFormOptions = formOptions({
-  validators: {
-    onDynamic: MessageEditSchema,
-  },
-  validationLogic: revalidateLogic(),
-  defaultValues: { body: '' },
-});
+export const MessageEditForm = ({
+  onSubmit,
+  value,
+  children,
+  ...props
+}: {
+  children?: ReactNode;
+  value?: SerializedRootNode;
+  onSubmit: (v?: SerializedRootNode) => Promise<void>;
+} & Omit<ComponentProps<'form'>, 'onSubmit'>) => {
+  const ref = useRef<LexicalEditor>(null);
+  const [formIsValid, setFormIsValid] = useState(false);
 
-export const MessageEditForm = withForm({
-  ...messageEditFormOptions,
-  render({ form, ...props }) {
-    return (
-      <form.AppForm>
-        <form.Form {...props}>
-          <form.AppField name="body">
-            {field => (
-              <>
-                <field.TextareaField
-                  autoFocus
-                  onKeyDown={e => {
-                    if (e.ctrlKey && e.key === 'Enter') form.handleSubmit();
+  return (
+    <Box
+      asChild
+      w="full"
+      onSubmit={e => {
+        e.preventDefault();
+        if (formIsValid) onSubmit(ref.current?.toJSON().editorState.root);
+      }}
+    >
+      <form {...props}>
+        <RichTextEditor
+          ref={ref}
+          value={value}
+          plugins={
+            <Stack>
+              <HStack mt={2}>
+                <MessageSelectUserPlugin />
+                <MessageLinkPlugin />
+                <Box flexGrow={1} />
+                <MessageBodyLengthPlugin
+                  onLengthChange={length => {
+                    setFormIsValid(length <= 600);
                   }}
-                  autoresize
-                  placeholder="Enter you message"
+                  maxLength={600}
                 />
-              </>
-            )}
-          </form.AppField>
-
-          <ProfileSelect
-            onSelect={v =>
-              form
-                .getFieldInfo('body')
-                .instance?.handleChange(`${form.getFieldValue('body').trim()} @${v.username}[${v.id}]`)
-            }
-          />
-        </form.Form>
-      </form.AppForm>
-    );
-  },
-});
+              </HStack>
+              <HStack mt={2}>
+                <FormatButtonsPlugin />
+              </HStack>
+            </Stack>
+          }
+        />
+        {children}
+      </form>
+    </Box>
+  );
+};

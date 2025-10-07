@@ -1,10 +1,13 @@
+import { lazy, Suspense, useId } from 'react';
 import { Button, type useDisclosure } from '@chakra-ui/react';
+import type { SerializedRootNode } from 'lexical';
 
 import type { MessageType } from '@/entities/messages';
-import { useAppForm } from '@/shared/lib/react-form';
-import { Modal } from '@/shared/ui/form-dialog';
-import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
+import { Modal } from '@/shared/ui/modal';
+import { MessageEditFormFallback } from './message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
+
+const MessageEditForm = lazy(() => import('./message-edit-form').then(m => ({ default: m.MessageEditForm })));
 
 export function MessageCreateDialog({
   answerId,
@@ -13,38 +16,30 @@ export function MessageCreateDialog({
   answerId: MessageType['answerId'];
   disclosure: ReturnType<typeof useDisclosure>;
 }) {
+  const id = useId();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
-  const messageEditForm = useAppForm({
-    ...messageEditFormOptions,
-    async onSubmit({ formApi, value }) {
-      const result = await messageCreateMutation.mutateAsync(value);
-      if (result.success) {
-        disclosure.onClose();
-        formApi.reset();
-      } else {
-        formApi.setErrorMap({
-          onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
-        });
-      }
-    },
-  });
+  async function handleSubmit(value?: SerializedRootNode) {
+    if (value == null) return;
+    const result = await messageCreateMutation.mutateAsync({ body: value });
+    if (result.success) {
+      disclosure.onClose();
+    }
+  }
 
   return (
     <Modal
       disclosure={disclosure}
       submitElement={
-        <Button
-          onClick={messageEditForm.handleSubmit}
-          loading={messageCreateMutation.isPending}
-          loadingText="Creating..."
-        >
+        <Button form={id} type="submit" loading={messageCreateMutation.isPending} loadingText="Creating...">
           Create
         </Button>
       }
       title="Create New Message"
     >
-      <MessageEditForm form={messageEditForm} />
+      <Suspense fallback={<MessageEditFormFallback />}>
+        <MessageEditForm onSubmit={handleSubmit} id={id} />
+      </Suspense>
     </Modal>
   );
 }

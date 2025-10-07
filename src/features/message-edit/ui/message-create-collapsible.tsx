@@ -1,10 +1,12 @@
-import { type ReactElement } from 'react';
-import { Button, Card, Collapsible, HStack, Stack, useDisclosure } from '@chakra-ui/react';
+import { lazy, type ReactElement, Suspense } from 'react';
+import { Button, Card, Collapsible, HStack, useDisclosure } from '@chakra-ui/react';
+import type { SerializedRootNode } from 'lexical';
 
 import type { MessageType } from '@/entities/messages';
-import { useAppForm } from '@/shared/lib/react-form';
-import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
+import { MessageEditFormFallback } from './message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
+
+const MessageEditForm = lazy(() => import('./message-edit-form').then(m => ({ default: m.MessageEditForm })));
 
 export function MessageCreateCollapsible({
   answerId,
@@ -16,23 +18,16 @@ export function MessageCreateCollapsible({
   const disclosure = useDisclosure();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
-  const messageEditForm = useAppForm({
-    ...messageEditFormOptions,
-    async onSubmit({ formApi, value }) {
-      const result = await messageCreateMutation.mutateAsync(value);
-      if (result.success) {
-        disclosure.onClose();
-        formApi.reset();
-      } else {
-        formApi.setErrorMap({
-          onSubmit: { fields: result.error.issues ?? {} },
-        });
-      }
-    },
-  });
+  async function handleSubmit(value?: SerializedRootNode) {
+    if (value == null) return;
+    const result = await messageCreateMutation.mutateAsync({ body: value });
+    if (result.success) {
+      disclosure.onClose();
+    }
+  }
 
   return (
-    <Collapsible.Root open={disclosure.open} unmountOnExit>
+    <Collapsible.Root lazyMount open={disclosure.open} unmountOnExit>
       <Collapsible.Trigger
         asChild
         cursor="pointer"
@@ -47,24 +42,20 @@ export function MessageCreateCollapsible({
       </Collapsible.Trigger>
       <Collapsible.Content asChild mt={2}>
         <Card.Root>
-          <Card.Body asChild>
-            <HStack>
-              <MessageEditForm form={messageEditForm} />
-              <Stack>
-                <Button
-                  onClick={messageEditForm.handleSubmit}
-                  loading={messageCreateMutation.isPending}
-                  loadingText="Creating..."
-                  type="submit"
-                >
-                  Create
-                </Button>
-                <Button onClick={disclosure.onClose} variant="ghost">
-                  Cancel
-                </Button>
-              </Stack>
-            </HStack>
-          </Card.Body>
+          <Suspense fallback={<MessageEditFormFallback />}>
+            <Card.Body asChild>
+              <MessageEditForm onSubmit={handleSubmit}>
+                <HStack justifyContent="flex-end">
+                  <Button onClick={disclosure.onClose} variant="ghost">
+                    Cancel
+                  </Button>
+                  <Button loading={messageCreateMutation.isPending} loadingText="Creating..." type="submit">
+                    Create
+                  </Button>
+                </HStack>
+              </MessageEditForm>
+            </Card.Body>
+          </Suspense>
         </Card.Root>
       </Collapsible.Content>
     </Collapsible.Root>
