@@ -1,6 +1,7 @@
-import { type MessageType } from '@/entities/messages';
+import type { MessageType } from '@/entities/messages';
 import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
+import type { Json } from '@/shared/model/supabase-types.generated';
 import type { MessageEditType } from '../../model/types';
 
 export async function updateMessage(messageId: MessageType['id'], input: MessageEditType): PromiseResult<null> {
@@ -10,7 +11,7 @@ export async function updateMessage(messageId: MessageType['id'], input: Message
 
   const { count, error } = await supabase
     .from('messages')
-    .update(input, { count: 'exact' })
+    .update({ body: input.body as unknown as Json }, { count: 'exact' })
     .eq('authorId', user.id)
     .eq('id', messageId);
 

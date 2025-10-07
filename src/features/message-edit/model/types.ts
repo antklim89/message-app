@@ -1,3 +1,5 @@
-import type { MessageEditSchema } from './schemas';
+import type { MessageBody } from '@/entities/messages';
 
-export type MessageEditType = MessageEditSchema;
+export interface MessageEditType {
+  body: MessageBody;
+}

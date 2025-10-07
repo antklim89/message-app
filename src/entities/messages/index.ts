@@ -12,5 +12,5 @@ export {
 } from './api/queries/use-message-query';
 export { MESSAGE_SELECT, MESSAGES_PER_PAGE } from './config/constants';
 export { updateMessageQueryData } from './lib/utils';
-export type { MessageType } from './models/types';
+export type { MessageBody, MessageType } from './models/types';
 export { Message } from './ui/message';

@@ -1,6 +1,10 @@
+import type { SerializedRootNode } from 'lexical';
+
+export type MessageBody = SerializedRootNode;
+
 export interface MessageType {
   id: number;
-  body: string;
+  body: MessageBody;
   created: string;
   answerId?: number;
   authorId: string;

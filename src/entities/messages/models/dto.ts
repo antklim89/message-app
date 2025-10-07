@@ -1,9 +1,10 @@
-import type { MessageType } from './types';
+import { type Json } from '@/shared/model/supabase-types.generated';
+import type { MessageBody, MessageType } from './types';
 
 export function messageDto(data: {
   answerId: number | null;
   authorId: string;
-  body: string;
+  body: Json;
   created: string;
   id: number;
   hasLiked: boolean | null;
@@ -27,7 +28,7 @@ export function messageDto(data: {
       username: data.author.username,
     },
     authorId: data.authorId,
-    body: data.body,
+    body: data.body as unknown as MessageBody,
     created: data.created,
     hasLiked: data.hasLiked ?? false,
     id: data.id,

@@ -1,6 +1,7 @@
 import { MESSAGE_SELECT, type MessageType } from '@/entities/messages';
 import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
+import type { Json } from '@/shared/model/supabase-types.generated';
 import type { MessageEditType } from '../../model/types';
 
 export async function createMessage(answerId: MessageType['answerId'], input: MessageEditType): PromiseResult<null> {
@@ -10,7 +11,7 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
 
   const { error } = await supabase
     .from('messages')
-    .insert({ ...input, answerId, authorId: user.id })
+    .insert({ body: input.body as unknown as Json, answerId, authorId: user.id })
     .select(MESSAGE_SELECT);
 
   if (error != null) return errUnexpected('Failed to create message.');
