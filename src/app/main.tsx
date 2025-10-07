@@ -5,6 +5,7 @@ import { Toaster } from '@/shared/ui/toaster';
 import { App } from './app';
 import { ChakraProvider } from './providers/chakra-provider';
 import { ReactQueryProvider } from './providers/react-query';
+import './styles.css';
 
 const root = document.getElementById('root');
 

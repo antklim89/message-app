@@ -1,0 +1,25 @@
+.editor-hashtag,
+.editor-user,
+.editor-link {
+  color: var(--chakra-colors-blue-200);
+}
+
+.editor-text-bold {
+  font-weight: var(--chakra-font-weights-bold);
+}
+
+.editor-text-italic {
+  font-style: italic;
+}
+
+.editor-text-strikethrough {
+  text-decoration: line-through;
+}
+
+.editor-text-underline {
+  text-decoration: underline;
+}
+
+.editor-text-underlineStrikethrough {
+  text-decoration: underline line-through;
+}
