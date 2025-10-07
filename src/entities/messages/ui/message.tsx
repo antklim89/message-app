@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react';
-import { Card, Flex, HStack, IconButton, Span, Text } from '@chakra-ui/react';
+import { Box, Card, Flex, HStack, IconButton, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
+import { RichText } from '@/shared/ui/rich-text';
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { wrapMessage } from '../lib/utils';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
   return (
@@ -38,25 +38,9 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
       </Card.Header>
       <Card.Body>
         <Card.Body>
-          <Text textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
-            {wrapMessage({
-              text: message.body,
-              hashtagRender: (hashtag, key) => (
-                <Span color="blue.200" key={key} asChild>
-                  <Link to="/hashtag/$hashtag" params={{ hashtag: hashtag.slice(1) }}>
-                    {hashtag}
-                  </Link>
-                </Span>
-              ),
-              usernameRender: (username, id, key) => (
-                <Span color="blue.200" key={key} asChild>
-                  <Link to="/profile/$profileId" params={{ profileId: id }}>
-                    {username}
-                  </Link>
-                </Span>
-              ),
-            })}
-          </Text>
+          <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
+            <RichText data={message.body} />
+          </Box>
         </Card.Body>
       </Card.Body>
       <Card.Footer css={{ '& > *': { flex: '1 0 auto' } }} display="flex" p={0}>
