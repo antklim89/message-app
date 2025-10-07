@@ -166,7 +166,7 @@
         },
         "useFragmentSyntax": { "fix": "safe", "level": "error" },
         "useGroupedAccessorPairs": "error",
-        "useImportType": { "fix": "safe", "level": "error", "options": { "style": "inlineType" } },
+        "useImportType": { "fix": "safe", "level": "error", "options": { "style": "auto" } },
         "useNamingConvention": {
           "level": "off",
           "options": {
