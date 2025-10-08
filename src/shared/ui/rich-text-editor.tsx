@@ -1,4 +1,4 @@
-import { type ReactNode, type RefObject, useId } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import { Box, Span, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
 import { LinkNode } from '@lexical/link';
@@ -18,27 +18,25 @@ import { LexicalRectPlugin } from '../lib/lexical/plugins/lexical-rect-plugin';
 import { LexicalSelectWordPlugin } from '../lib/lexical/plugins/lexical-select-word-plugin';
 import { LexicalUserPlugin } from '../lib/lexical/plugins/lexical-user-plugin';
 
+export const RICH_TEXT_EDITOR_NAMESPACE = 'rich-text-editor';
+
 export function RichTextEditor({
-  namespace,
   onError = error => console.error(error),
   plugins,
   value,
   placeholder = 'Enter your message...',
   ref,
 }: {
-  namespace?: string;
   plugins?: ReactNode;
   onError?: (error: Error, editor: LexicalEditor) => void;
   value?: SerializedRootNode;
   placeholder?: string;
   ref: RefObject<LexicalEditor | null>;
 }) {
-  const id = useId();
-
   return (
     <LexicalComposer
       initialConfig={{
-        namespace: namespace ?? id,
+        namespace: RICH_TEXT_EDITOR_NAMESPACE,
         theme: {
           hashtag: 'editor-hashtag',
           user: 'editor-user',

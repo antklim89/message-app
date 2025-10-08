@@ -5,6 +5,7 @@ import type { MessageType } from '@/entities/messages';
 import { MessageDeleteDialog, MessageUpdateDialog } from '@/features/message-edit';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCardMenuCopyUrl } from './message-card-menu-copy-url';
+import { MessageCardMenuCopyUser } from './message-card-menu-copy-user';
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
   const updateMessageDisclosure = useDisclosure();
@@ -26,6 +27,7 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
             <Menu.Content>
               <Menu.ItemGroup cursor="pointer">
                 <MessageCardMenuCopyUrl answerId={message.id} />
+                <MessageCardMenuCopyUser {...message.author} />
 
                 <Protected
                   authorId={message.authorId}
