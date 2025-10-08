@@ -1,9 +1,9 @@
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Box, HStack, Separator, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { type FollowerProfileType } from '../models/types';
+import type { FollowerProfileType } from '../models/types';
 
 export function FollowersListItem({ follower, actions }: { follower: FollowerProfileType; actions?: ReactNode }) {
   return (

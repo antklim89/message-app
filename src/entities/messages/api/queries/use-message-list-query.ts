@@ -2,7 +2,7 @@ import { type InferDataFromTag, infiniteQueryOptions, useSuspenseInfiniteQuery }
 
 import { messageQueryOptions } from './use-message-query';
 import { MESSAGES_PER_PAGE } from '../../config/constants';
-import { type MessageType } from '../../models/types';
+import type { MessageType } from '../../models/types';
 import { getMessageList } from '../repository/get-message-list';
 
 export const MessageListQueryOptionsBaseKey = 'MESSAGES';

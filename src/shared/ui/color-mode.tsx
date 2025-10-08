@@ -5,7 +5,7 @@ import { ClientOnly, IconButton, Skeleton, Span } from '@chakra-ui/react';
 import { LuMoon, LuSun } from 'react-icons/lu';
 
 import { useColorMode } from '../hooks/use-color-mode-value';
-import { type ColorModeProviderProps } from '../model/colors';
+import type { ColorModeProviderProps } from '../model/colors';
 
 interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {}
 

@@ -1,5 +1,5 @@
 import { Spinner } from '@chakra-ui/react';
-import { type UseQueryResult } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 import { AwaitQueryError } from './await-query-error';
 

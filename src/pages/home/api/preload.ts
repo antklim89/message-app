@@ -1,4 +1,4 @@
-import { type QueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 
 import { messageListQueryOptions } from '@/entities/messages';
 

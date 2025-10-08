@@ -1,4 +1,4 @@
-import { type Json } from '@/shared/model/supabase-types.generated';
+import type { Json } from '@/shared/model/supabase-types.generated';
 import type { MessageBody, MessageType } from './types';
 
 export function messageDto(data: {

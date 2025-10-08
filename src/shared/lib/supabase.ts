@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/shared/model/supabase-types.generated';
 import { env } from './env';
-import { type User } from '../model/user';
+import type { User } from '../model/user';
 
 const sbPromise = import('@supabase/supabase-js');
 let supabaseClient: SupabaseClient<Database> | undefined;

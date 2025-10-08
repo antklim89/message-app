@@ -1,5 +1,5 @@
 import { Alert, Button, HStack } from '@chakra-ui/react';
-import { type UseQueryResult } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { ErrType, type ErrVariant, isErr } from '../lib/result';

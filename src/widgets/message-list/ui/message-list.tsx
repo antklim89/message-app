@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Card, Text } from '@chakra-ui/react';
 
 import useInfiniteScroll from '@/shared/hooks/use-infinity-scroll';

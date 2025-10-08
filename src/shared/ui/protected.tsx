@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { AwaitQuery } from './await-query';
 import { sessionQueryOptions } from '../hooks/use-session';
-import { type User } from '../model/user';
+import type { User } from '../model/user';
 
 export function Protected({
   fallback,

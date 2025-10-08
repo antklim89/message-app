@@ -1,6 +1,6 @@
 import { useTheme } from 'next-themes';
 
-import { type ColorMode, type UseColorModeReturn } from '../model/colors';
+import type { ColorMode, UseColorModeReturn } from '../model/colors';
 
 export function useColorMode(): UseColorModeReturn {
   const { resolvedTheme, setTheme } = useTheme();

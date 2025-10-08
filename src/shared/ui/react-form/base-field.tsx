@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Field as ChakraField } from '@chakra-ui/react';
 
 import { useFieldContext } from '@/shared/lib/react-form';

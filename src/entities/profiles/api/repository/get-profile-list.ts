@@ -1,7 +1,7 @@
 import { errNotFound, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
 import { profileListItemDto } from '../../models/dto';
-import { type ProfileListItemType } from '../../models/types';
+import type { ProfileListItemType } from '../../models/types';
 
 export async function getProfileList({ search }: { search: string }): PromiseResult<ProfileListItemType[]> {
   const supabase = await createSupabaseClient();

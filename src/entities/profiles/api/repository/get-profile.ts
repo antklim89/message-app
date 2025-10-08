@@ -1,7 +1,7 @@
 import { errAuthentication, errNotFound, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
 import { profileDto } from '../../models/dto';
-import { type ProfileType } from '../../models/types';
+import type { ProfileType } from '../../models/types';
 
 export async function getProfile({ profileId }: { profileId: string }): PromiseResult<ProfileType> {
   const supabase = await createSupabaseClient();

@@ -1,4 +1,4 @@
-import { type DefaultOptions } from '@tanstack/react-query';
+import type { DefaultOptions } from '@tanstack/react-query';
 
 import { ErrType, isErr } from '@/shared/lib/result';
 

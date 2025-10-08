@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Card, Stack } from '@chakra-ui/react';
 
 export function FollowersList({ children }: { children: ReactNode }) {

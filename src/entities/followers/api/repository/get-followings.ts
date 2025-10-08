@@ -1,6 +1,6 @@
 import { errAuthentication, errNotFound, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
-import { type FollowerProfileType } from '../../models/types';
+import type { FollowerProfileType } from '../../models/types';
 
 export async function getFollowings(): PromiseResult<FollowerProfileType[]> {
   const supabase = await createSupabaseClient();

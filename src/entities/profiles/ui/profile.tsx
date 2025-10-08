@@ -5,7 +5,7 @@ import { FollowToggleButton } from '@/features/follow-toggle';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { type ProfileType } from '../models/types';
+import type { ProfileType } from '../models/types';
 
 export function Profile({ profile }: { profile: ProfileType }) {
   return (

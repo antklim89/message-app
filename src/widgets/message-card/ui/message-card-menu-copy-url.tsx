@@ -2,7 +2,7 @@ import { Menu } from '@chakra-ui/react';
 import { useRouter } from '@tanstack/react-router';
 import { FaCopy } from 'react-icons/fa6';
 
-import { type MessageType } from '@/entities/messages';
+import type { MessageType } from '@/entities/messages';
 
 export function MessageCardMenuCopyUrl({ answerId }: { answerId: MessageType['id'] }) {
   const { href } = useRouter().buildLocation({ params: { answerId }, to: '/answers/$answerId' });

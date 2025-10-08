@@ -1,5 +1,5 @@
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
-import { type z } from 'zod/v4-mini';
+import type { z } from 'zod/v4-mini';
 
 import { withForm } from '@/shared/lib/react-form';
 import { SearchSchema } from '../model/schemas';

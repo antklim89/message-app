@@ -1,7 +1,7 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { getSupabaseSession } from '../lib/supabase';
-import { type User } from '../model/user';
+import type { User } from '../model/user';
 
 export function sessionQueryOptions() {
   return queryOptions<User | null>({
