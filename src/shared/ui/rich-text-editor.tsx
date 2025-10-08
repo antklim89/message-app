@@ -13,12 +13,11 @@ import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $createParagraphNode, $getRoot, type LexicalEditor, type SerializedRootNode } from 'lexical';
 
+import { RICH_TEXT_EDITOR_NAMESPACE } from '../lib/lexical/constants';
 import { UserNode } from '../lib/lexical/nodes/user-node';
 import { LexicalRectPlugin } from '../lib/lexical/plugins/lexical-rect-plugin';
 import { LexicalSelectWordPlugin } from '../lib/lexical/plugins/lexical-select-word-plugin';
 import { LexicalUserPlugin } from '../lib/lexical/plugins/lexical-user-plugin';
-
-export const RICH_TEXT_EDITOR_NAMESPACE = 'rich-text-editor';
 
 export function RichTextEditor({
   onError = error => console.error(error),

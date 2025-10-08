@@ -5,7 +5,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { FaCopy } from 'react-icons/fa6';
 
-import { RICH_TEXT_EDITOR_NAMESPACE } from '@/shared/ui/rich-text-editor';
+import { RICH_TEXT_EDITOR_NAMESPACE } from '@/shared/lib/lexical/constants';
 
 export function MessageCardMenuCopyUser(props: { id: string; username: string }) {
   return (

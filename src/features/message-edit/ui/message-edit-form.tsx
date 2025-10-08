@@ -2,6 +2,7 @@ import { type ComponentProps, type ReactNode, useRef, useState } from 'react';
 import { Box, HStack, Stack } from '@chakra-ui/react';
 import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
+import { MAX_MESSAGE_BODY_LENGTH } from '@/shared/lib/lexical/constants';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageBodyLengthPlugin } from './lexcical-plugins/message-body-length-plugin';
 import { FormatButtonsPlugin } from './lexcical-plugins/message-format-buttons-plugin';
@@ -42,9 +43,9 @@ export const MessageEditForm = ({
                 <Box flexGrow={1} />
                 <MessageBodyLengthPlugin
                   onLengthChange={length => {
-                    setFormIsValid(length <= 600);
+                    setFormIsValid(length <= MAX_MESSAGE_BODY_LENGTH);
                   }}
-                  maxLength={600}
+                  maxLength={MAX_MESSAGE_BODY_LENGTH}
                 />
               </HStack>
               <HStack mt={2}>

@@ -8,11 +8,7 @@ import type { SerializedLexicalNode, SerializedParagraphNode, SerializedRootNode
 import { z } from 'zod/v4-mini';
 
 import type { SerializedUserNode } from '@/shared/lib/lexical/nodes/user-node';
-
-const IS_BOLD = 1;
-const IS_ITALIC = 1 << 1;
-const IS_STRIKETHROUGH = 1 << 2;
-const IS_UNDERLINE = 1 << 3;
+import { IS_BOLD, IS_ITALIC, IS_STRIKETHROUGH, IS_UNDERLINE } from '../lib/lexical/constants';
 
 function convertLexicalText(data: SerializedLexicalNode): ReactNode {
   if (data.type === 'root') {
