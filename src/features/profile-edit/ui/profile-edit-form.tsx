@@ -18,7 +18,7 @@ export const ProfileEditForm = withForm({
     return (
       <form.AppForm>
         <form.Form {...props}>
-          <form.AppField name="username">{field => <field.InputField label="Username" />}</form.AppField>
+          <form.AppField name="displayname">{field => <field.InputField label="Displayname" />}</form.AppField>
           <form.AppField name="bio">{field => <field.TextareaField label="Bio" autoresize />}</form.AppField>
         </form.Form>
       </form.AppForm>

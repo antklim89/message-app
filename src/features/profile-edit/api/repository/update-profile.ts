@@ -9,12 +9,12 @@ export async function updateProfile(input: ProfileEditType): PromiseResult<null>
 
   const { count, error } = await supabase
     .from('profiles')
-    .update(input, { count: 'exact' })
+    .update({ displayname: input.displayname, bio: input.bio }, { count: 'exact' })
     .eq('id', user.id)
     .select('id');
 
-  if (count == null || count <= 0) return errNotFound('The profile has not been updated.');
   if (error != null) return errUnexpected('Failed to update profile.');
+  if (count == null || count <= 0) return errNotFound('The profile has not been updated.');
 
   return ok(null);
 }
