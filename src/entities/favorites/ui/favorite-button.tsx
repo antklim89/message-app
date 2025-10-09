@@ -2,7 +2,7 @@ import { Icon, IconButton, Spinner } from '@chakra-ui/react';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
-import { useToggleLikeMutation } from '../api/mutations/use-toggle-like-mutation';
+import { useToggleFavoriteMutation } from '../api/mutations/use-toggle-favorite-mutation';
 
 interface Props {
   messageId: MessageType['id'];
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function FavoriteButton({ messageId, isFavorite }: Props) {
-  const toggleLikeMutation = useToggleLikeMutation({ isFavorite, messageId });
+  const toggleLikeMutation = useToggleFavoriteMutation({ isFavorite, messageId });
 
   function handleToggleLike() {
     toggleLikeMutation.mutateAsync();
