@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 import { Box, Button, HStack, IconButton, Popover, Stack, useDisclosure } from '@chakra-ui/react';
 import { $createLinkNode, $isLinkNode, type LinkNode } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -60,6 +60,13 @@ export function MessageLinkPlugin() {
     },
   });
 
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      form.handleSubmit();
+    }
+  }
+
   useEffect(() => {
     return editor.registerUpdateListener(() => {
       editor.update(() => {
@@ -91,12 +98,6 @@ export function MessageLinkPlugin() {
 
   function handleLinkRemove() {
     editor.update(() => {
-      // const selection = $getSelection();
-      // if (!$isRangeSelection(selection)) return;
-      // if (!selection.isCollapsed() && $isTextNode(selectedNode)) {
-      //   const textContent = selectedNode.getTextContent();
-      //   return form.setFieldValue('name', textContent);
-      // }
       if (!selectedLinkNode) return;
       const newTextContent = selectedLinkNode
         .getChildren()
@@ -116,11 +117,7 @@ export function MessageLinkPlugin() {
       </IconButton>
       <Popover.Root
         modal
-        positioning={{
-          placement: 'bottom-start',
-          strategy: 'fixed',
-          getAnchorRect: () => position.current,
-        }}
+        positioning={{ placement: 'bottom-start', strategy: 'fixed', getAnchorRect: () => position.current }}
         onExitComplete={() => {
           form.reset();
           editor.focus(undefined, { defaultSelection: undefined });
@@ -135,16 +132,18 @@ export function MessageLinkPlugin() {
                 <form.AppForm>
                   <Stack>
                     <form.AppField name="name">
-                      {field => <field.InputField placeholder="Link name..." />}
+                      {field => <field.InputField onKeyDown={handleKeyDown} placeholder="Link name..." />}
                     </form.AppField>
                     <form.AppField name="url">
-                      {field => <field.InputField placeholder="https://www.example.com" />}
+                      {field => <field.InputField onKeyDown={handleKeyDown} placeholder="https://www.example.com" />}
                     </form.AppField>
                   </Stack>
                 </form.AppForm>
               </Box>
               <Stack>
-                <Button onClick={form.handleSubmit}>Paste</Button>
+                <Button form={form.formId} type="submit">
+                  Paste
+                </Button>
                 {selectedLinkNode && (
                   <Button colorPalette="red" onClick={handleLinkRemove}>
                     Remove
