@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
 
 import { withForm } from '@/shared/lib/react-form';
@@ -14,6 +15,7 @@ export const profileEditFormOptions = formOptions({
 
 export const ProfileEditForm = withForm({
   ...profileEditFormOptions,
+  props: {} as ComponentProps<'form'>,
   render({ form, ...props }) {
     return (
       <form.AppForm>

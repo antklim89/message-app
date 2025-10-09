@@ -14,6 +14,10 @@ export function ProfileUpdate({ profileEditValues }: { profileEditValues: Profil
     async onSubmit({ value, formApi }) {
       const result = await profileUpdateMutation.mutateAsync(value);
 
+      if (result.success) {
+        formApi.reset();
+      }
+
       if (result.fail) {
         formApi.setErrorMap({
           onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
@@ -33,17 +37,18 @@ export function ProfileUpdate({ profileEditValues }: { profileEditValues: Profil
         <ProfileEditForm form={profileEditForm} />
       </Card.Body>
       <Card.Footer justifyContent="end">
-        <profileEditForm.Subscribe selector={state => state.isDefaultValue || !state.canSubmit}>
+        <profileEditForm.Subscribe selector={state => state.isDefaultValue}>
           {isDisabled => (
             <>
               <Button disabled={isDisabled} variant="ghost" onClick={() => profileEditForm.reset()}>
                 Cancel
               </Button>
               <Button
+                form={profileEditForm.formId}
+                type="submit"
                 disabled={isDisabled}
                 loadingText="Saving..."
                 loading={profileUpdateMutation.isPending}
-                onClick={profileEditForm.handleSubmit}
               >
                 Save
               </Button>

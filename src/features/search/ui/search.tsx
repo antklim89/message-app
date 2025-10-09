@@ -27,7 +27,7 @@ export function Search() {
           <SearchForm form={searchForm} />
           <searchForm.Subscribe selector={state => state.isSubmitting}>
             {isSubmitting => (
-              <IconButton onClick={searchForm.handleSubmit} loading={isSubmitting} aria-label="search">
+              <IconButton form={searchForm.formId} type="submit" loading={isSubmitting} aria-label="search">
                 <FaMagnifyingGlass />
               </IconButton>
             )}

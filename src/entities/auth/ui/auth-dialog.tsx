@@ -42,12 +42,13 @@ export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useD
       disclosure={disclosure}
       submitElement={
         type === 'login' ? (
-          <Button onClick={() => loginForm.handleSubmit()} loading={loginMutation.isPending} loadingText="Saving...">
+          <Button type="submit" form={loginForm.formId} loading={loginMutation.isPending} loadingText="Entering...">
             Login
           </Button>
         ) : (
           <Button
-            onClick={() => registerForm.handleSubmit()}
+            type="submit"
+            form={registerForm.formId}
             loading={registerMutation.isPending}
             loadingText="Registering..."
           >

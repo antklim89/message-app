@@ -10,6 +10,7 @@ export function Form({ onSubmit, children, ...props }: ComponentProps<'form'>) {
   return (
     <Stack asChild gap={4} width="full">
       <form
+        id={form.formId}
         {...props}
         onSubmit={e => {
           e.preventDefault();
@@ -25,7 +26,7 @@ export function Form({ onSubmit, children, ...props }: ComponentProps<'form'>) {
                 <Alert.Content>
                   <Alert.Title asChild>
                     <Heading fontSize="xl" as="h4">
-                      Submitting Failed
+                      Form Error
                     </Heading>
                   </Alert.Title>
                   <Alert.Description whiteSpace="pre-wrap">{error}</Alert.Description>
