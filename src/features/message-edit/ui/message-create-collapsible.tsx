@@ -1,8 +1,8 @@
 import { lazy, type ReactElement, Suspense } from 'react';
 import { Button, Card, Collapsible, HStack, useDisclosure } from '@chakra-ui/react';
-import type { SerializedRootNode } from 'lexical';
 
 import type { MessageType } from '@/entities/messages';
+import { useRichTextHandler } from '@/shared/lib/lexical/use-rich-text-handler';
 import { MessageEditFormFallback } from './message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
 
@@ -17,14 +17,13 @@ export function MessageCreateCollapsible({
 }) {
   const disclosure = useDisclosure();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
-
-  async function handleSubmit(value?: SerializedRootNode) {
-    if (value == null) return;
-    const result = await messageCreateMutation.mutateAsync({ body: value });
-    if (result.success) {
-      disclosure.onClose();
-    }
-  }
+  const { ref, handleSubmit } = useRichTextHandler({
+    async onSubmit(value) {
+      if (!value) return;
+      const result = await messageCreateMutation.mutateAsync({ body: value });
+      if (result.success) disclosure.onClose();
+    },
+  });
 
   return (
     <Collapsible.Root lazyMount open={disclosure.open} unmountOnExit>
@@ -42,20 +41,21 @@ export function MessageCreateCollapsible({
       </Collapsible.Trigger>
       <Collapsible.Content asChild mt={2}>
         <Card.Root>
-          <Suspense fallback={<MessageEditFormFallback />}>
-            <Card.Body asChild>
-              <MessageEditForm onSubmit={handleSubmit}>
-                <HStack justifyContent="flex-end">
-                  <Button onClick={disclosure.onClose} variant="ghost">
-                    Cancel
-                  </Button>
-                  <Button loading={messageCreateMutation.isPending} loadingText="Creating..." type="submit">
-                    Create
-                  </Button>
-                </HStack>
-              </MessageEditForm>
-            </Card.Body>
-          </Suspense>
+          <Card.Body>
+            <Suspense fallback={<MessageEditFormFallback />}>
+              <MessageEditForm ref={ref} />
+            </Suspense>
+          </Card.Body>
+          <Card.Footer asChild>
+            <HStack justifyContent="flex-end">
+              <Button onClick={disclosure.onClose} variant="ghost">
+                Cancel
+              </Button>
+              <Button loading={messageCreateMutation.isPending} loadingText="Creating..." onClick={handleSubmit}>
+                Create
+              </Button>
+            </HStack>
+          </Card.Footer>
         </Card.Root>
       </Collapsible.Content>
     </Collapsible.Root>

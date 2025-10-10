@@ -1,8 +1,8 @@
-import { lazy, Suspense, useId } from 'react';
+import { lazy, Suspense } from 'react';
 import { Button, type useDisclosure } from '@chakra-ui/react';
-import type { SerializedRootNode } from 'lexical';
 
 import type { MessageType } from '@/entities/messages';
+import { useRichTextHandler } from '@/shared/lib/lexical/use-rich-text-handler';
 import { Modal } from '@/shared/ui/modal';
 import { MessageEditFormFallback } from './message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
@@ -16,29 +16,28 @@ export function MessageCreateDialog({
   answerId: MessageType['answerId'];
   disclosure: ReturnType<typeof useDisclosure>;
 }) {
-  const id = useId();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
-  async function handleSubmit(value?: SerializedRootNode) {
-    if (value == null) return;
-    const result = await messageCreateMutation.mutateAsync({ body: value });
-    if (result.success) {
-      disclosure.onClose();
-    }
-  }
+  const { ref, handleSubmit } = useRichTextHandler({
+    async onSubmit(value) {
+      if (!value) return;
+      const result = await messageCreateMutation.mutateAsync({ body: value });
+      if (result.success) disclosure.onClose();
+    },
+  });
 
   return (
     <Modal
       disclosure={disclosure}
       submitElement={
-        <Button form={id} type="submit" loading={messageCreateMutation.isPending} loadingText="Creating...">
+        <Button onClick={handleSubmit} loading={messageCreateMutation.isPending} loadingText="Creating...">
           Create
         </Button>
       }
       title="Create New Message"
     >
       <Suspense fallback={<MessageEditFormFallback />}>
-        <MessageEditForm onSubmit={handleSubmit} id={id} />
+        <MessageEditForm ref={ref} />
       </Suspense>
     </Modal>
   );
