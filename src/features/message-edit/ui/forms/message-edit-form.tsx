@@ -3,10 +3,10 @@ import { Box, type BoxProps, HStack, Stack } from '@chakra-ui/react';
 import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
-import { MessageBodyLengthPlugin } from './lexcical-plugins/message-body-length-plugin';
-import { FormatButtonsPlugin } from './lexcical-plugins/message-format-buttons-plugin';
-import { MessageLinkPlugin } from './lexcical-plugins/message-link-plugin';
-import { MessageSelectUserPlugin } from './lexcical-plugins/message-select-user-plugin';
+import { MessageBodyLengthPlugin } from '../plugins/message-body-length-plugin';
+import { FormatButtonsPlugin } from '../plugins/message-format-buttons-plugin';
+import { MessageLinkPlugin } from '../plugins/message-link-plugin';
+import { MessageSelectUserPlugin } from '../plugins/message-select-user-plugin';
 
 export const MessageEditForm = ({
   value,

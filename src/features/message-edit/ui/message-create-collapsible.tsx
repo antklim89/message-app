@@ -3,10 +3,10 @@ import { Button, Card, Collapsible, HStack, useDisclosure } from '@chakra-ui/rea
 
 import type { MessageType } from '@/entities/messages';
 import { useRichTextHandler } from '@/shared/lib/lexical';
-import { MessageEditFormFallback } from './message-edit-form-fallback';
+import { MessageEditFormFallback } from './fallbacks/message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
 
-const MessageEditForm = lazy(() => import('./message-edit-form').then(m => ({ default: m.MessageEditForm })));
+const MessageEditForm = lazy(() => import('./forms/message-edit-form').then(m => ({ default: m.MessageEditForm })));
 
 export function MessageCreateCollapsible({
   answerId,
