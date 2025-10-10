@@ -16,7 +16,6 @@ import { $createParagraphNode, $getRoot, type LexicalEditor, type SerializedRoot
 import { RICH_TEXT_EDITOR_NAMESPACE } from '../lib/lexical/constants';
 import { UserNode } from '../lib/lexical/nodes/user-node';
 import { LexicalRectPlugin } from '../lib/lexical/plugins/lexical-rect-plugin';
-import { LexicalSelectWordPlugin } from '../lib/lexical/plugins/lexical-select-word-plugin';
 import { LexicalUserPlugin } from '../lib/lexical/plugins/lexical-user-plugin';
 
 export function RichTextEditor({
@@ -90,7 +89,6 @@ export function RichTextEditor({
       <HashtagPlugin />
       <LexicalRectPlugin />
       <LexicalUserPlugin />
-      <LexicalSelectWordPlugin />
       <HistoryPlugin />
       <AutoFocusPlugin defaultSelection="rootEnd" />
       <EditorRefPlugin editorRef={ref} />

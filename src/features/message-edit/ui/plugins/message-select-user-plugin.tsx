@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { IconButton, Input, useDisclosure } from '@chakra-ui/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { COMMAND_PRIORITY_EDITOR, KEY_DOWN_COMMAND } from 'lexical';
+import {
+  $getSelection,
+  $isRangeSelection,
+  COMMAND_PRIORITY_EDITOR,
+  KEY_DOWN_COMMAND,
+  SELECTION_CHANGE_COMMAND,
+} from 'lexical';
 import { FaUserPlus } from 'react-icons/fa6';
 
 import { ProfileSelect } from '@/entities/profiles';
-import { INSERT_USER, SELECT_WORD, useLexicalRectPlugin } from '@/shared/lib/lexical';
+import { INSERT_USER, useLexicalRectPlugin } from '@/shared/lib/lexical';
 
 export function MessageSelectUserPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -15,9 +21,13 @@ export function MessageSelectUserPlugin() {
 
   useEffect(() => {
     return editor.registerCommand(
-      SELECT_WORD,
-      word => {
-        setUsernameTerm(word);
+      SELECTION_CHANGE_COMMAND,
+      () => {
+        const selection = $getSelection();
+        if (!$isRangeSelection(selection)) return true;
+        if (selection.isCollapsed()) setUsernameTerm('');
+        else setUsernameTerm(selection.getTextContent());
+
         return true;
       },
       COMMAND_PRIORITY_EDITOR,
