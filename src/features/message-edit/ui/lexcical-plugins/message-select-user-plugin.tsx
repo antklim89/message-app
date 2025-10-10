@@ -5,9 +5,7 @@ import { COMMAND_PRIORITY_EDITOR, KEY_DOWN_COMMAND } from 'lexical';
 import { FaUserPlus } from 'react-icons/fa6';
 
 import { ProfileSelect } from '@/entities/profiles';
-import { INSERT_USER } from '@/shared/lib/lexical/nodes/user-node';
-import { useLexicalRectPlugin } from '@/shared/lib/lexical/plugins/lexical-rect-plugin';
-import { SELECT_WORD } from '@/shared/lib/lexical/plugins/lexical-select-word-plugin';
+import { INSERT_USER, SELECT_WORD, useLexicalRectPlugin } from '@/shared/lib/lexical';
 
 export function MessageSelectUserPlugin() {
   const [editor] = useLexicalComposerContext();

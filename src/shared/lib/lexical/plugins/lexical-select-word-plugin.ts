@@ -9,7 +9,7 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 
-import { $isUserNode, UserNode } from '@/shared/lib/lexical/nodes/user-node';
+import { $isUserNode, UserNode } from '@/shared/lib/lexical';
 import { getWordFromText } from '@/shared/lib/utils';
 
 export const SELECT_WORD = createCommand<string>();

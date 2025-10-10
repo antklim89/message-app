@@ -7,7 +7,7 @@ import { Link } from '@tanstack/react-router';
 import type { SerializedLexicalNode, SerializedParagraphNode, SerializedRootNode, SerializedTextNode } from 'lexical';
 import { z } from 'zod/v4-mini';
 
-import type { SerializedUserNode } from '@/shared/lib/lexical/nodes/user-node';
+import type { SerializedUserNode } from '@/shared/lib/lexical';
 import { IS_BOLD, IS_ITALIC, IS_STRIKETHROUGH, IS_UNDERLINE } from '../lib/lexical/constants';
 
 function convertLexicalText(data: SerializedLexicalNode): ReactNode {

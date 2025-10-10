@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
-import { MAX_MESSAGE_BODY_LENGTH } from './constants';
-import { calculateLexicalTextLength } from './utils';
+import { MAX_MESSAGE_BODY_LENGTH } from '../constants';
+import { calculateLexicalTextLength } from '../utils';
 
 export function useRichTextHandler({ onSubmit }: { onSubmit: (v?: SerializedRootNode) => Promise<void> }) {
   const ref = useRef<LexicalEditor>(null);

@@ -7,7 +7,7 @@ import { $createTextNode, $getSelection, $isRangeSelection, $isTextNode } from '
 import { FaLink } from 'react-icons/fa6';
 import { z } from 'zod/v4-mini';
 
-import { useLexicalRectPlugin } from '@/shared/lib/lexical/plugins/lexical-rect-plugin';
+import { useLexicalRectPlugin } from '@/shared/lib/lexical';
 import { useAppForm } from '@/shared/lib/react-form';
 
 const LinkSchema = z.object({

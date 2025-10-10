@@ -2,7 +2,7 @@ import { lazy, type ReactElement, Suspense } from 'react';
 import { Button, Card, Collapsible, HStack, useDisclosure } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
-import { useRichTextHandler } from '@/shared/lib/lexical/use-rich-text-handler';
+import { useRichTextHandler } from '@/shared/lib/lexical';
 import { MessageEditFormFallback } from './message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
 
