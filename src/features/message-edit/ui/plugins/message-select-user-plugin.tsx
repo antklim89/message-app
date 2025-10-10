@@ -24,11 +24,11 @@ export function MessageSelectUserPlugin() {
       SELECTION_CHANGE_COMMAND,
       () => {
         const selection = $getSelection();
-        if (!$isRangeSelection(selection)) return true;
+        if (!$isRangeSelection(selection)) return false;
         if (selection.isCollapsed()) setUsernameTerm('');
         else setUsernameTerm(selection.getTextContent());
 
-        return true;
+        return false;
       },
       COMMAND_PRIORITY_EDITOR,
     );
