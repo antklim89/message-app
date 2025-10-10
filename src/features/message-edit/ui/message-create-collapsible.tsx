@@ -2,9 +2,9 @@ import { lazy, type ReactElement, Suspense } from 'react';
 import { Button, Card, Collapsible, HStack, useDisclosure } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
-import { useRichTextHandler } from '@/shared/lib/lexical';
 import { MessageEditFormFallback } from './fallbacks/message-edit-form-fallback';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
+import { useRichTextHandler } from '../lib/hooks/use-rich-text-handler';
 
 const MessageEditForm = lazy(() => import('./forms/message-edit-form').then(m => ({ default: m.MessageEditForm })));
 

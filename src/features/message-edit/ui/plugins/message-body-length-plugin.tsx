@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Text } from '@chakra-ui/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
-import { calculateLexicalTextLength, MAX_MESSAGE_BODY_LENGTH } from '@/shared/lib/lexical';
+import { calculateLexicalTextLength } from '@/shared/lib/lexical';
+import { MAX_MESSAGE_BODY_LENGTH } from '../../config/constants';
 
 export function MessageBodyLengthPlugin() {
   const [editor] = useLexicalComposerContext();

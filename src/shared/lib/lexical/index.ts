@@ -3,10 +3,8 @@ export {
   IS_ITALIC,
   IS_STRIKETHROUGH,
   IS_UNDERLINE,
-  MAX_MESSAGE_BODY_LENGTH,
   RICH_TEXT_EDITOR_NAMESPACE,
 } from './constants';
-export { useRichTextHandler } from './hooks/use-rich-text-handler';
 export {
   $createUserNode,
   $isUserNode,
