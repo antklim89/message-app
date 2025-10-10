@@ -1,11 +1,15 @@
-import { IconButton, Menu, Portal, useDisclosure } from '@chakra-ui/react';
+import { lazy, Suspense } from 'react';
+import { IconButton, Menu, Portal, SkeletonText, useDisclosure } from '@chakra-ui/react';
 import { FaEllipsis, FaPencil, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { MessageDeleteDialog, MessageUpdateDialog } from '@/features/message-edit';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCardMenuCopyUrl } from './message-card-menu-copy-url';
-import { MessageCardMenuCopyUser } from './message-card-menu-copy-user';
+
+const MessageCardMenuCopyUser = lazy(() =>
+  import('./message-card-menu-copy-user').then(m => ({ default: m.MessageCardMenuCopyUser })),
+);
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
   const updateMessageDisclosure = useDisclosure();
@@ -27,7 +31,10 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
             <Menu.Content>
               <Menu.ItemGroup cursor="pointer">
                 <MessageCardMenuCopyUrl answerId={message.id} />
-                <MessageCardMenuCopyUser {...message.author} />
+
+                <Suspense fallback={<SkeletonText w="full" noOfLines={1} />}>
+                  <MessageCardMenuCopyUser {...message.author} />
+                </Suspense>
 
                 <Protected
                   authorId={message.authorId}
