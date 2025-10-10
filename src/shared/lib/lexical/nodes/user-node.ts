@@ -4,7 +4,6 @@ import {
   $createTextNode,
   $getSelection,
   $isRangeSelection,
-  $isTextNode,
   COMMAND_PRIORITY_EDITOR,
   createCommand,
   type EditorConfig,
@@ -16,7 +15,6 @@ import {
   TextNode,
 } from 'lexical';
 
-import { getWordFromText } from '@/shared/lib/utils';
 export const INSERT_USER = createCommand<UserNodePayload>();
 
 export interface UserNodePayload {
@@ -98,20 +96,8 @@ function registerInsertUserCommand(editor: LexicalEditor) {
       const selectedNode = selection.getNodes()[0];
 
       if ($isUserNode(selectedNode) && selection.isCollapsed()) {
-        selectedNode.replace($createUserNode(payload));
-        selectedNode.selectEnd();
-        return true;
-      }
-
-      if ($isTextNode(selectedNode) && selection.isCollapsed()) {
-        const focusOffset = selection.focus.offset;
-        const textContent = selectedNode.getTextContent();
-        const word = getWordFromText(textContent, focusOffset);
-
-        const newTextNode = $createTextNode(textContent.replace(word, ''));
         const newUserNode = $createUserNode(payload);
-        selectedNode.replace(newTextNode);
-        newTextNode.insertAfter(newUserNode, false);
+        selectedNode.replace(newUserNode);
         newUserNode.selectEnd();
         return true;
       }

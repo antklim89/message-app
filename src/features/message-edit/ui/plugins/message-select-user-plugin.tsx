@@ -11,7 +11,7 @@ import {
 import { FaUserPlus } from 'react-icons/fa6';
 
 import { ProfileSelect } from '@/entities/profiles';
-import { INSERT_USER, useLexicalRectPlugin } from '@/shared/lib/lexical';
+import { $isUserNode, INSERT_USER, useLexicalRectPlugin } from '@/shared/lib/lexical';
 
 export function MessageSelectUserPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -25,7 +25,10 @@ export function MessageSelectUserPlugin() {
       () => {
         const selection = $getSelection();
         if (!$isRangeSelection(selection)) return false;
-        if (selection.isCollapsed()) setUsernameTerm('');
+        const selectedNode = selection.getNodes()[0];
+
+        if (selection.isCollapsed() && $isUserNode(selectedNode)) setUsernameTerm(selectedNode.getUsername());
+        else if (selection.isCollapsed()) setUsernameTerm('');
         else setUsernameTerm(selection.getTextContent());
 
         return false;
