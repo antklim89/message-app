@@ -2,7 +2,7 @@ import { Box, type BoxProps, Button, HStack, IconButton, Skeleton, Stack } from 
 
 export const MessageEditFormFallback = (props: BoxProps) => {
   return (
-    <Box {...props} p={8}>
+    <Box {...props}>
       <Skeleton w="full" h={100} />
       <Stack>
         <HStack mt={2}>
