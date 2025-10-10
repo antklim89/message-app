@@ -43,7 +43,7 @@ export function MessageCreateCollapsible({
         <Card.Root>
           <Card.Body>
             <Suspense fallback={<MessageEditFormFallback />}>
-              <MessageEditForm ref={ref} />
+              <MessageEditForm ref={ref} onEnterKeyDown={handleSubmit} />
             </Suspense>
           </Card.Body>
           <Card.Footer asChild>

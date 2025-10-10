@@ -7,19 +7,21 @@ import { MessageBodyLengthPlugin } from '../plugins/message-body-length-plugin';
 import { FormatButtonsPlugin } from '../plugins/message-format-buttons-plugin';
 import { MessageLinkPlugin } from '../plugins/message-link-plugin';
 import { MessageSelectUserPlugin } from '../plugins/message-select-user-plugin';
+import { MessageSubmitPlugin } from '../plugins/message-submit-plugin';
 
 export const MessageEditForm = ({
   value,
   ref,
+  onEnterKeyDown,
   ...props
 }: {
   value?: SerializedRootNode;
   ref: RefObject<LexicalEditor | null>;
+  onEnterKeyDown?: () => Promise<void>;
 } & BoxProps) => {
   return (
     <Box {...props} asChild w="full">
       <RichTextEditor
-        ref={ref}
         value={value}
         plugins={
           <Stack>
@@ -31,6 +33,7 @@ export const MessageEditForm = ({
             </HStack>
             <HStack mt={2}>
               <FormatButtonsPlugin />
+              <MessageSubmitPlugin ref={ref} onEnterKeyDown={onEnterKeyDown} />
             </HStack>
           </Stack>
         }

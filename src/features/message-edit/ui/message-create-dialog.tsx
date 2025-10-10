@@ -37,7 +37,7 @@ export function MessageCreateDialog({
       title="Create New Message"
     >
       <Suspense fallback={<MessageEditFormFallback />}>
-        <MessageEditForm ref={ref} />
+        <MessageEditForm onEnterKeyDown={handleSubmit} ref={ref} />
       </Suspense>
     </Modal>
   );

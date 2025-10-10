@@ -1,11 +1,10 @@
-import type { ReactNode, RefObject } from 'react';
+import type { ReactNode } from 'react';
 import { Box, Span, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
 import { LinkNode } from '@lexical/link';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { EditorRefPlugin } from '@lexical/react/LexicalEditorRefPlugin';
+import { ContentEditable, type ContentEditableProps } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -23,14 +22,13 @@ export function RichTextEditor({
   plugins,
   value,
   placeholder = 'Enter your message...',
-  ref,
+  ...props
 }: {
   plugins?: ReactNode;
   onError?: (error: Error, editor: LexicalEditor) => void;
   value?: SerializedRootNode;
   placeholder?: string;
-  ref: RefObject<LexicalEditor | null>;
-}) {
+} & Omit<ContentEditableProps, 'placeholder' | 'value'>) {
   return (
     <LexicalComposer
       initialConfig={{
@@ -78,6 +76,7 @@ export function RichTextEditor({
                     {placeholder}
                   </Span>
                 }
+                {...props}
               />
             </Textarea>
           }
@@ -91,7 +90,6 @@ export function RichTextEditor({
       <LexicalUserPlugin />
       <HistoryPlugin />
       <AutoFocusPlugin defaultSelection="rootEnd" />
-      <EditorRefPlugin editorRef={ref} />
       <LinkPlugin />
     </LexicalComposer>
   );

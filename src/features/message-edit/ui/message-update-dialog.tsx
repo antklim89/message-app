@@ -38,7 +38,7 @@ export function MessageUpdateDialog({
       title="Update Message"
     >
       <Suspense fallback={<MessageEditFormFallback />}>
-        <MessageEditForm value={message.body} ref={ref} />
+        <MessageEditForm value={message.body} ref={ref} onEnterKeyDown={handleSubmit} />
       </Suspense>
     </Modal>
   );
