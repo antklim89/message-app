@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IconButton, Input, useDisclosure } from '@chakra-ui/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import {
-  $getSelection,
-  $isRangeSelection,
-  COMMAND_PRIORITY_EDITOR,
-  KEY_DOWN_COMMAND,
-  SELECTION_CHANGE_COMMAND,
-} from 'lexical';
+import { $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { FaUserPlus } from 'react-icons/fa6';
 
 import { ProfileSelect } from '@/entities/profiles';
@@ -36,20 +30,6 @@ export function MessageSelectUserPlugin() {
       COMMAND_PRIORITY_EDITOR,
     );
   }, [editor]);
-
-  useEffect(() => {
-    return editor.registerCommand(
-      KEY_DOWN_COMMAND,
-      e => {
-        if (e.key === '@') {
-          e.preventDefault();
-          disclosure.onOpen();
-        }
-        return false;
-      },
-      COMMAND_PRIORITY_EDITOR,
-    );
-  }, [editor, disclosure]);
 
   return (
     <ProfileSelect
