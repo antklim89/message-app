@@ -16,7 +16,8 @@ export function calculateLexicalTextLength(data?: SerializedLexicalNode): number
 
     case 'text':
     case 'hashtag':
-    case 'user': {
+    case 'user':
+    case 'emoji': {
       const { text } = data as SerializedTextNode | SerializedUserNode;
       return text.length;
     }

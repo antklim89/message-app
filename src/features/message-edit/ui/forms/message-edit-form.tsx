@@ -4,6 +4,7 @@ import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageBodyLengthPlugin } from '../plugins/message-body-length-plugin';
+import { MessageEmojiPlugin } from '../plugins/message-emoji-plugin';
 import { FormatButtonsPlugin } from '../plugins/message-format-buttons-plugin';
 import { MessageLinkPlugin } from '../plugins/message-link-plugin';
 import { MessageSelectUserPlugin } from '../plugins/message-select-user-plugin';
@@ -28,6 +29,7 @@ export const MessageEditForm = ({
             <HStack mt={2}>
               <MessageSelectUserPlugin />
               <MessageLinkPlugin />
+              <MessageEmojiPlugin />
               <Box flexGrow={1} />
               <MessageBodyLengthPlugin />
             </HStack>

@@ -13,6 +13,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $createParagraphNode, $getRoot, type LexicalEditor, type SerializedRootNode } from 'lexical';
 
 import { RICH_TEXT_EDITOR_NAMESPACE } from '../lib/lexical/constants';
+import { EmojiNode } from '../lib/lexical/nodes/emoji-node';
 import { UserNode } from '../lib/lexical/nodes/user-node';
 import { LexicalRectPlugin } from '../lib/lexical/plugins/lexical-rect-plugin';
 import { LexicalUserPlugin } from '../lib/lexical/plugins/lexical-user-plugin';
@@ -46,7 +47,7 @@ export function RichTextEditor({
           link: 'editor-link',
         },
         onError,
-        nodes: [HashtagNode, UserNode, LinkNode],
+        nodes: [HashtagNode, UserNode, LinkNode, EmojiNode],
         editorState(editor) {
           try {
             if (value) editor.setEditorState(editor.parseEditorState({ root: value }));

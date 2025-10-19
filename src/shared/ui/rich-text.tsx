@@ -29,6 +29,14 @@ function convertLexicalText(data: SerializedLexicalNode): ReactNode {
       </ChakraLink>
     );
   }
+  if (data.type === 'emoji') {
+    const { text } = data as SerializedTextNode;
+    return (
+      <Text fontSize="lg" key={Math.random()} as="span">
+        {text}
+      </Text>
+    );
+  }
 
   if (data.type === 'paragraph') {
     const { children } = data as SerializedParagraphNode;
