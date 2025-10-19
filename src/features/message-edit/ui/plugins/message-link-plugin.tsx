@@ -1,5 +1,5 @@
 import { type KeyboardEvent, useEffect, useState } from 'react';
-import { Box, Button, HStack, IconButton, Popover, Stack, useDisclosure } from '@chakra-ui/react';
+import { Button, HStack, IconButton, Popover, Stack, useDisclosure } from '@chakra-ui/react';
 import { $createLinkNode, $isLinkNode, type LinkNode } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
@@ -9,9 +9,10 @@ import { z } from 'zod/v4-mini';
 
 import { useLexicalRectPlugin } from '@/shared/lib/lexical';
 import { useAppForm } from '@/shared/lib/react-form';
+import { checkLink } from '@/shared/model/schema-checks';
 
 const LinkSchema = z.object({
-  url: z.union([z.string().check(z.url('Link should look like this https://www.example.com'))]),
+  url: z.union([z.string().check(checkLink)]),
   name: z.string().check(z.maxLength(100, 'Link name is too long.')),
 });
 
@@ -29,7 +30,7 @@ export function MessageLinkPlugin() {
   const [selectedLinkNode, setSelectedLinkNode] = useState<LinkNode | null>(null);
   const position = useLexicalRectPlugin(editor);
 
-  const form = useAppForm({
+  const linkForm = useAppForm({
     ...linkFormOptions,
     onSubmit({ value }) {
       editor.update(
@@ -63,7 +64,7 @@ export function MessageLinkPlugin() {
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      form.handleSubmit();
+      linkForm.handleSubmit();
     }
   }
 
@@ -79,22 +80,22 @@ export function MessageLinkPlugin() {
           const textContent = selectedNode.getTextContent();
           const newLinkUrl = selectedNodeParent.getURL();
 
-          form.setFieldValue('name', textContent);
-          form.setFieldValue('url', newLinkUrl);
+          linkForm.setFieldValue('name', textContent);
+          linkForm.setFieldValue('url', newLinkUrl);
           return setSelectedLinkNode(selectedNodeParent);
         }
 
         if (!selection.isCollapsed() && $isTextNode(selectedNode)) {
           const textContent = selection.getTextContent();
-          return form.setFieldValue('name', textContent);
+          return linkForm.setFieldValue('name', textContent);
         }
 
-        form.setFieldValue('name', '');
-        form.setFieldValue('url', '');
+        linkForm.setFieldValue('name', '');
+        linkForm.setFieldValue('url', '');
         setSelectedLinkNode(null);
       });
     });
-  }, [editor, form]);
+  }, [editor, linkForm]);
 
   function handleLinkRemove() {
     editor.update(() => {
@@ -119,7 +120,7 @@ export function MessageLinkPlugin() {
         modal
         positioning={{ placement: 'bottom-start', strategy: 'fixed', getAnchorRect: () => position.current }}
         onExitComplete={() => {
-          form.reset();
+          linkForm.reset();
           editor.focus(undefined, { defaultSelection: undefined });
         }}
         open={disclosure.open}
@@ -128,20 +129,18 @@ export function MessageLinkPlugin() {
         <Popover.Positioner>
           <Popover.Content asChild>
             <HStack p={2}>
-              <Box w="full">
-                <form.AppForm>
-                  <Stack>
-                    <form.AppField name="name">
-                      {field => <field.InputField onKeyDown={handleKeyDown} placeholder="Link name..." />}
-                    </form.AppField>
-                    <form.AppField name="url">
-                      {field => <field.InputField onKeyDown={handleKeyDown} placeholder="https://www.example.com" />}
-                    </form.AppField>
-                  </Stack>
-                </form.AppForm>
-              </Box>
+              <linkForm.AppForm>
+                <Stack w="full">
+                  <linkForm.AppField name="name">
+                    {field => <field.InputField onKeyDown={handleKeyDown} placeholder="Link name..." />}
+                  </linkForm.AppField>
+                  <linkForm.AppField name="url">
+                    {field => <field.InputField onKeyDown={handleKeyDown} placeholder="https://www.example.com" />}
+                  </linkForm.AppField>
+                </Stack>
+              </linkForm.AppForm>
               <Stack>
-                <Button form={form.formId} type="submit">
+                <Button form={linkForm.formId} onClick={linkForm.handleSubmit}>
                   Paste
                 </Button>
                 {selectedLinkNode && (
