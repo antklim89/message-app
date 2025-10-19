@@ -84,7 +84,187 @@ BEGIN
       WHEN 'text' THEN length(lexical_node ->> 'text')
       WHEN 'user' THEN length(lexical_node ->> 'text')
       WHEN 'hashtag' THEN length(lexical_node ->> 'text')
+      WHEN 'emoji' THEN length(lexical_node ->> 'text')
       ELSE 0
   END;
 END;
 $$ LANGUAGE plpgsql;
+
+create or replace function validate_message_body (message_body jsonb) returns boolean as $$
+select extensions.jsonb_matches_schema(
+  schema := '
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "root"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Paragraph"
+      }
+    }
+  },
+  "required": [
+    "type",
+    "children"
+  ],
+  "definitions": {
+    "Paragraph": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "paragraph"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/Text"
+              },
+              {
+                "$ref": "#/definitions/Link"
+              },
+              {
+                "$ref": "#/definitions/Hashtag"
+              },
+              {
+                "$ref": "#/definitions/User"
+              },
+              {
+                "$ref": "#/definitions/Emoji"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "children"
+      ]
+    },
+    "Text": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "text"
+        },
+        "text": {
+          "type": "string"
+        },
+        "format": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "format"
+      ]
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "link"
+        },
+        "text": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/definitions/Text"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "children"
+      ]
+    },
+    "Hashtag": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "hashtag"
+        },
+        "text": {
+          "type": "string"
+        },
+        "format": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "format"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "user"
+        },
+        "text": {
+          "type": "string"
+        },
+        "format": {
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "format",
+        "id",
+        "username"
+      ]
+    },
+    "Emoji": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "emoji"
+        },
+        "text": {
+          "type": "string"
+        },
+        "unicode": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "unicode",
+        "label"
+      ]
+    }
+  }
+}',
+  instance := message_body
+);
+$$ language sql stable security definer;
