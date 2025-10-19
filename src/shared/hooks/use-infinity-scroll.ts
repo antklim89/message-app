@@ -1,12 +1,12 @@
 import { type RefObject, useEffect, useRef } from 'react';
 
-const useInfiniteScroll = ({
+export const useInfiniteScroll = ({
   loadMore,
   rootMargin = '0px',
   threshold = 1.0,
   dependencies = [],
 }: {
-  loadMore?: () => Promise<unknown>;
+  loadMore?: () => unknown | Promise<unknown>;
   dependencies?: unknown[];
 } & IntersectionObserverInit): RefObject<HTMLDivElement | null> => {
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -39,5 +39,3 @@ const useInfiniteScroll = ({
 
   return sentinelRef;
 };
-
-export default useInfiniteScroll;

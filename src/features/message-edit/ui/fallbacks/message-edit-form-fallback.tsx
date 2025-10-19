@@ -1,4 +1,4 @@
-import { Box, type BoxProps, Button, HStack, IconButton, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, type BoxProps, HStack, IconButton, Skeleton, Stack } from '@chakra-ui/react';
 
 export const MessageEditFormFallback = (props: BoxProps) => {
   return (
@@ -6,7 +6,7 @@ export const MessageEditFormFallback = (props: BoxProps) => {
       <Skeleton w="full" h={100} />
       <Stack>
         <HStack mt={2}>
-          {Array.from({ length: 2 }).map(() => (
+          {Array.from({ length: 3 }).map(() => (
             <Skeleton asChild key={Math.random()}>
               <IconButton />
             </Skeleton>
@@ -18,14 +18,6 @@ export const MessageEditFormFallback = (props: BoxProps) => {
               <IconButton />
             </Skeleton>
           ))}
-        </HStack>
-        <HStack justifyContent="flex-end">
-          <Skeleton asChild>
-            <Button>Cancel</Button>
-          </Skeleton>
-          <Skeleton asChild>
-            <Button>Create</Button>
-          </Skeleton>
         </HStack>
       </Stack>
     </Box>
