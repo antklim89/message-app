@@ -13,13 +13,56 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 
-CREATE SCHEMA IF NOT EXISTS "public";
+CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
 
 
-ALTER SCHEMA "public" OWNER TO "pg_database_owner";
+
+
 
 
 COMMENT ON SCHEMA "public" IS 'standard public schema';
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pg_jsonschema" WITH SCHEMA "extensions";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
+
+
+
 
 
 
@@ -36,6 +79,8 @@ BEGIN
       WHEN 'text' THEN length(lexical_node ->> 'text')
       WHEN 'user' THEN length(lexical_node ->> 'text')
       WHEN 'hashtag' THEN length(lexical_node ->> 'text')
+      WHEN 'user' THEN length(lexical_node ->> 'text')
+      WHEN 'emoji' THEN length(lexical_node ->> 'text')
       ELSE 0
   END;
 END;
@@ -130,6 +175,191 @@ $_$;
 ALTER FUNCTION "public"."is_following"("public"."profiles") OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "jsonb") RETURNS boolean
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $_$
+select extensions.jsonb_matches_schema(
+  schema := '
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "root"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Paragraph"
+      }
+    }
+  },
+  "required": [
+    "type",
+    "children"
+  ],
+  "definitions": {
+    "Paragraph": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "paragraph"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/Text"
+              },
+              {
+                "$ref": "#/definitions/Link"
+              },
+              {
+                "$ref": "#/definitions/Hashtag"
+              },
+              {
+                "$ref": "#/definitions/User"
+              },
+              {
+                "$ref": "#/definitions/Emoji"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "children"
+      ]
+    },
+    "Text": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "text"
+        },
+        "text": {
+          "type": "string"
+        },
+        "format": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "format"
+      ]
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "link"
+        },
+        "text": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/definitions/Text"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "children"
+      ]
+    },
+    "Hashtag": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "hashtag"
+        },
+        "text": {
+          "type": "string"
+        },
+        "format": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "format"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "user"
+        },
+        "text": {
+          "type": "string"
+        },
+        "format": {
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "format",
+        "id",
+        "username"
+      ]
+    },
+    "Emoji": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "emoji"
+        },
+        "text": {
+          "type": "string"
+        },
+        "unicode": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "unicode",
+        "label"
+      ]
+    }
+  }
+}',
+  instance := message_body
+);
+$_$;
+
+
+ALTER FUNCTION "public"."validate_message_body"("message_body" "jsonb") OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."messages" (
     "id" bigint NOT NULL,
     "created" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -137,7 +367,7 @@ CREATE TABLE IF NOT EXISTS "public"."messages" (
     "authorId" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "answerId" bigint,
     "body" "jsonb" NOT NULL,
-    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 50) AND "extensions"."jsonb_matches_schema"('{"type":"object","properties":{"type":{"type":"string","const":"root"},"children":{"type":"array","items":{"$ref":"#/definitions/Paragraph"}}},"required":["type","children"],"definitions":{"Paragraph":{"type":"object","properties":{"type":{"type":"string","const":"paragraph"},"children":{"type":"array","items":{"oneOf":[{"$ref":"#/definitions/Text"},{"$ref":"#/definitions/Link"},{"$ref":"#/definitions/Hashtag"},{"$ref":"#/definitions/User"}]}}},"required":["type","children"]},"Text":{"type":"object","properties":{"type":{"type":"string","const":"text"},"text":{"type":"string"},"format":{"type":"number"}},"required":["type","text","format"]},"Link":{"type":"object","properties":{"type":{"type":"string","const":"link"},"text":{"type":"string"},"children":{"type":"array","minItems":1,"maxItems":1,"items":{"$ref":"#/definitions/Text"}}},"required":["type","text","children"]},"Hashtag":{"type":"object","properties":{"type":{"type":"string","const":"hashtag"},"text":{"type":"string"},"format":{"type":"number"}},"required":["type","text","format"]},"User":{"type":"object","properties":{"type":{"type":"string","const":"user"},"text":{"type":"string"},"format":{"type":"number"},"id":{"type":"string"},"username":{"type":"string"}},"required":["type","text","format","id","username"]}}}'::json, "body")))
+    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body")))
 );
 
 
@@ -421,10 +651,180 @@ ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."reports" ENABLE ROW LEVEL SECURITY;
 
 
+
+
+ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
+
+
+
+
+
 GRANT USAGE ON SCHEMA "public" TO "postgres";
 GRANT USAGE ON SCHEMA "public" TO "anon";
 GRANT USAGE ON SCHEMA "public" TO "authenticated";
 GRANT USAGE ON SCHEMA "public" TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -476,6 +876,12 @@ GRANT ALL ON FUNCTION "public"."is_following"("public"."profiles") TO "service_r
 
 
 
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."messages" TO "anon";
 GRANT ALL ON TABLE "public"."messages" TO "authenticated";
 GRANT ALL ON TABLE "public"."messages" TO "service_role";
@@ -509,6 +915,21 @@ GRANT ALL ON FUNCTION "public"."messages_count"("public"."profiles") TO "service
 GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) TO "anon";
 GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -548,6 +969,12 @@ GRANT ALL ON SEQUENCE "public"."reports_id_seq" TO "service_role";
 
 
 
+
+
+
+
+
+
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "postgres";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "anon";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "authenticated";
@@ -572,6 +999,30 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TAB
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "anon";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "authenticated";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
