@@ -28,6 +28,8 @@ export function MessageCreateDialog({
 
   return (
     <Modal
+      size="xl"
+      placement="top"
       disclosure={disclosure}
       submitElement={
         <Button onClick={handleSubmit} loading={messageCreateMutation.isPending} loadingText="Creating...">

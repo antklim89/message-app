@@ -1,16 +1,17 @@
-import { Box, Button, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Skeleton, useDisclosure } from '@chakra-ui/react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Link, useRouter } from '@tanstack/react-router';
-import { FaChevronLeft } from 'react-icons/fa6';
+import { FaChevronLeft, FaPlus } from 'react-icons/fa6';
 
 import { messageListQueryOptions, messageQueryOptions } from '@/entities/messages';
-import { MessageCreateCollapsible } from '@/features/message-edit';
+import { MessageCreateDialog } from '@/features/message-edit';
 import { AwaitQuery } from '@/shared/ui/await-query';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
 export function AnswersPage({ params }: { params: { answerId: number } }) {
+  const disclosure = useDisclosure();
   const messageListQuery = useInfiniteQuery(messageListQueryOptions({ answerId: params.answerId }));
   const messageQuery = useQuery(messageQueryOptions({ id: params.answerId }));
 
@@ -23,7 +24,9 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
         fallback={
           <>
             <Skeleton asChild>
-              <Button>&larr; BACK</Button>
+              <Button>
+                <FaChevronLeft /> BACK
+              </Button>
             </Skeleton>
             <MessageCardFallback />
             <Skeleton h={30} />
@@ -46,10 +49,12 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
               <Protected
                 fallback={<Skeleton h={30} />}
                 privateElement={
-                  <MessageCreateCollapsible
-                    answerId={message.answerId}
-                    trigger={<Button variant="outline">Answer to this message.</Button>}
-                  />
+                  <>
+                    <Button onClick={disclosure.onOpen}>
+                      ANSWER TO THIS MESSAGE. <FaPlus />
+                    </Button>
+                    <MessageCreateDialog answerId={message.answerId} disclosure={disclosure} />
+                  </>
                 }
                 publicElement={<Box h={30} />}
               />

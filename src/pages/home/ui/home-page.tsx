@@ -1,14 +1,16 @@
-import { Box, Button, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Skeleton, useDisclosure } from '@chakra-ui/react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { FaPlus } from 'react-icons/fa6';
 
 import { messageListQueryOptions } from '@/entities/messages';
-import { MessageCreateCollapsible } from '@/features/message-edit';
+import { MessageCreateDialog } from '@/features/message-edit';
 import { AwaitQuery } from '@/shared/ui/await-query';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
 export function HomePage() {
+  const disclosure = useDisclosure();
   const messageQuery = useInfiniteQuery(messageListQueryOptions());
 
   return (
@@ -16,10 +18,12 @@ export function HomePage() {
       <Protected
         fallback={<Skeleton h={30} />}
         privateElement={
-          <MessageCreateCollapsible
-            answerId={undefined}
-            trigger={<Button variant="outline">Add New Message.</Button>}
-          />
+          <>
+            <Button onClick={disclosure.onOpen}>
+              ADD NEW MESSAGE. <FaPlus />
+            </Button>
+            <MessageCreateDialog answerId={undefined} disclosure={disclosure} />
+          </>
         }
         publicElement={<Box h={30} />}
       />
