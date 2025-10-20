@@ -174,13 +174,18 @@ select extensions.jsonb_matches_schema(
           "type": "string",
           "const": "link"
         },
-        "text": {
+        "url": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
           "type": "string"
         },
         "children": {
           "type": "array",
           "minItems": 1,
-          "maxItems": 1,
           "items": {
             "$ref": "#/definitions/Text"
           }
@@ -188,7 +193,9 @@ select extensions.jsonb_matches_schema(
       },
       "required": [
         "type",
-        "text",
+        "url",
+        "target",
+        "rel",
         "children"
       ]
     },
