@@ -10,19 +10,9 @@ const customConfig = defineConfig({
     recipes: {
       button: {
         variants: {
-          variant: { outline: { color: 'white' } },
+          variant: { outline: { _dark: { color: 'white' }, _light: { color: 'black' } } },
         },
         defaultVariants: {},
-      },
-    },
-    semanticTokens: {
-      colors: {
-        bg: {
-          DEFAULT: { value: { _dark: '{colors.black}', _light: '{colors.white}' } },
-        },
-        bgPanel: {
-          DEFAULT: { value: { _dark: '{colors.gray.950}', _light: '{colors.gray.50}' } },
-        },
       },
     },
     tokens: {
@@ -43,18 +33,17 @@ const customConfig = defineConfig({
           '950': { value: '#000000' },
         },
         gray: {
-          '0': { value: '#cdd4dc' },
-          '50': { value: '#cdd4dc' },
-          '100': { value: '#b8c3cd' },
-          '200': { value: '#a3b1bf' },
-          '300': { value: '#8e9fb0' },
-          '400': { value: '#798da1' },
-          '500': { value: '#667b91' },
-          '600': { value: '#57697c' },
-          '700': { value: '#485867' },
-          '800': { value: '#394652' },
-          '900': { value: '#2b343d' },
-          '950': { value: '#1c2228' },
+          '50': { value: '#f6f8f9' },
+          '100': { value: '#ebf0f3' },
+          '200': { value: '#c6d4db' },
+          '300': { value: '#adc2cc' },
+          '400': { value: '#81a1af' },
+          '500': { value: '#618696' },
+          '600': { value: '#4d6c7c' },
+          '700': { value: '#3f5865' },
+          '800': { value: '#374b55' },
+          '900': { value: '#314049' },
+          '950': { value: '#212a30' },
         },
         white: { value: '#F4F5F6' },
       },
