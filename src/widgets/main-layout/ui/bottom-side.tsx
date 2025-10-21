@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Container, HStack, Icon, IconButton, Skeleton, type StackProps, useDialog } from '@chakra-ui/react';
+import { Container, Flex, HStack, Icon, IconButton, Skeleton, type StackProps, useDialog } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleQuestion, FaDoorOpen, FaGear, FaRegBookmark, FaUser } from 'react-icons/fa6';
 
@@ -14,7 +14,7 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
     <Container asChild>
       <HStack
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         bg="bg"
         borderColor="border"
         borderTop="sm"
@@ -25,25 +25,29 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
         right={0}
         {...props}
       >
-        <Box flex="1 0 auto">
+        <Flex mr="auto" minW="6rem" justifyContent="center">
           <Logo height={32} width={32} />
-        </Box>
+        </Flex>
 
         <Protected
-          fallback={<Skeleton h="60%" w={100} />}
+          fallback={Array.from({ length: 3 }).map(() => (
+            <Skeleton key={Math.random()}>
+              <IconButton flex="0 1 8rem" />
+            </Skeleton>
+          ))}
           privateElement={user => (
             <>
-              <IconButton flex="1 1 100%" aria-label="link to profile page" variant="subtle" asChild>
+              <IconButton flex="0 1 8rem" aria-label="link to profile page" variant="subtle" asChild>
                 <Link to="/profile/$profileId" params={{ profileId: user.id }}>
                   <Icon as={FaUser} />
                 </Link>
               </IconButton>
-              <IconButton flex="1 1 100%" aria-label="link to profile settings" variant="subtle" asChild>
+              <IconButton flex="0 1 8rem" aria-label="link to profile settings" variant="subtle" asChild>
                 <Link to="/profile-settings">
                   <Icon as={FaGear} />
                 </Link>
               </IconButton>
-              <IconButton flex="1 1 100%" aria-label="link to favorite messages" variant="subtle" asChild>
+              <IconButton flex="0 1 8rem" aria-label="link to favorite messages" variant="subtle" asChild>
                 <Link to="/favorite-messages">
                   <Icon as={FaRegBookmark} />
                 </Link>
@@ -60,7 +64,7 @@ export function BottomSide({ rightSide, ...props }: { rightSide?: ReactNode } & 
           }
         />
 
-        <IconButton flex="1 1 100%" aria-label="link to about page" variant="subtle" asChild>
+        <IconButton flex="0 1 8rem" aria-label="link to about page" variant="subtle" asChild>
           <Link to="/about">
             <Icon as={FaCircleQuestion} />
           </Link>
