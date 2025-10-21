@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Stack, Text, type useDisclosure } from '@chakra-ui/react';
+import { Button, Stack, Text, type UseDialogReturn } from '@chakra-ui/react';
 
 import { useAppForm } from '@/shared/lib/react-form';
 import { Modal } from '@/shared/ui/modal';
@@ -8,7 +8,7 @@ import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/mutations/use-login-mutation';
 import { useRegisterMutation } from '../api/mutations/use-register-mutation';
 
-export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useDisclosure> }) {
+export function LoginDialog({ dialog }: { dialog: UseDialogReturn }) {
   const [type, setType] = useState<'login' | 'register'>('login');
   const loginMutation = useLoginMutation();
   const registerMutation = useRegisterMutation();
@@ -17,7 +17,7 @@ export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useD
     ...loginFormOptions,
     async onSubmit({ value, formApi }) {
       const result = await loginMutation.mutateAsync(value);
-      if (result.success) return disclosure.onClose();
+      if (result.success) return dialog.setOpen(false);
 
       formApi.setErrorMap({
         onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
@@ -29,7 +29,7 @@ export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useD
     ...registerFormOptions,
     async onSubmit({ value, formApi }) {
       const result = await registerMutation.mutateAsync(value);
-      if (result.success) return disclosure.onClose();
+      if (result.success) return dialog.setOpen(false);
 
       formApi.setErrorMap({
         onSubmit: { fields: result.error.issues ?? {}, form: result.error.message },
@@ -38,26 +38,9 @@ export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useD
   });
 
   return (
-    <Modal
-      disclosure={disclosure}
-      submitElement={
-        type === 'login' ? (
-          <Button type="submit" form={loginForm.formId} loading={loginMutation.isPending} loadingText="Entering...">
-            Login
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            form={registerForm.formId}
-            loading={registerMutation.isPending}
-            loadingText="Registering..."
-          >
-            Register
-          </Button>
-        )
-      }
-      title={
-        type === 'login' ? (
+    <Modal.Root dialog={dialog}>
+      <Modal.Title>
+        {type === 'login' ? (
           <Stack textAlign="center">
             <Text as="span" fontSize="2xl">
               Login
@@ -81,10 +64,29 @@ export function LoginDialog({ disclosure }: { disclosure: ReturnType<typeof useD
               Login
             </Button>
           </Stack>
-        )
-      }
-    >
-      {type === 'login' ? <LoginForm form={loginForm} /> : <RegisterForm form={registerForm} />}
-    </Modal>
+        )}
+      </Modal.Title>
+
+      <Modal.Body>
+        {type === 'login' ? <LoginForm form={loginForm} /> : <RegisterForm form={registerForm} />}
+      </Modal.Body>
+
+      <Modal.Footer>
+        {type === 'login' ? (
+          <Button type="submit" form={loginForm.formId} loading={loginMutation.isPending} loadingText="Entering...">
+            Login
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            form={registerForm.formId}
+            loading={registerMutation.isPending}
+            loadingText="Registering..."
+          >
+            Register
+          </Button>
+        )}
+      </Modal.Footer>
+    </Modal.Root>
   );
 }

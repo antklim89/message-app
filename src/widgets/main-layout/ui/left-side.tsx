@@ -1,21 +1,13 @@
-import {
-  Button,
-  Heading,
-  Skeleton,
-  SkeletonText,
-  type StackProps,
-  Text,
-  useDisclosure,
-  VStack,
-} from '@chakra-ui/react';
+import { Button, Heading, Skeleton, SkeletonText, type StackProps, Text, useDialog, VStack } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { LoginDialog } from '@/entities/auth';
+import { Modal } from '@/shared/ui/modal';
 import { Protected } from '@/shared/ui/protected';
 import { Logo } from './logo';
 
 export function LeftSide(props: StackProps) {
-  const disclosure = useDisclosure();
+  const dialog = useDialog();
 
   return (
     <VStack {...props}>
@@ -64,15 +56,15 @@ export function LeftSide(props: StackProps) {
                 To continue please
               </Text>
 
-              <LoginDialog disclosure={disclosure} />
-              <Button mb={8} width="full" onClick={disclosure.onOpen}>
+              <LoginDialog dialog={dialog} />
+              <Modal.Trigger mb={8} width="full" dialog={dialog}>
                 Login or Register
-              </Button>
+              </Modal.Trigger>
             </>
           }
         />
 
-        <Button onClick={disclosure.onOpen} width="full" asChild variant="solid">
+        <Button width="full" asChild variant="solid">
           <Link to="/about">About</Link>
         </Button>
       </VStack>

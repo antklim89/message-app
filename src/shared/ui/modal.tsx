@@ -1,51 +1,92 @@
-import type { ReactElement, ReactNode } from 'react';
-import { Button, CloseButton, Dialog, type DialogRootProps, Portal, type useDisclosure } from '@chakra-ui/react';
+import { type ReactNode, Suspense } from 'react';
+import {
+  Button,
+  type ButtonProps,
+  CloseButton,
+  Dialog,
+  type DialogBodyProps,
+  type DialogFooterProps,
+  type DialogHeaderProps,
+  type DialogRootProps,
+  Portal,
+  type UseDialogReturn,
+} from '@chakra-ui/react';
 
-export function Modal({
+function Root({
   children,
-  submitElement,
-  title,
-  disclosure,
+  dialog,
+  fallback,
   ...props
 }: {
   children: ReactNode;
-  submitElement: ReactElement;
-  title?: ReactNode;
-  disclosure: ReturnType<typeof useDisclosure>;
+  fallback?: ReactNode;
+  dialog: UseDialogReturn;
 } & DialogRootProps) {
   return (
-    <Dialog.Root
-      motionPreset="slide-in-bottom"
-      open={disclosure.open}
-      onOpenChange={e => disclosure.setOpen(e.open)}
-      placement="center"
-      size="lg"
-      {...props}
-    >
+    <Dialog.RootProvider value={dialog} motionPreset="slide-in-bottom" placement="top" size="lg" {...props}>
       <Portal>
         <Dialog.Positioner>
           <Dialog.Backdrop />
           <Dialog.Content>
-            <Dialog.Header justifyContent="center">
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="lg" />
-              </Dialog.CloseTrigger>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="lg" />
+            </Dialog.CloseTrigger>
 
-              {title != null && <Dialog.Title fontSize="xl">{title}</Dialog.Title>}
-            </Dialog.Header>
-
-            <Dialog.Body>{children}</Dialog.Body>
-
-            <Dialog.Footer display="flex" justifyItems="flex-end">
-              <Dialog.CloseTrigger position="static" asChild>
-                <Button variant="ghost">Close</Button>
-              </Dialog.CloseTrigger>
-
-              {submitElement}
-            </Dialog.Footer>
+            <Suspense fallback={fallback}>{children}</Suspense>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
-    </Dialog.Root>
+    </Dialog.RootProvider>
   );
 }
+
+function Trigger({ children, dialog, ...props }: { children: ReactNode; dialog: UseDialogReturn } & ButtonProps) {
+  return (
+    <Button onClick={() => dialog.setOpen(true)} {...props}>
+      {children}
+    </Button>
+  );
+}
+
+function Title({
+  children,
+  ...props
+}: {
+  children: ReactNode;
+} & DialogHeaderProps) {
+  return (
+    <Dialog.Header justifyContent="center">
+      <Dialog.Title fontSize="xl" {...props}>
+        {children}
+      </Dialog.Title>
+    </Dialog.Header>
+  );
+}
+
+function Body({
+  children,
+  ...props
+}: {
+  children: ReactNode;
+} & DialogBodyProps) {
+  return <Dialog.Body {...props}>{children}</Dialog.Body>;
+}
+
+function Footer({
+  children,
+  ...props
+}: {
+  children: ReactNode;
+} & DialogFooterProps) {
+  return (
+    <Dialog.Footer display="flex" justifyItems="flex-end" {...props}>
+      <Dialog.CloseTrigger position="static" asChild>
+        <Button variant="ghost">Close</Button>
+      </Dialog.CloseTrigger>
+
+      {children}
+    </Dialog.Footer>
+  );
+}
+
+export const Modal = { Trigger, Root, Title, Body, Footer };
