@@ -1,6 +1,5 @@
 import { Box, Button, Card, FileUpload, useDialog, useFileUpload } from '@chakra-ui/react';
 
-import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
 import { Modal } from '@/shared/ui/modal';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { useProfileAvatarDeleteMutation } from '../api/mutations/use-profile-avatar-delete-mutation';
@@ -31,10 +30,9 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
 
   return (
     <Card.Root>
-      <ConfirmDialog
-        text="Are you sure you want to delete your avatar?"
-        dialog={deleteAvatarDialog}
-        confirmElement={
+      <Modal.Root dialog={deleteAvatarDialog}>
+        <Modal.Title fontSize="xl">Are you sure you want to delete your avatar?</Modal.Title>
+        <Modal.Body>
           <Button
             disabled={isPending || file == null}
             colorPalette="red"
@@ -44,8 +42,8 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
           >
             Delete
           </Button>
-        }
-      />
+        </Modal.Body>
+      </Modal.Root>
       <Card.Body>
         <FileUpload.RootProvider value={fileUpload}>
           <FileUpload.HiddenInput disabled={isPending} />
