@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getProfileQueryOptions, Profile, ProfileFallback } from '@/entities/profiles';
+import { FollowToggleButton } from '@/features/follow-toggle';
 import { AwaitQuery } from '@/shared/ui/await-query';
 
 export function ProfilePage({ params }: { params: { profileId: string } }) {
@@ -8,7 +9,14 @@ export function ProfilePage({ params }: { params: { profileId: string } }) {
 
   return (
     <AwaitQuery query={profileQuery} fallback={<ProfileFallback />}>
-      {profile => <Profile profile={profile} />}
+      {profile => (
+        <Profile
+          profile={profile}
+          followToggleButton={
+            <FollowToggleButton alignSelf="flex-start" followerId={profile.id} isFollowing={profile.isFollowing} />
+          }
+        />
+      )}
     </AwaitQuery>
   );
 }

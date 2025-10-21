@@ -1,13 +1,13 @@
+import type { ReactNode } from 'react';
 import { Badge, Card, HStack, SimpleGrid, Span, Stack, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
-import { FollowToggleButton } from '@/features/follow-toggle';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import type { ProfileType } from '../models/types';
 
-export function Profile({ profile }: { profile: ProfileType }) {
+export function Profile({ profile, followToggleButton }: { profile: ProfileType; followToggleButton: ReactNode }) {
   return (
     <Card.Root border="none">
       <Card.Header asChild>
@@ -63,7 +63,7 @@ export function Profile({ profile }: { profile: ProfileType }) {
               />
             </SimpleGrid>
           </Stack>
-          <FollowToggleButton alignSelf="flex-start" followerId={profile.id} isFollowing={profile.isFollowing} />
+          {followToggleButton}
         </HStack>
       </Card.Header>
       <Card.Body>
