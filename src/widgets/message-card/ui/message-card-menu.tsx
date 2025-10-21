@@ -21,7 +21,7 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
       <MessageUpdateDialog message={message} dialog={updateMessageDialog} />
       <MessageDeleteDialog id={message.id} deleteRedirectUrl={deleteRedirectUrl} dialog={deleteMessageDialog} />
 
-      <Menu.Root positioning={{ placement: 'bottom-end' }} size="md">
+      <Menu.Root lazyMount positioning={{ placement: 'bottom-end' }} size="md">
         <Menu.Trigger asChild>
           <IconButton aria-label="message menu" variant="ghost">
             <FaEllipsis />
@@ -43,12 +43,12 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
                     <>
                       <Menu.Separator />
 
-                      <Menu.Item onClick={() => updateMessageDialog.setOpen(true)} as="button" value="update-message">
+                      <Menu.Item onClick={() => updateMessageDialog.setOpen(true)} value="update-message">
                         <FaPencil /> Update
                       </Menu.Item>
 
                       <Menu.Item
-                        onClick={() => deleteMessageDialog.setOpen(false)}
+                        onClick={() => deleteMessageDialog.setOpen(true)}
                         color="fg.error"
                         _hover={{ bg: 'bg.error', color: 'fg.error' }}
                         as="button"
