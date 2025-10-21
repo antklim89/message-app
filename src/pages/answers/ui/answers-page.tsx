@@ -1,4 +1,4 @@
-import { Box, Button, Skeleton, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Skeleton, useDialog } from '@chakra-ui/react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Link, useRouter } from '@tanstack/react-router';
 import { FaChevronLeft, FaPlus } from 'react-icons/fa6';
@@ -11,7 +11,7 @@ import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
 export function AnswersPage({ params }: { params: { answerId: number } }) {
-  const disclosure = useDisclosure();
+  const dialog = useDialog();
   const messageListQuery = useInfiniteQuery(messageListQueryOptions({ answerId: params.answerId }));
   const messageQuery = useQuery(messageQueryOptions({ id: params.answerId }));
 
@@ -50,10 +50,10 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
                 fallback={<Skeleton h={30} />}
                 privateElement={
                   <>
-                    <Button onClick={disclosure.onOpen}>
+                    <Button onClick={() => dialog.setOpen(true)}>
                       ANSWER TO THIS MESSAGE. <FaPlus />
                     </Button>
-                    <MessageCreateDialog answerId={message.answerId} disclosure={disclosure} />
+                    <MessageCreateDialog answerId={message.answerId} dialog={dialog} />
                   </>
                 }
                 publicElement={<Box h={30} />}

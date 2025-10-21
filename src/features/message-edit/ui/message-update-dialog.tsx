@@ -1,45 +1,25 @@
-import { lazy, Suspense } from 'react';
-import { Button, type useDisclosure } from '@chakra-ui/react';
+import { lazy } from 'react';
+import type { UseDialogReturn } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
 import { Modal } from '@/shared/ui/modal';
 import { MessageEditFormFallback } from './fallbacks/message-edit-form-fallback';
-import { useMessageUpdateMutation } from '../api/mutations/use-message-update-mutation';
-import { useRichTextHandler } from '../lib/hooks/use-rich-text-handler';
 import type { MessageEditType } from '../model/types';
 
-const MessageEditForm = lazy(() => import('./forms/message-edit-form').then(m => ({ default: m.MessageEditForm })));
+const MessageUpdateDialogContent = lazy(() =>
+  import('./contents/message-update-dialog-content').then(m => ({ default: m.MessageUpdateDialogContent })),
+);
 
 export function MessageUpdateDialog({
   message,
-  disclosure,
+  dialog,
 }: {
   message: MessageEditType & { id: MessageType['id'] };
-  disclosure: ReturnType<typeof useDisclosure>;
+  dialog: UseDialogReturn;
 }) {
-  const messageUpdateMutation = useMessageUpdateMutation({ messageId: message.id });
-
-  const { ref, handleSubmit } = useRichTextHandler({
-    async onSubmit(value) {
-      if (!value) return;
-      const result = await messageUpdateMutation.mutateAsync({ body: value });
-      if (result.success) disclosure.onClose();
-    },
-  });
-
   return (
-    <Modal
-      disclosure={disclosure}
-      submitElement={
-        <Button onClick={handleSubmit} loading={messageUpdateMutation.isPending} loadingText="Updating...">
-          Update
-        </Button>
-      }
-      title="Update Message"
-    >
-      <Suspense fallback={<MessageEditFormFallback />}>
-        <MessageEditForm value={message.body} ref={ref} onEnterKeyDown={handleSubmit} />
-      </Suspense>
-    </Modal>
+    <Modal.Root fallback={<MessageEditFormFallback />} dialog={dialog}>
+      <MessageUpdateDialogContent message={message} />
+    </Modal.Root>
   );
 }
