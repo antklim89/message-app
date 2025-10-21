@@ -17,12 +17,11 @@ export function LeftSide(props: StackProps) {
           fallback={
             <>
               <SkeletonText noOfLines={2} />
-              <Skeleton width={100}>
-                <Button />
-              </Skeleton>
-              <Skeleton width={100}>
-                <Button />
-              </Skeleton>
+              {Array.from({ length: 6 }).map(() => (
+                <Skeleton key={Math.random()} width="full">
+                  <Button />
+                </Skeleton>
+              ))}
             </>
           }
           privateElement={user => (
