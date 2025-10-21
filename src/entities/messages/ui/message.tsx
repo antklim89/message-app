@@ -11,7 +11,7 @@ import { UserAvatar } from '@/shared/ui/user-avatar';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
   return (
-    <Card.Root border="none" w="full">
+    <Card.Root w="full">
       <Card.Header alignItems="center" asChild gap={4}>
         <HStack>
           <Link to="/profile/$profileId" params={{ profileId: message.author.id }}>
