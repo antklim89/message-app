@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { IconButton, Menu, Portal, SkeletonText, useDialog, useDisclosure } from '@chakra-ui/react';
+import { IconButton, Menu, Portal, SkeletonText, useDialog } from '@chakra-ui/react';
 import { FaEllipsis, FaPencil, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
@@ -14,12 +14,12 @@ const MessageCardMenuCopyUser = lazy(() =>
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
   const updateMessageDialog = useDialog();
-  const deleteMessageDisclosure = useDisclosure();
+  const deleteMessageDialog = useDialog();
 
   return (
     <>
       <MessageUpdateDialog message={message} dialog={updateMessageDialog} />
-      <MessageDeleteDialog id={message.id} deleteRedirectUrl={deleteRedirectUrl} disclosure={deleteMessageDisclosure} />
+      <MessageDeleteDialog id={message.id} deleteRedirectUrl={deleteRedirectUrl} dialog={deleteMessageDialog} />
 
       <Menu.Root positioning={{ placement: 'bottom-end' }} size="md">
         <Menu.Trigger asChild>
@@ -48,7 +48,7 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
                       </Menu.Item>
 
                       <Menu.Item
-                        onClick={deleteMessageDisclosure.onOpen}
+                        onClick={() => deleteMessageDialog.setOpen(false)}
                         color="fg.error"
                         _hover={{ bg: 'bg.error', color: 'fg.error' }}
                         as="button"

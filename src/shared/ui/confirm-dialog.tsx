@@ -1,25 +1,19 @@
 import type { ReactElement, ReactNode } from 'react';
-import { Button, CloseButton, Dialog, Portal, type useDisclosure } from '@chakra-ui/react';
+import { Button, CloseButton, Dialog, Portal, type UseDialogReturn } from '@chakra-ui/react';
 
 export function ConfirmDialog({
   text,
   confirmElement,
   cancelButtonText,
-  disclosure,
+  dialog,
 }: {
   text: ReactNode;
   confirmElement: ReactElement;
   cancelButtonText?: string;
-  disclosure: ReturnType<typeof useDisclosure>;
+  dialog: UseDialogReturn;
 }) {
   return (
-    <Dialog.Root
-      role="alertdialog"
-      onOpenChange={e => disclosure.setOpen(e.open)}
-      open={disclosure.open}
-      placement="center"
-      size="sm"
-    >
+    <Dialog.RootProvider value={dialog} placement="center" size="sm">
       <Portal>
         <Dialog.Positioner>
           <Dialog.Backdrop />
@@ -42,6 +36,6 @@ export function ConfirmDialog({
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
-    </Dialog.Root>
+    </Dialog.RootProvider>
   );
 }

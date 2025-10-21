@@ -1,12 +1,13 @@
-import { Box, Button, Card, FileUpload, useDisclosure, useFileUpload } from '@chakra-ui/react';
+import { Box, Button, Card, FileUpload, useDialog, useFileUpload } from '@chakra-ui/react';
 
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
+import { Modal } from '@/shared/ui/modal';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { useProfileAvatarDeleteMutation } from '../api/mutations/use-profile-avatar-delete-mutation';
 import { useProfileAvatarUpdateMutation } from '../api/mutations/use-profile-avatar-update-mutation';
 
 export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
-  const deleteAvatarDisclosure = useDisclosure();
+  const deleteAvatarDialog = useDialog();
   const avatarUpdateMutation = useProfileAvatarUpdateMutation();
   const avatarDeleteMutation = useProfileAvatarDeleteMutation();
 
@@ -15,7 +16,7 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
   async function handleFileDelete() {
     await avatarDeleteMutation.mutateAsync();
     fileUpload.clearFiles();
-    deleteAvatarDisclosure.onClose();
+    deleteAvatarDialog.setOpen(false);
   }
   const fileUpload = useFileUpload({
     maxFiles: 1,
@@ -32,7 +33,7 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
     <Card.Root>
       <ConfirmDialog
         text="Are you sure you want to delete your avatar?"
-        disclosure={deleteAvatarDisclosure}
+        dialog={deleteAvatarDialog}
         confirmElement={
           <Button
             disabled={isPending || file == null}
@@ -67,9 +68,9 @@ export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string
         <Button disabled={isPending || file == null} variant="ghost" onClick={() => fileUpload.clearFiles()}>
           Cancel
         </Button>
-        <Button onClick={deleteAvatarDisclosure.onOpen} disabled={isPending || file == null} colorPalette="red">
+        <Modal.Trigger dialog={deleteAvatarDialog} disabled={isPending || file == null} colorPalette="red">
           Delete
-        </Button>
+        </Modal.Trigger>
         <Button
           disabled={isPending || file == null}
           loading={avatarUpdateMutation.isPending}

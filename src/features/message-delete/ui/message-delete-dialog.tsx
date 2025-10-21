@@ -1,4 +1,4 @@
-import { Button, type useDisclosure } from '@chakra-ui/react';
+import { Button, type UseDialogReturn } from '@chakra-ui/react';
 import { useNavigate } from '@tanstack/react-router';
 
 import type { MessageType } from '@/entities/messages';
@@ -7,11 +7,11 @@ import { useMessageDeleteMutation } from '../api/mutations/use-message-delete-mu
 
 export function MessageDeleteDialog({
   id: messageId,
-  disclosure,
+  dialog,
   deleteRedirectUrl,
 }: {
   id: MessageType['id'];
-  disclosure: ReturnType<typeof useDisclosure>;
+  dialog: UseDialogReturn;
   deleteRedirectUrl?: string;
 }) {
   const deleteMutation = useMessageDeleteMutation({ id: messageId });
@@ -20,14 +20,14 @@ export function MessageDeleteDialog({
   async function handleDelete() {
     const result = await deleteMutation.mutateAsync();
     if (result.success) {
-      disclosure.onClose();
+      dialog.setOpen(false);
       if (deleteRedirectUrl) await navigate({ to: deleteRedirectUrl });
     }
   }
 
   return (
     <ConfirmDialog
-      disclosure={disclosure}
+      dialog={dialog}
       confirmElement={
         <Button
           colorPalette="red"

@@ -1,19 +1,19 @@
-import { Button, type useDisclosure } from '@chakra-ui/react';
+import { Button, type UseDialogReturn } from '@chakra-ui/react';
 
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
 import { useLogoutMutation } from '../api/mutations/use-logout-mutation';
 
-export function LogoutDialog({ disclosure }: { disclosure: ReturnType<typeof useDisclosure> }) {
+export function LogoutDialog({ dialog }: { dialog: UseDialogReturn }) {
   const logoutMutation = useLogoutMutation();
 
   async function handleLogout() {
     await logoutMutation.mutateAsync();
-    if (logoutMutation.isSuccess) disclosure.onClose();
+    if (logoutMutation.isSuccess) dialog.setOpen(false);
   }
 
   return (
     <ConfirmDialog
-      disclosure={disclosure}
+      dialog={dialog}
       text="Are you sure you want to logout?"
       confirmElement={
         <Button colorPalette="red" loading={logoutMutation.isPending} onClick={handleLogout}>
