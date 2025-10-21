@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { Button, Card, FormatNumber, SimpleGrid, Span, Stack, Stat, Text } from '@chakra-ui/react';
+import { Card, FormatNumber, SimpleGrid, Span, Stack, Stat, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { FromNowDate } from '@/shared/ui/from-now-date';
@@ -9,16 +9,13 @@ import type { ProfileType } from '../models/types';
 
 export function Profile({ profile, followToggleButton }: { profile: ProfileType; followToggleButton: ReactElement }) {
   return (
-    <Card.Root border="none">
+    <Card.Root>
       <Card.Header asChild>
         <Stack gap={4} flexDirection={{ base: 'column', md: 'row' }}>
           <UserAvatar w="12rem" h="12rem" fontSize="8rem" username={profile.username} src={profile.avatar} />
           <Stack w="full" gap={8}>
             <Card.Title fontSize="4xl">
-              {profile.username}{' '}
-              <Button asChild size="xs">
-                {followToggleButton}
-              </Button>
+              {profile.username} {followToggleButton}
             </Card.Title>
             <Span color="fg/80" fontWeight="normal">
               Created: <FromNowDate fontSize="sm" date={profile.created} />
