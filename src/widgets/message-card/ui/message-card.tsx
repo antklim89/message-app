@@ -1,6 +1,6 @@
-import { Like } from '@/entities/likes';
 import { Message, type MessageType } from '@/entities/messages';
 import { ToggleFavoriteButton } from '@/features/toggle-favorites';
+import { ToggleLikeButton } from '@/features/toggle-likes';
 import { MessageCardMenu } from './message-card-menu';
 
 export function MessageCard({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
@@ -8,7 +8,7 @@ export function MessageCard({ message, deleteRedirectUrl }: { message: MessageTy
     <Message
       footer={
         <>
-          <Like hasLiked={message.hasLiked} likesCount={message.likesCount} messageId={message.id} />
+          <ToggleLikeButton hasLiked={message.hasLiked} likesCount={message.likesCount} messageId={message.id} />
           <ToggleFavoriteButton isFavorite={message.isFavorite} messageId={message.id} />
         </>
       }
