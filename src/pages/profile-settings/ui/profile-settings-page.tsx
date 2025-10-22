@@ -3,12 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getProfileQueryOptions } from '@/entities/profiles';
 import { LogoutDialog } from '@/features/auth';
-import {
-  ProfileAvatarUpdate,
-  ProfileAvatarUpdateFallback,
-  ProfileUpdate,
-  ProfileUpdateFallback,
-} from '@/features/profile-edit';
+import { AvatarUpdate, AvatarUpdateFallback } from '@/features/avatar-edit';
+import { ProfileUpdate, ProfileUpdateFallback } from '@/features/profile-edit';
 import { useSession } from '@/shared/hooks/use-session';
 import { errAuthentication } from '@/shared/lib/result';
 import { AwaitQuery } from '@/shared/ui/await-query';
@@ -23,9 +19,9 @@ export function ProfileSettingsPage() {
   return (
     <>
       <AwaitQuery query={profileQuery} fallback={<ProfileUpdateFallback />}>
-        {profile => <ProfileAvatarUpdate username={profile.username} avatarUrl={profile.avatar} />}
+        {profile => <AvatarUpdate username={profile.username} avatarUrl={profile.avatar} />}
       </AwaitQuery>
-      <AwaitQuery query={profileQuery} fallback={<ProfileAvatarUpdateFallback />}>
+      <AwaitQuery query={profileQuery} fallback={<AvatarUpdateFallback />}>
         {profile => <ProfileUpdate profileEditValues={profile} />}
       </AwaitQuery>
 

@@ -2,13 +2,13 @@ import { Box, Button, Card, FileUpload, useDialog, useFileUpload } from '@chakra
 
 import { Modal } from '@/shared/ui/modal';
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { useProfileAvatarDeleteMutation } from '../api/mutations/use-profile-avatar-delete-mutation';
-import { useProfileAvatarUpdateMutation } from '../api/mutations/use-profile-avatar-update-mutation';
+import { useAvatarDeleteMutation } from '../api/mutations/use-avatar-delete-mutation';
+import { useAvatarUpdateMutation } from '../api/mutations/use-avatar-update-mutation';
 
-export function ProfileAvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
+export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
   const deleteAvatarDialog = useDialog();
-  const avatarUpdateMutation = useProfileAvatarUpdateMutation();
-  const avatarDeleteMutation = useProfileAvatarDeleteMutation();
+  const avatarUpdateMutation = useAvatarUpdateMutation();
+  const avatarDeleteMutation = useAvatarDeleteMutation();
 
   const isPending = avatarUpdateMutation.isPending || avatarDeleteMutation.isPending;
 

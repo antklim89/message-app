@@ -3,30 +3,29 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProfileQueryOptions } from '@/entities/profiles';
 import { getSupabaseSession } from '@/shared/lib/supabase';
 import { toaster } from '@/shared/lib/toaster';
-import { deleteAvatar } from '../repository/delete-profile-avatar';
+import { updateAvatar } from '../repository/update-avatar';
 
-const TOAST_ID = 'AVATAR_DELETE';
+const TOAST_ID = 'AVATAR_UPDATE';
 
-export function useProfileAvatarDeleteMutation() {
+export function useAvatarUpdateMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    async mutationFn() {
+    async mutationFn(file: File) {
       toaster.loading({ description: 'Avatar is updating...', id: TOAST_ID });
-      const deleteAvatarResult = await deleteAvatar();
-      return deleteAvatarResult;
+      const updateAvatarResult = await updateAvatar(file);
+      return updateAvatarResult;
     },
-    async onSuccess({ fail, success, error }) {
+    async onSuccess({ fail, success, error, result }) {
       const user = await getSupabaseSession();
       if (user) {
         queryClient.setQueryData(
           getProfileQueryOptions({ profileId: user.id }).queryKey,
-          oldData => oldData && { ...oldData, avatar: null },
+          oldData => oldData && { ...oldData, avatar: result ?? null },
         );
       }
-
       if (fail) toaster.error({ description: error.message, id: TOAST_ID });
-      if (success) toaster.success({ description: 'Avatar deleted successfully!', id: TOAST_ID });
+      if (success) toaster.success({ description: 'Avatar updated successfully!', id: TOAST_ID });
     },
   });
 }

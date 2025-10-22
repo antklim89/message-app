@@ -1,6 +1,6 @@
 import { Button, Card, Skeleton } from '@chakra-ui/react';
 
-export function ProfileAvatarUpdateFallback() {
+export function AvatarUpdateFallback() {
   return (
     <Card.Root>
       <Card.Body>

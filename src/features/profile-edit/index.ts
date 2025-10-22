@@ -1,5 +1,3 @@
 export type { ProfileEditType } from './model/types';
-export { ProfileAvatarUpdate } from './ui/profile-avatar-update';
-export { ProfileAvatarUpdateFallback } from './ui/profile-avatar-update-fallback';
 export { ProfileUpdate } from './ui/profile-update';
 export { ProfileUpdateFallback } from './ui/profile-update-fallback';
