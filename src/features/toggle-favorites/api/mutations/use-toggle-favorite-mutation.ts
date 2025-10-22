@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { type MessageType, updateMessageQueryData } from '@/entities/messages';
 import { useSession } from '@/shared/hooks/use-session';
 import { ErrType, errAuthentication } from '@/shared/lib/result';
 import { toaster } from '@/shared/lib/toaster';
-import { type MessageType, updateMessageQueryData } from '../../@x/entities/messages';
 import { addFavorite } from '../repository/add-favorite';
 import { removeFavorite } from '../repository/remove-favorite';
 

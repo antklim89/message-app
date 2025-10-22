@@ -9,7 +9,7 @@ interface Props {
   isFavorite: boolean;
 }
 
-export function FavoriteButton({ messageId, isFavorite }: Props) {
+export function ToggleFavoriteButton({ messageId, isFavorite }: Props) {
   const toggleLikeMutation = useToggleFavoriteMutation({ isFavorite, messageId });
 
   function handleToggleLike() {
