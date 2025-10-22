@@ -1,7 +1,7 @@
 import { Button, Heading, Skeleton, SkeletonText, type StackProps, Text, useDialog, VStack } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
-import { LoginDialog } from '@/entities/auth';
+import { AuthDialog } from '@/features/auth';
 import { Modal } from '@/shared/ui/modal';
 import { Protected } from '@/shared/ui/protected';
 import { Logo } from './logo';
@@ -55,7 +55,7 @@ export function LeftSide(props: StackProps) {
                 To continue please
               </Text>
 
-              <LoginDialog dialog={dialog} />
+              <AuthDialog dialog={dialog} />
               <Modal.Trigger mb={8} width="full" dialog={dialog}>
                 Login or Register
               </Modal.Trigger>

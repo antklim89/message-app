@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Stack, Text, type UseDialogReturn } from '@chakra-ui/react';
+import { Button, Stack, Text, useDialogContext } from '@chakra-ui/react';
 
 import { useAppForm } from '@/shared/lib/react-form';
 import { Modal } from '@/shared/ui/modal';
@@ -8,7 +8,8 @@ import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/mutations/use-login-mutation';
 import { useRegisterMutation } from '../api/mutations/use-register-mutation';
 
-export function LoginDialog({ dialog }: { dialog: UseDialogReturn }) {
+export function AuthDialogContent() {
+  const dialog = useDialogContext();
   const [type, setType] = useState<'login' | 'register'>('login');
   const loginMutation = useLoginMutation();
   const registerMutation = useRegisterMutation();
@@ -38,7 +39,7 @@ export function LoginDialog({ dialog }: { dialog: UseDialogReturn }) {
   });
 
   return (
-    <Modal.Root dialog={dialog}>
+    <>
       <Modal.Title>
         {type === 'login' ? (
           <Stack textAlign="center">
@@ -87,6 +88,6 @@ export function LoginDialog({ dialog }: { dialog: UseDialogReturn }) {
           </Button>
         )}
       </Modal.Footer>
-    </Modal.Root>
+    </>
   );
 }

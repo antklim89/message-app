@@ -1,8 +1,8 @@
 import { Card, useDialog } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 
-import { LogoutDialog } from '@/entities/auth';
 import { getProfileQueryOptions } from '@/entities/profiles';
+import { LogoutDialog } from '@/features/auth';
 import {
   ProfileAvatarUpdate,
   ProfileAvatarUpdateFallback,
