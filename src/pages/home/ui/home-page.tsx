@@ -5,7 +5,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { messageListQueryOptions } from '@/entities/messages';
 import { MessageCreateDialog } from '@/features/message-edit';
 import { AwaitQuery } from '@/shared/ui/await-query';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
@@ -21,9 +21,9 @@ export function HomePage() {
       <Protected
         fallback={<Skeleton h={30} />}
         privateElement={
-          <Modal.Trigger dialog={dialog}>
+          <Dialog.Trigger dialog={dialog}>
             ADD NEW MESSAGE. <FaPlus />
-          </Modal.Trigger>
+          </Dialog.Trigger>
         }
         publicElement={<Box h={30} />}
       />

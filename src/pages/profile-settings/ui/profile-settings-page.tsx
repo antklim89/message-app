@@ -8,7 +8,7 @@ import { ProfileUpdate, ProfileUpdateFallback } from '@/features/profile-edit';
 import { useSession } from '@/shared/hooks/use-session';
 import { errAuthentication } from '@/shared/lib/result';
 import { AwaitQuery } from '@/shared/ui/await-query';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 
 export function ProfileSettingsPage() {
   const logoutDialog = useDialog();
@@ -28,9 +28,9 @@ export function ProfileSettingsPage() {
       <Card.Root justifyContent="flex-end">
         <Card.Body>
           <LogoutDialog dialog={logoutDialog} />
-          <Modal.Trigger dialog={logoutDialog} colorPalette="red">
+          <Dialog.Trigger dialog={logoutDialog} colorPalette="red">
             Logout
-          </Modal.Trigger>
+          </Dialog.Trigger>
         </Card.Body>
       </Card.Root>
     </>

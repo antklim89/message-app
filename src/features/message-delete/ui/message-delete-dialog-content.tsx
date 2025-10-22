@@ -2,7 +2,7 @@ import { Button, useDialogContext } from '@chakra-ui/react';
 import { useNavigate } from '@tanstack/react-router';
 
 import type { MessageType } from '@/entities/messages';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { useMessageDeleteMutation } from '../api/mutations/use-message-delete-mutation';
 
 export function MessageDeleteDialogContent({
@@ -26,8 +26,8 @@ export function MessageDeleteDialogContent({
 
   return (
     <>
-      <Modal.Title>Are you sure you want to delete this message?</Modal.Title>
-      <Modal.Footer>
+      <Dialog.Title>Are you sure you want to delete this message?</Dialog.Title>
+      <Dialog.Footer>
         <Button
           colorPalette="red"
           loading={deleteMutation.isPending}
@@ -36,7 +36,7 @@ export function MessageDeleteDialogContent({
         >
           Delete
         </Button>
-      </Modal.Footer>
+      </Dialog.Footer>
     </>
   );
 }

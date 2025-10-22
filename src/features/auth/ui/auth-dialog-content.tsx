@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Stack, Text, useDialogContext } from '@chakra-ui/react';
 
 import { useAppForm } from '@/shared/lib/react-form';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { LoginForm, loginFormOptions } from './login-form';
 import { RegisterForm, registerFormOptions } from './register-form';
 import { useLoginMutation } from '../api/mutations/use-login-mutation';
@@ -40,7 +40,7 @@ export function AuthDialogContent() {
 
   return (
     <>
-      <Modal.Title>
+      <Dialog.Title>
         {type === 'login' ? (
           <Stack textAlign="center">
             <Text as="span" fontSize="2xl">
@@ -66,13 +66,13 @@ export function AuthDialogContent() {
             </Button>
           </Stack>
         )}
-      </Modal.Title>
+      </Dialog.Title>
 
-      <Modal.Body>
+      <Dialog.Body>
         {type === 'login' ? <LoginForm form={loginForm} /> : <RegisterForm form={registerForm} />}
-      </Modal.Body>
+      </Dialog.Body>
 
-      <Modal.Footer>
+      <Dialog.Footer>
         {type === 'login' ? (
           <Button type="submit" form={loginForm.formId} loading={loginMutation.isPending} loadingText="Entering...">
             Login
@@ -87,7 +87,7 @@ export function AuthDialogContent() {
             Register
           </Button>
         )}
-      </Modal.Footer>
+      </Dialog.Footer>
     </>
   );
 }

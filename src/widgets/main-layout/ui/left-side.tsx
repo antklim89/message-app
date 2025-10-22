@@ -2,7 +2,7 @@ import { Button, Heading, Skeleton, SkeletonText, type StackProps, Text, useDial
 import { Link } from '@tanstack/react-router';
 
 import { AuthDialog } from '@/features/auth';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { Protected } from '@/shared/ui/protected';
 import { Logo } from './logo';
 
@@ -56,9 +56,9 @@ export function LeftSide(props: StackProps) {
               </Text>
 
               <AuthDialog dialog={dialog} />
-              <Modal.Trigger mb={8} width="full" dialog={dialog}>
+              <Dialog.Trigger mb={8} width="full" dialog={dialog}>
                 Login or Register
-              </Modal.Trigger>
+              </Dialog.Trigger>
             </>
           }
         />

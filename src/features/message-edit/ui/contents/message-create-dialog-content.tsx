@@ -1,6 +1,6 @@
 import { Button, useDialogContext } from '@chakra-ui/react';
 
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { useMessageCreateMutation } from '../../api/mutations/use-message-create-mutation';
 import { useRichTextHandler } from '../../lib/hooks/use-rich-text-handler';
 import { MessageEditForm } from '../forms/message-edit-form';
@@ -19,15 +19,15 @@ export function MessageCreateDialogContent({ answerId }: { answerId: number | un
 
   return (
     <>
-      <Modal.Title>Create New Message</Modal.Title>
-      <Modal.Body>
+      <Dialog.Title>Create New Message</Dialog.Title>
+      <Dialog.Body>
         <MessageEditForm onEnterKeyDown={handleSubmit} ref={ref} />
-      </Modal.Body>
-      <Modal.Footer>
+      </Dialog.Body>
+      <Dialog.Footer>
         <Button onClick={handleSubmit} loading={messageCreateMutation.isPending} loadingText="Creating...">
           Create
         </Button>
-      </Modal.Footer>
+      </Dialog.Footer>
     </>
   );
 }

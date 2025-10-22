@@ -1,7 +1,7 @@
 import { Button, useDialogContext } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { useMessageUpdateMutation } from '../../api/mutations/use-message-update-mutation';
 import { useRichTextHandler } from '../../lib/hooks/use-rich-text-handler';
 import type { MessageEditType } from '../../model/types';
@@ -21,16 +21,16 @@ export function MessageUpdateDialogContent({ message }: { message: MessageEditTy
 
   return (
     <>
-      <Modal.Title>Update Message</Modal.Title>
-      <Modal.Body>
+      <Dialog.Title>Update Message</Dialog.Title>
+      <Dialog.Body>
         <MessageEditForm value={message.body} ref={ref} onEnterKeyDown={handleSubmit} />
-      </Modal.Body>
+      </Dialog.Body>
 
-      <Modal.Footer>
+      <Dialog.Footer>
         <Button onClick={handleSubmit} loading={messageUpdateMutation.isPending} loadingText="Updating...">
           Update
         </Button>
-      </Modal.Footer>
+      </Dialog.Footer>
     </>
   );
 }

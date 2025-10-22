@@ -2,8 +2,8 @@ import { type ReactNode, Suspense } from 'react';
 import {
   Button,
   type ButtonProps,
+  Dialog as ChakraDialog,
   CloseButton,
-  Dialog,
   type DialogBodyProps,
   type DialogFooterProps,
   type DialogHeaderProps,
@@ -23,20 +23,20 @@ function Root({
   dialog: UseDialogReturn;
 } & DialogRootProps) {
   return (
-    <Dialog.RootProvider value={dialog} motionPreset="slide-in-bottom" placement="top" size="lg" {...props}>
+    <ChakraDialog.RootProvider value={dialog} motionPreset="slide-in-bottom" placement="top" size="lg" {...props}>
       <Portal>
-        <Dialog.Positioner>
-          <Dialog.Backdrop />
-          <Dialog.Content>
-            <Dialog.CloseTrigger asChild>
+        <ChakraDialog.Positioner>
+          <ChakraDialog.Backdrop />
+          <ChakraDialog.Content>
+            <ChakraDialog.CloseTrigger asChild>
               <CloseButton size="lg" />
-            </Dialog.CloseTrigger>
+            </ChakraDialog.CloseTrigger>
 
             <Suspense fallback={fallback}>{children}</Suspense>
-          </Dialog.Content>
-        </Dialog.Positioner>
+          </ChakraDialog.Content>
+        </ChakraDialog.Positioner>
       </Portal>
-    </Dialog.RootProvider>
+    </ChakraDialog.RootProvider>
   );
 }
 
@@ -55,11 +55,11 @@ function Title({
   children: ReactNode;
 } & DialogHeaderProps) {
   return (
-    <Dialog.Header justifyContent="center">
-      <Dialog.Title fontSize="xl" {...props}>
+    <ChakraDialog.Header justifyContent="center">
+      <ChakraDialog.Title fontSize="xl" {...props}>
         {children}
-      </Dialog.Title>
-    </Dialog.Header>
+      </ChakraDialog.Title>
+    </ChakraDialog.Header>
   );
 }
 
@@ -69,7 +69,7 @@ function Body({
 }: {
   children: ReactNode;
 } & DialogBodyProps) {
-  return <Dialog.Body {...props}>{children}</Dialog.Body>;
+  return <ChakraDialog.Body {...props}>{children}</ChakraDialog.Body>;
 }
 
 function Footer({
@@ -79,14 +79,14 @@ function Footer({
   children: ReactNode;
 } & DialogFooterProps) {
   return (
-    <Dialog.Footer display="flex" justifyItems="flex-end" {...props}>
-      <Dialog.CloseTrigger position="static" asChild>
+    <ChakraDialog.Footer display="flex" justifyItems="flex-end" {...props}>
+      <ChakraDialog.CloseTrigger position="static" asChild>
         <Button variant="ghost">Close</Button>
-      </Dialog.CloseTrigger>
+      </ChakraDialog.CloseTrigger>
 
       {children}
-    </Dialog.Footer>
+    </ChakraDialog.Footer>
   );
 }
 
-export const Modal = { Trigger, Root, Title, Body, Footer };
+export const Dialog = { Trigger, Root, Title, Body, Footer };

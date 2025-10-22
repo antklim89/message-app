@@ -1,6 +1,6 @@
 import { Box, Button, Card, FileUpload, useDialog, useFileUpload } from '@chakra-ui/react';
 
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { useAvatarDeleteMutation } from '../api/mutations/use-avatar-delete-mutation';
 import { useAvatarUpdateMutation } from '../api/mutations/use-avatar-update-mutation';
@@ -30,9 +30,9 @@ export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null
 
   return (
     <Card.Root>
-      <Modal.Root dialog={deleteAvatarDialog}>
-        <Modal.Title fontSize="xl">Are you sure you want to delete your avatar?</Modal.Title>
-        <Modal.Body>
+      <Dialog.Root dialog={deleteAvatarDialog}>
+        <Dialog.Title fontSize="xl">Are you sure you want to delete your avatar?</Dialog.Title>
+        <Dialog.Body>
           <Button
             disabled={isPending || file == null}
             colorPalette="red"
@@ -42,8 +42,8 @@ export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null
           >
             Delete
           </Button>
-        </Modal.Body>
-      </Modal.Root>
+        </Dialog.Body>
+      </Dialog.Root>
       <Card.Body>
         <FileUpload.RootProvider value={fileUpload}>
           <FileUpload.HiddenInput disabled={isPending} />
@@ -66,9 +66,9 @@ export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null
         <Button disabled={isPending || file == null} variant="ghost" onClick={() => fileUpload.clearFiles()}>
           Cancel
         </Button>
-        <Modal.Trigger dialog={deleteAvatarDialog} disabled={isPending || file == null} colorPalette="red">
+        <Dialog.Trigger dialog={deleteAvatarDialog} disabled={isPending || file == null} colorPalette="red">
           Delete
-        </Modal.Trigger>
+        </Dialog.Trigger>
         <Button
           disabled={isPending || file == null}
           loading={avatarUpdateMutation.isPending}

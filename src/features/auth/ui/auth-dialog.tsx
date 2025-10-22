@@ -1,14 +1,14 @@
 import { lazy } from 'react';
 import type { UseDialogReturn } from '@chakra-ui/react';
 
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 
 const AuthDialogContent = lazy(() => import('./auth-dialog-content').then(m => ({ default: m.AuthDialogContent })));
 
 export function AuthDialog({ dialog }: { dialog: UseDialogReturn }) {
   return (
-    <Modal.Root dialog={dialog}>
+    <Dialog.Root dialog={dialog}>
       <AuthDialogContent />
-    </Modal.Root>
+    </Dialog.Root>
   );
 }

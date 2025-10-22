@@ -1,6 +1,6 @@
 import { Button, type UseDialogReturn } from '@chakra-ui/react';
 
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { useLogoutMutation } from '../api/mutations/use-logout-mutation';
 
 export function LogoutDialog({ dialog }: { dialog: UseDialogReturn }) {
@@ -12,13 +12,13 @@ export function LogoutDialog({ dialog }: { dialog: UseDialogReturn }) {
   }
 
   return (
-    <Modal.Root dialog={dialog}>
-      <Modal.Title fontSize="xl">Are you sure you want to logout?</Modal.Title>
-      <Modal.Footer>
+    <Dialog.Root dialog={dialog}>
+      <Dialog.Title fontSize="xl">Are you sure you want to logout?</Dialog.Title>
+      <Dialog.Footer>
         <Button colorPalette="red" loading={logoutMutation.isPending} onClick={handleLogout}>
           Logout
         </Button>
-      </Modal.Footer>
-    </Modal.Root>
+      </Dialog.Footer>
+    </Dialog.Root>
   );
 }
