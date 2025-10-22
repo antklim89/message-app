@@ -1,4 +1,4 @@
-import type { emojiGroups } from '../lib/emojis/groups';
+import type { emojiGroups } from '../ui/emoji-picker/emoji-groups';
 
 export interface Emoji {
   group: EmojiGroupKey;

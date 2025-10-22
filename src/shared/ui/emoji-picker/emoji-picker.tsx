@@ -21,10 +21,10 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 
 import { useDebounceValue } from '@/shared/hooks/use-debounce-value';
-import { emojiGroups } from '@/shared/lib/emojis/groups';
 import type { Emoji } from '@/shared/model/emoji';
+import { emojiGroups } from './emoji-groups';
 
-const emojisPromise = import('@/shared/lib/emojis/list.json').then(m => m.default);
+const emojisPromise = import('./emoji-list.json').then(m => m.default);
 
 const skinTones = ['#FDE030', '#FFDBAC', '#F1C27D', '#E0AC69', '#C68642', '#8D5524'] as const;
 
