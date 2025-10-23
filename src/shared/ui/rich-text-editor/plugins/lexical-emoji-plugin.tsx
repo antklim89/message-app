@@ -6,7 +6,7 @@ import { FaFaceSmile } from 'react-icons/fa6';
 import { INSERT_EMOJI, registerEmojiCommands } from '@/shared/lib/lexical/nodes/emoji-node';
 import { EmojiPicker } from '@/shared/ui/emoji-picker';
 
-export function MessageEmojiPlugin() {
+export function LexicalEmojiPlugin() {
   const [editor] = useLexicalComposerContext();
   const dialog = useDialog();
 

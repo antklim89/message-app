@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { Box, Span, Textarea } from '@chakra-ui/react';
+import type { ReactNode, RefObject } from 'react';
+import { Box, HStack, Span, Stack, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
 import { LinkNode } from '@lexical/link';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -10,25 +10,35 @@ import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { $createParagraphNode, $getRoot, type LexicalEditor, type SerializedRootNode } from 'lexical';
+import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
-import { RICH_TEXT_EDITOR_NAMESPACE } from '../lib/lexical/constants';
-import { EmojiNode } from '../lib/lexical/nodes/emoji-node';
-import { UserNode } from '../lib/lexical/nodes/user-node';
-import { LexicalRectPlugin } from '../lib/lexical/plugins/lexical-rect-plugin';
-import { LexicalUserPlugin } from '../lib/lexical/plugins/lexical-user-plugin';
+import { RICH_TEXT_EDITOR_NAMESPACE } from '@/shared/lib/lexical/constants';
+import { EmojiNode } from '@/shared/lib/lexical/nodes/emoji-node';
+import { UserNode } from '@/shared/lib/lexical/nodes/user-node';
+import { LexicalBodyLengthPlugin } from './plugins/lexical-body-length-plugin';
+import { LexicalEmojiPlugin } from './plugins/lexical-emoji-plugin';
+import { LexicalFormatButtonsPlugin } from './plugins/lexical-format-buttons-plugin';
+import { LexicalLinkPlugin } from './plugins/lexical-link-plugin';
+import { LexicalSubmitPlugin } from './plugins/lexical-submit-plugin';
+import { LexicalUserPlugin } from './plugins/lexical-user-plugin';
 
 export function RichTextEditor({
+  maxLength = 600,
   onError = error => console.error(error),
   plugins,
   value,
   placeholder = 'Enter your message...',
+  ref,
+  onEnterKeyDown,
   ...props
 }: {
+  maxLength?: number;
   plugins?: ReactNode;
   onError?: (error: Error, editor: LexicalEditor) => void;
   value?: SerializedRootNode;
   placeholder?: string;
+  ref: RefObject<LexicalEditor | null>;
+  onEnterKeyDown?: () => Promise<void>;
 } & Omit<ContentEditableProps, 'placeholder' | 'value'>) {
   return (
     <LexicalComposer
@@ -51,7 +61,6 @@ export function RichTextEditor({
         editorState(editor) {
           try {
             if (value) editor.setEditorState(editor.parseEditorState({ root: value }));
-            else $getRoot().append($createParagraphNode());
           } catch (error) {
             console.error(error);
             return null;
@@ -83,11 +92,22 @@ export function RichTextEditor({
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
-        {plugins}
+        <Stack>
+          <HStack mt={2}>
+            <LexicalLinkPlugin />
+            <LexicalEmojiPlugin />
+            {plugins}
+            <Box flexGrow={1} />
+            <LexicalBodyLengthPlugin maxLength={maxLength} />
+          </HStack>
+          <HStack mt={2}>
+            <LexicalFormatButtonsPlugin />
+            <LexicalSubmitPlugin ref={ref} onEnterKeyDown={onEnterKeyDown} />
+          </HStack>
+        </Stack>
       </Box>
 
       <HashtagPlugin />
-      <LexicalRectPlugin />
       <LexicalUserPlugin />
       <HistoryPlugin />
       <AutoFocusPlugin defaultSelection="rootEnd" />

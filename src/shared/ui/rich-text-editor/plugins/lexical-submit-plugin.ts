@@ -2,7 +2,7 @@ import { type RefObject, useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { COMMAND_PRIORITY_CRITICAL, KEY_ENTER_COMMAND, type LexicalEditor } from 'lexical';
 
-export function MessageSubmitPlugin({
+export function LexicalSubmitPlugin({
   ref,
   onEnterKeyDown,
 }: {

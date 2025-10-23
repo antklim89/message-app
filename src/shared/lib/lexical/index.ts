@@ -14,6 +14,4 @@ export {
   UserNode,
   type UserNodePayload,
 } from './nodes/user-node';
-export { LexicalRectPlugin, RECT_CHANGE_COMMAND, useLexicalRectPlugin } from './plugins/lexical-rect-plugin';
-export { LexicalUserPlugin } from './plugins/lexical-user-plugin';
 export { calculateLexicalTextLength } from './utils';

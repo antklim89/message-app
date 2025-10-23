@@ -4,7 +4,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 'lexical';
 import { FaBold, FaEraser, FaItalic, FaStrikethrough, FaUnderline } from 'react-icons/fa6';
 
-export function FormatButtonsPlugin() {
+export function LexicalFormatButtonsPlugin() {
   const [editor] = useLexicalComposerContext();
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);

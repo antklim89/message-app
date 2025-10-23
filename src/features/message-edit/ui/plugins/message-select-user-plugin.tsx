@@ -5,12 +5,11 @@ import { $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, SELECTION_CH
 import { FaUserPlus } from 'react-icons/fa6';
 
 import { ProfileSelect } from '@/entities/profiles';
-import { $isUserNode, INSERT_USER, useLexicalRectPlugin } from '@/shared/lib/lexical';
+import { $isUserNode, INSERT_USER } from '@/shared/lib/lexical';
 
 export function MessageSelectUserPlugin() {
   const [editor] = useLexicalComposerContext();
   const [usernameTerm, setUsernameTerm] = useState('');
-  const position = useLexicalRectPlugin(editor);
   const disclosure = useDisclosure();
 
   useEffect(() => {
@@ -33,11 +32,7 @@ export function MessageSelectUserPlugin() {
 
   return (
     <ProfileSelect
-      positioning={{
-        placement: 'bottom-start',
-        strategy: 'fixed',
-        getAnchorRect: () => position.current,
-      }}
+      positioning={{ placement: 'bottom-end', strategy: 'fixed' }}
       onExitComplete={() => editor.focus(undefined, { defaultSelection: undefined })}
       trigger={
         <IconButton>

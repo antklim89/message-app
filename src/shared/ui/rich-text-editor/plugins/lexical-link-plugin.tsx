@@ -7,7 +7,6 @@ import { $createTextNode, $getSelection, $isRangeSelection, $isTextNode } from '
 import { FaLink } from 'react-icons/fa6';
 import { z } from 'zod/v4-mini';
 
-import { useLexicalRectPlugin } from '@/shared/lib/lexical';
 import { useAppForm } from '@/shared/lib/react-form';
 import { checkLink } from '@/shared/model/schema-checks';
 
@@ -24,11 +23,10 @@ const linkFormOptions = formOptions({
   validationLogic: revalidateLogic(),
 });
 
-export function MessageLinkPlugin() {
+export function LexicalLinkPlugin() {
   const [editor] = useLexicalComposerContext();
   const disclosure = useDisclosure();
   const [selectedLinkNode, setSelectedLinkNode] = useState<LinkNode | null>(null);
-  const position = useLexicalRectPlugin(editor);
 
   const linkForm = useAppForm({
     ...linkFormOptions,
@@ -112,50 +110,50 @@ export function MessageLinkPlugin() {
   }
 
   return (
-    <>
-      <IconButton onClick={disclosure.onOpen}>
-        <FaLink />
-      </IconButton>
-      <Popover.Root
-        modal
-        positioning={{ placement: 'bottom-start', strategy: 'fixed', getAnchorRect: () => position.current }}
-        onExitComplete={() => {
-          linkForm.reset();
-          editor.focus(undefined, { defaultSelection: undefined });
-        }}
-        open={disclosure.open}
-        onOpenChange={e => disclosure.setOpen(e.open)}
-      >
-        <Popover.Positioner>
-          <Popover.Content asChild>
-            <HStack p={2}>
-              <linkForm.AppForm>
-                <Stack w="full">
-                  <linkForm.AppField name="name">
-                    {field => <field.InputField onKeyDown={handleKeyDown} placeholder="Link name..." />}
-                  </linkForm.AppField>
-                  <linkForm.AppField name="url">
-                    {field => <field.InputField onKeyDown={handleKeyDown} placeholder="https://www.example.com" />}
-                  </linkForm.AppField>
-                </Stack>
-              </linkForm.AppForm>
-              <Stack>
-                <Button form={linkForm.formId} onClick={linkForm.handleSubmit}>
-                  Paste
-                </Button>
-                {selectedLinkNode && (
-                  <Button colorPalette="red" onClick={handleLinkRemove}>
-                    Remove
-                  </Button>
-                )}
-                <Button onClick={disclosure.onClose} variant="ghost">
-                  Close
-                </Button>
+    <Popover.Root
+      modal
+      positioning={{ placement: 'bottom-end', strategy: 'fixed' }}
+      onExitComplete={() => {
+        linkForm.reset();
+        editor.focus(undefined, { defaultSelection: undefined });
+      }}
+      open={disclosure.open}
+      onOpenChange={e => disclosure.setOpen(e.open)}
+    >
+      <Popover.Trigger asChild>
+        <IconButton onClick={disclosure.onOpen}>
+          <FaLink />
+        </IconButton>
+      </Popover.Trigger>
+      <Popover.Positioner>
+        <Popover.Content asChild>
+          <HStack p={2}>
+            <linkForm.AppForm>
+              <Stack w="full">
+                <linkForm.AppField name="name">
+                  {field => <field.InputField onKeyDown={handleKeyDown} placeholder="Link name..." />}
+                </linkForm.AppField>
+                <linkForm.AppField name="url">
+                  {field => <field.InputField onKeyDown={handleKeyDown} placeholder="https://www.example.com" />}
+                </linkForm.AppField>
               </Stack>
-            </HStack>
-          </Popover.Content>
-        </Popover.Positioner>
-      </Popover.Root>
-    </>
+            </linkForm.AppForm>
+            <Stack>
+              <Button form={linkForm.formId} onClick={linkForm.handleSubmit}>
+                Paste
+              </Button>
+              {selectedLinkNode && (
+                <Button colorPalette="red" onClick={handleLinkRemove}>
+                  Remove
+                </Button>
+              )}
+              <Button onClick={disclosure.onClose} variant="ghost">
+                Close
+              </Button>
+            </Stack>
+          </HStack>
+        </Popover.Content>
+      </Popover.Positioner>
+    </Popover.Root>
   );
 }

@@ -3,9 +3,8 @@ import { Text } from '@chakra-ui/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import { calculateLexicalTextLength } from '@/shared/lib/lexical';
-import { MAX_MESSAGE_BODY_LENGTH } from '../../config/constants';
 
-export function MessageBodyLengthPlugin() {
+export function LexicalBodyLengthPlugin({ maxLength }: { maxLength: number }) {
   const [editor] = useLexicalComposerContext();
   const [textLength, setTextLength] = useState(0);
 
@@ -17,8 +16,8 @@ export function MessageBodyLengthPlugin() {
   }, [editor]);
 
   return (
-    <Text color={textLength > MAX_MESSAGE_BODY_LENGTH ? 'red.500' : undefined}>
-      {textLength}/{MAX_MESSAGE_BODY_LENGTH}
+    <Text color={textLength > maxLength ? 'red.500' : undefined}>
+      {textLength}/{maxLength}
     </Text>
   );
 }
