@@ -3,11 +3,11 @@ import type { UseDialogReturn } from '@chakra-ui/react';
 
 import type { MessageType } from '@/entities/messages';
 import { Dialog } from '@/shared/ui/dialog';
-import { MessageEditFormFallback } from './fallbacks/message-edit-form-fallback';
+import { MessageEditFormFallback } from './message-edit-form-fallback';
 import type { MessageEditType } from '../model/types';
 
 const MessageUpdateDialogContent = lazy(() =>
-  import('./contents/message-update-dialog-content').then(m => ({ default: m.MessageUpdateDialogContent })),
+  import('./message-update-dialog-content').then(m => ({ default: m.MessageUpdateDialogContent })),
 );
 
 export function MessageUpdateDialog({

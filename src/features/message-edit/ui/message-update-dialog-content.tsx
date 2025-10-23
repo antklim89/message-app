@@ -3,10 +3,10 @@ import { Button, useDialogContext } from '@chakra-ui/react';
 import type { MessageType } from '@/entities/messages';
 import { Dialog } from '@/shared/ui/dialog';
 import { useRichTextHandler } from '@/shared/ui/rich-text-editor';
-import { useMessageUpdateMutation } from '../../api/mutations/use-message-update-mutation';
-import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../../config/constants';
-import type { MessageEditType } from '../../model/types';
-import { MessageEditForm } from '../forms/message-edit-form';
+import { MessageEditForm } from './message-edit-form';
+import { useMessageUpdateMutation } from '../api/mutations/use-message-update-mutation';
+import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../config/constants';
+import type { MessageEditType } from '../model/types';
 
 export function MessageUpdateDialogContent({ message }: { message: MessageEditType & { id: MessageType['id'] } }) {
   const dialog = useDialogContext();

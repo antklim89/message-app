@@ -2,9 +2,9 @@ import { Button, useDialogContext } from '@chakra-ui/react';
 
 import { Dialog } from '@/shared/ui/dialog';
 import { useRichTextHandler } from '@/shared/ui/rich-text-editor';
-import { useMessageCreateMutation } from '../../api/mutations/use-message-create-mutation';
-import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../../config/constants';
-import { MessageEditForm } from '../forms/message-edit-form';
+import { MessageEditForm } from './message-edit-form';
+import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
+import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../config/constants';
 
 export function MessageCreateDialogContent({ answerId }: { answerId: number | undefined }) {
   const dialog = useDialogContext();
