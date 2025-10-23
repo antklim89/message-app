@@ -4,10 +4,10 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { FaUserPlus } from 'react-icons/fa6';
 
-import { ProfileSelect } from '@/entities/profiles';
 import { $isUserNode, INSERT_USER } from '@/shared/lib/lexical';
+import { ProfileSelect } from './profile-select';
 
-export function MessageSelectUserPlugin() {
+export function ProfileSelectLexicalPlugin() {
   const [editor] = useLexicalComposerContext();
   const [usernameTerm, setUsernameTerm] = useState('');
   const disclosure = useDisclosure();

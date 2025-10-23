@@ -10,3 +10,4 @@ export type { ProfileType } from './models/types';
 export { Profile } from './ui/profile';
 export { ProfileFallback } from './ui/profile-fallback';
 export { ProfileSelect } from './ui/profile-select';
+export { ProfileSelectLexicalPlugin } from './ui/profile-select-lexical-plugin';
