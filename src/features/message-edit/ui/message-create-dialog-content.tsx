@@ -1,21 +1,19 @@
 import { Button, useDialogContext } from '@chakra-ui/react';
 
+import { useAppForm } from '@/shared/lib/react-form';
 import { Dialog } from '@/shared/ui/dialog';
-import { useRichTextHandler } from '@/shared/ui/rich-text-editor';
-import { MessageEditForm } from './message-edit-form';
+import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
-import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../config/constants';
 
 export function MessageCreateDialogContent({ answerId }: { answerId: number | undefined }) {
   const dialog = useDialogContext();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 
-  const { ref, handleSubmit } = useRichTextHandler({
-    maxLength: MAX_MESSAGE_BODY_LENGTH,
-    minLength: MIN_MESSAGE_BODY_LENGTH,
-    async onSubmit(value) {
-      if (!value) return;
-      const result = await messageCreateMutation.mutateAsync({ body: value });
+  const form = useAppForm({
+    ...messageEditFormOptions,
+    async onSubmit({ value }) {
+      if (!value.body) return;
+      const result = await messageCreateMutation.mutateAsync({ body: value.body });
       if (result.success) dialog.setOpen(false);
     },
   });
@@ -24,10 +22,10 @@ export function MessageCreateDialogContent({ answerId }: { answerId: number | un
     <>
       <Dialog.Title>Create New Message</Dialog.Title>
       <Dialog.Body>
-        <MessageEditForm onEnterKeyDown={handleSubmit} ref={ref} />
+        <MessageEditForm form={form} />
       </Dialog.Body>
       <Dialog.Footer>
-        <Button onClick={handleSubmit} loading={messageCreateMutation.isPending} loadingText="Creating...">
+        <Button onClick={form.handleSubmit} loading={messageCreateMutation.isPending} loadingText="Creating...">
           Create
         </Button>
       </Dialog.Footer>
