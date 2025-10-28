@@ -1,4 +1,4 @@
-import type { ReactNode, RefObject } from 'react';
+import type { ReactNode } from 'react';
 import { Box, HStack, Span, Stack, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
 import { LinkNode } from '@lexical/link';
@@ -18,8 +18,8 @@ import { UserNode } from '@/shared/lib/lexical/nodes/user-node';
 import { LexicalBodyLengthPlugin } from './plugins/lexical-body-length-plugin';
 import { LexicalEmojiPlugin } from './plugins/lexical-emoji-plugin';
 import { LexicalFormatButtonsPlugin } from './plugins/lexical-format-buttons-plugin';
+import { LexicalKeyDownPlugin } from './plugins/lexical-key-down-plugin';
 import { LexicalLinkPlugin } from './plugins/lexical-link-plugin';
-import { LexicalSubmitPlugin } from './plugins/lexical-submit-plugin';
 import { LexicalUserPlugin } from './plugins/lexical-user-plugin';
 
 export function RichTextEditor({
@@ -28,18 +28,15 @@ export function RichTextEditor({
   plugins,
   value,
   placeholder = 'Enter your message...',
-  ref,
-  onEnterKeyDown,
+  onKeyDown,
   ...props
 }: {
-  maxLength?: number;
   plugins?: ReactNode;
   onError?: (error: Error, editor: LexicalEditor) => void;
   value?: SerializedRootNode;
   placeholder?: string;
-  ref: RefObject<LexicalEditor | null>;
-  onEnterKeyDown?: () => Promise<void>;
-} & Omit<ContentEditableProps, 'placeholder' | 'value'>) {
+  onKeyDown?: (e: KeyboardEvent | null) => void;
+} & Omit<ContentEditableProps, 'placeholder' | 'value' | 'onKeyDown'>) {
   return (
     <LexicalComposer
       initialConfig={{
@@ -102,11 +99,11 @@ export function RichTextEditor({
           </HStack>
           <HStack mt={2}>
             <LexicalFormatButtonsPlugin />
-            <LexicalSubmitPlugin ref={ref} onEnterKeyDown={onEnterKeyDown} />
           </HStack>
         </Stack>
       </Box>
 
+      <LexicalKeyDownPlugin onKeyDown={onKeyDown} />
       <HashtagPlugin />
       <LexicalUserPlugin />
       <HistoryPlugin />
