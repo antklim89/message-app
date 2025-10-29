@@ -1,50 +1,105 @@
-import { useEffect, useState } from 'react';
-import { IconButton, Input, useDisclosure } from '@chakra-ui/react';
+import { useCallback, useMemo, useState } from 'react';
+import { Button, Popover } from '@chakra-ui/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, SELECTION_CHANGE_COMMAND } from 'lexical';
-import { FaUserPlus } from 'react-icons/fa6';
+import {
+  LexicalTypeaheadMenuPlugin,
+  MenuOption,
+  useBasicTypeaheadTriggerMatch,
+} from '@lexical/react/LexicalTypeaheadMenuPlugin';
+import { useQuery } from '@tanstack/react-query';
+import { $getSelection, $isRangeSelection, type TextNode } from 'lexical';
 
-import { $isUserNode, INSERT_USER } from '@/shared/lib/lexical';
-import { ProfileSelect } from './profile-select';
+import { $createUserNode } from '@/shared/lib/lexical';
+import { getProfileListQueryOptions } from '../api/queries/use-profile-list-query';
+import type { ProfileListItemType } from '../models/types';
+
+class ProfileOption extends MenuOption {
+  id: string;
+  username: string;
+  displayname: string;
+
+  constructor(profile: ProfileListItemType) {
+    super(profile.username);
+    this.id = profile.id;
+    this.username = profile.username;
+    this.displayname = profile.displayname;
+  }
+}
 
 export function ProfileSelectLexicalPlugin() {
   const [editor] = useLexicalComposerContext();
-  const [usernameTerm, setUsernameTerm] = useState('');
-  const disclosure = useDisclosure();
+  const [queryString, setQueryString] = useState<string | null>('');
+  const profileListQuery = useQuery({
+    ...getProfileListQueryOptions({ search: queryString ?? '' }),
+    enabled: queryString != null && queryString.length > 0,
+  });
 
-  useEffect(() => {
-    return editor.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      () => {
+  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch('@', {
+    minLength: 1,
+  });
+
+  const options = useMemo(
+    () => (profileListQuery.data != null ? profileListQuery.data.map(profile => new ProfileOption(profile)) : []),
+    [profileListQuery.data],
+  );
+
+  const onSelectOption = useCallback(
+    (selectedOption: ProfileOption, nodeToRemove: TextNode | null, closeMenu: () => void) => {
+      editor.update(() => {
         const selection = $getSelection();
-        if (!$isRangeSelection(selection)) return false;
-        const selectedNode = selection.getNodes()[0];
+        if (!$isRangeSelection(selection) || selectedOption == null) return;
+        if (nodeToRemove) nodeToRemove.remove();
+        const newUserNode = $createUserNode({ id: selectedOption.id, username: selectedOption.username });
+        selection.insertNodes([newUserNode]);
 
-        if (selection.isCollapsed() && $isUserNode(selectedNode)) setUsernameTerm(selectedNode.getUsername());
-        else if (selection.isCollapsed()) setUsernameTerm('');
-        else setUsernameTerm(selection.getTextContent());
-
-        return false;
-      },
-      COMMAND_PRIORITY_EDITOR,
-    );
-  }, [editor]);
+        closeMenu();
+      });
+    },
+    [editor],
+  );
 
   return (
-    <ProfileSelect
-      positioning={{ placement: 'bottom-end', strategy: 'fixed' }}
-      onExitComplete={() => editor.focus(undefined, { defaultSelection: undefined })}
-      trigger={
-        <IconButton>
-          <FaUserPlus />
-        </IconButton>
-      }
-      disclosure={disclosure}
-      input={<Input value={usernameTerm} onChange={e => setUsernameTerm(e.target.value)} />}
-      value={usernameTerm}
-      onSelect={({ id, username }) => {
-        editor.dispatchCommand(INSERT_USER, { id, username });
-        setUsernameTerm('');
+    <LexicalTypeaheadMenuPlugin
+      onQueryChange={setQueryString}
+      onSelectOption={onSelectOption}
+      triggerFn={checkForTriggerMatch}
+      options={options}
+      menuRenderFn={(anchorElementRef, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => {
+        return (
+          <Popover.Root
+            open
+            positioning={{
+              placement: 'right-start',
+              getAnchorRect: () => anchorElementRef.current?.getBoundingClientRect() || null,
+            }}
+          >
+            <Popover.Positioner>
+              <Popover.Content>
+                {options.map((option, index) => (
+                  <Button
+                    variant="ghost"
+                    bg={selectedIndex === index ? 'bg.muted' : undefined}
+                    key={option.key}
+                    tabIndex={-1}
+                    ref={option.setRefElement}
+                    role="option"
+                    aria-selected={selectedIndex === index}
+                    id={`typeahead-item-${index}`}
+                    onMouseEnter={() => {
+                      setHighlightedIndex(index);
+                    }}
+                    onClick={() => {
+                      setHighlightedIndex(index);
+                      selectOptionAndCleanUp(option);
+                    }}
+                  >
+                    {option.displayname}@{option.username}
+                  </Button>
+                ))}
+              </Popover.Content>
+            </Popover.Positioner>
+          </Popover.Root>
+        );
       }}
     />
   );
