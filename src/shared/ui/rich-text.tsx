@@ -62,7 +62,7 @@ function convertLexicalText(data: SerializedLexicalNode): ReactNode {
       </Text>
     );
   }
-  if (data.type === 'link') {
+  if (data.type === 'link' || data.type === 'autolink') {
     const { children, url } = data as SerializedLinkNode;
     const { success } = z.string().check(z.url()).safeParse(url);
     if (!success) return '[Invalid Link]';

@@ -1,20 +1,20 @@
 import type { ReactNode } from 'react';
 import { Box, HStack, Span, Stack, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
-import { LinkNode } from '@lexical/link';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable, type ContentEditableProps } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import type { LexicalEditor, SerializedRootNode } from 'lexical';
 
 import { RICH_TEXT_EDITOR_NAMESPACE } from '@/shared/lib/lexical/constants';
 import { EmojiNode } from '@/shared/lib/lexical/nodes/emoji-node';
 import { UserNode } from '@/shared/lib/lexical/nodes/user-node';
+import { LexicalAutoLinkPlugin } from './plugins/lexical-autolink-plugin';
 import { LexicalBodyLengthPlugin } from './plugins/lexical-body-length-plugin';
 import { LexicalEmojiPlugin } from './plugins/lexical-emoji-plugin';
 import { LexicalFormatButtonsPlugin } from './plugins/lexical-format-buttons-plugin';
@@ -54,7 +54,7 @@ export function RichTextEditor({
           link: 'editor-link',
         },
         onError,
-        nodes: [HashtagNode, UserNode, LinkNode, EmojiNode],
+        nodes: [HashtagNode, UserNode, LinkNode, AutoLinkNode, EmojiNode],
         editorState(editor) {
           try {
             if (value) editor.setEditorState(editor.parseEditorState({ root: value }));
@@ -103,12 +103,12 @@ export function RichTextEditor({
         </Stack>
       </Box>
 
+      <LexicalAutoLinkPlugin />
       <LexicalKeyDownPlugin onKeyDown={onKeyDown} />
       <HashtagPlugin />
       <LexicalUserPlugin />
       <HistoryPlugin />
       <AutoFocusPlugin defaultSelection="rootEnd" />
-      <LinkPlugin />
     </LexicalComposer>
   );
 }

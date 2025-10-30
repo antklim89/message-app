@@ -81,6 +81,7 @@ BEGIN
       WHEN 'root' THEN process_lexical_node_with_children(lexical_node, result_length)
       WHEN 'paragraph' THEN process_lexical_node_with_children(lexical_node, result_length)
       WHEN 'link' THEN process_lexical_node_with_children(lexical_node, result_length)
+      WHEN 'autolink' THEN process_lexical_node_with_children(lexical_node, result_length)
       WHEN 'text' THEN length(lexical_node ->> 'text')
       WHEN 'user' THEN length(lexical_node ->> 'text')
       WHEN 'hashtag' THEN length(lexical_node ->> 'text')
@@ -130,6 +131,9 @@ select extensions.jsonb_matches_schema(
                 "$ref": "#/definitions/Link"
               },
               {
+                "$ref": "#/definitions/AutoLink"
+              },
+              {
                 "$ref": "#/definitions/Hashtag"
               },
               {
@@ -177,10 +181,28 @@ select extensions.jsonb_matches_schema(
         "url": {
           "type": "string"
         },
-        "target": {
-          "type": "string"
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Text"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "children"
+      ]
+    },
+    "AutoLink": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "autolink"
         },
-        "rel": {
+        "url": {
           "type": "string"
         },
         "children": {
@@ -194,8 +216,6 @@ select extensions.jsonb_matches_schema(
       "required": [
         "type",
         "url",
-        "target",
-        "rel",
         "children"
       ]
     },
