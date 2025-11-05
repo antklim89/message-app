@@ -8,10 +8,13 @@ import { FaCheck, FaLink, FaTrash, FaX } from 'react-icons/fa6';
 import { z } from 'zod/v4-mini';
 
 import { useAppForm } from '@/shared/lib/react-form';
-import { checkLink } from '@/shared/model/schema-checks';
+import { checkLink, checkMailLink } from '@/shared/model/schema-checks';
 
 const LinkSchema = z.object({
-  url: z.union([z.string().check(checkLink)]),
+  url: z.union(
+    [z.string().check(checkLink), z.string().check(checkMailLink)],
+    'Link should look like this https://www.example.com or mailto:example@mail.com',
+  ),
   name: z.string().check(z.maxLength(100, 'Link name is too long.')),
 });
 
