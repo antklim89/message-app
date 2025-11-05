@@ -1,10 +1,10 @@
 import { type KeyboardEvent, useEffect, useState } from 'react';
-import { Button, HStack, IconButton, Popover, Stack, useDisclosure } from '@chakra-ui/react';
+import { HStack, IconButton, Popover, Stack, useDisclosure } from '@chakra-ui/react';
 import { $createLinkNode, $isLinkNode, type LinkNode } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
 import { $createTextNode, $getSelection, $isRangeSelection, $isTextNode } from 'lexical';
-import { FaLink } from 'react-icons/fa6';
+import { FaCheck, FaLink, FaTrash, FaX } from 'react-icons/fa6';
 import { z } from 'zod/v4-mini';
 
 import { useAppForm } from '@/shared/lib/react-form';
@@ -36,10 +36,7 @@ export function LexicalLinkPlugin() {
           const selection = $getSelection();
           if (!$isRangeSelection(selection)) return;
 
-          const newLinkNode = $createLinkNode(value.url, {
-            target: '_blank',
-            rel: 'noopener noreferrer',
-          });
+          const newLinkNode = $createLinkNode(value.url);
           const newTextNode = $createTextNode(value.name || value.url);
           newLinkNode.append(newTextNode);
 
@@ -72,39 +69,30 @@ export function LexicalLinkPlugin() {
         const selection = $getSelection();
         if (!$isRangeSelection(selection)) return;
         const selectedNode = selection.getNodes()[0];
-        const selectedNodeParent = selection.getNodes()[0]?.getParent();
+        const selectedNodeParent = selectedNode?.getParent();
 
-        if (selection.isCollapsed() && $isTextNode(selectedNode) && $isLinkNode(selectedNodeParent)) {
-          const textContent = selectedNode.getTextContent();
-          const newLinkUrl = selectedNodeParent.getURL();
-
-          linkForm.setFieldValue('name', textContent);
-          linkForm.setFieldValue('url', newLinkUrl);
+        if (selection.isCollapsed() && $isLinkNode(selectedNodeParent)) {
+          linkForm.setFieldValue('name', selectedNodeParent.getTextContent());
+          linkForm.setFieldValue('url', selectedNodeParent.getURL());
           return setSelectedLinkNode(selectedNodeParent);
         }
 
         if (!selection.isCollapsed() && $isTextNode(selectedNode)) {
-          const textContent = selection.getTextContent();
-          return linkForm.setFieldValue('name', textContent);
+          linkForm.setFieldValue('name', selection.getTextContent());
+          return;
         }
 
-        linkForm.setFieldValue('name', '');
-        linkForm.setFieldValue('url', '');
+        linkForm.reset({ name: '', url: '' });
         setSelectedLinkNode(null);
       });
     });
   }, [editor, linkForm]);
 
   function handleLinkRemove() {
+    if (!selectedLinkNode) return;
     editor.update(() => {
-      if (!selectedLinkNode) return;
-      const newTextContent = selectedLinkNode
-        .getChildren()
-        .map(i => i.getTextContent())
-        .join('');
-      const newTextNode = $createTextNode(newTextContent);
-      selectedLinkNode.replace(newTextNode);
-      newTextNode.selectEnd();
+      selectedLinkNode.selectEnd().insertNodes(selectedLinkNode.getAllTextNodes());
+      selectedLinkNode.remove();
       disclosure.onClose();
     });
   }
@@ -112,9 +100,8 @@ export function LexicalLinkPlugin() {
   return (
     <Popover.Root
       modal
-      positioning={{ placement: 'bottom-end', strategy: 'fixed' }}
+      positioning={{ placement: 'bottom-start' }}
       onExitComplete={() => {
-        linkForm.reset();
         editor.focus(undefined, { defaultSelection: undefined });
       }}
       open={disclosure.open}
@@ -139,17 +126,17 @@ export function LexicalLinkPlugin() {
               </Stack>
             </linkForm.AppForm>
             <Stack>
-              <Button form={linkForm.formId} onClick={linkForm.handleSubmit}>
-                Paste
-              </Button>
+              <IconButton size="xs" aria-label="paste link" form={linkForm.formId} onClick={linkForm.handleSubmit}>
+                <FaCheck />
+              </IconButton>
               {selectedLinkNode && (
-                <Button colorPalette="red" onClick={handleLinkRemove}>
-                  Remove
-                </Button>
+                <IconButton size="xs" aria-label="remove link" colorPalette="red" onClick={handleLinkRemove}>
+                  <FaTrash />
+                </IconButton>
               )}
-              <Button onClick={disclosure.onClose} variant="ghost">
-                Close
-              </Button>
+              <IconButton size="xs" aria-label="close window" onClick={disclosure.onClose} variant="ghost">
+                <FaX />
+              </IconButton>
             </Stack>
           </HStack>
         </Popover.Content>
