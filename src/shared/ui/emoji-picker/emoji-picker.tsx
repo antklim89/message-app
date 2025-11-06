@@ -43,27 +43,27 @@ export function EmojiPicker({
   const searchTermDebounced = useDebounceValue(searchTerm, 700);
 
   return (
-    <Dialog.RootProvider motionPreset="slide-in-bottom" placement="top" {...props}>
+    <Dialog.RootProvider size="xs" motionPreset="slide-in-bottom" placement="bottom" {...props}>
       <Portal>
         <Dialog.Positioner>
           <Dialog.Backdrop />
-          <Dialog.Content w="fit-content">
-            <Dialog.Header flexDirection="column" alignItems="center">
+          <Dialog.Content w="320px" h="280px">
+            <Dialog.Header flexDirection="column" alignItems="center" pt={1} pb={1}>
               <Tabs.RootProvider value={tabs} lazyMount unmountOnExit asChild>
                 <Stack alignItems="center">
                   <Tabs.List flexWrap="wrap">
                     <Tabs.Trigger px={1} py={0} fontSize="xs" value="search">
-                      <Icon size="md" as={FaMagnifyingGlass} />
+                      <Icon size="sm" as={FaMagnifyingGlass} />
                     </Tabs.Trigger>
 
                     {Object.entries(emojiGroups).map(([key, group]) => (
                       <Tabs.Trigger title={group.label} textTransform="uppercase" key={key} value={key}>
-                        <Icon size="md" as={group.icon} />
+                        <Icon size="sm" as={group.icon} />
                       </Tabs.Trigger>
                     ))}
                   </Tabs.List>
 
-                  <Tabs.Content p={0} value="1" display="flex" justifyContent="center">
+                  <Tabs.Content value="1" display="flex" justifyContent="center">
                     <SegmentGroup.Root defaultValue="0">
                       <SegmentGroup.Indicator />
                       {skinTones.map((item, index) => (
@@ -89,7 +89,7 @@ export function EmojiPicker({
               </Tabs.RootProvider>
             </Dialog.Header>
 
-            <Dialog.Body overflow="hidden">
+            <Dialog.Body overflow="hidden" height="200px" p={1}>
               <Tabs.RootProvider value={tabs} lazyMount unmountOnExit>
                 {Object.keys(emojiGroups).map(group => (
                   <Tabs.Content p={0} key={group} value={group}>
@@ -131,7 +131,7 @@ export function EmojiPicker({
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.CloseTrigger position="static" asChild>
-                <Button variant="ghost">Close</Button>
+                <Button>Close</Button>
               </Dialog.CloseTrigger>
             </Dialog.Footer>
           </Dialog.Content>
@@ -153,7 +153,7 @@ const EmojisGrid = memo(
     search?: string;
     onEmojiSelect: (emoji: Emoji) => void;
   }) => {
-    const chunkSize = useBreakpointValue({ base: 4, sm: 6 }, { ssr: false }) || 4;
+    const chunkSize = useBreakpointValue({ base: 6, sm: 8 }, { ssr: false }) || 4;
     const emojis = use(emojisPromise) as Emoji[];
     const parentRef = useRef(null);
 
@@ -177,12 +177,12 @@ const EmojisGrid = memo(
     const rowVirtualizer = useVirtualizer({
       count: chunkedEmojis.length,
       getScrollElement: () => parentRef.current,
-      estimateSize: () => 64,
+      estimateSize: () => 24,
       gap: 2,
     });
 
     return (
-      <Box ref={parentRef} height="400px" overflow="auto">
+      <Box ref={parentRef} height="180px" overflow="auto">
         <Box w="100%" position="relative" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
           {rowVirtualizer.getVirtualItems().map(virtualItem => {
             const emojisChunk = chunkedEmojis[virtualItem.index];
@@ -238,8 +238,8 @@ function EmojiItem({
       title={emojisSkinTone.label}
       onClick={handleEmojiSelect}
       variant="ghost"
-      size="2xl"
-      fontSize="5xl"
+      size="xl"
+      fontSize="2xl"
       key={emojisSkinTone.hexcode}
       aria-label={emojisSkinTone.label}
     >
