@@ -96,93 +96,47 @@ select extensions.jsonb_matches_schema(
 {
   "type": "object",
   "properties": {
-    "type": {
-      "type": "string",
-      "const": "root"
-    },
+    "type": { "type": "string", "const": "root" },
     "children": {
       "type": "array",
-      "items": {
-        "$ref": "#/definitions/Paragraph"
-      }
+      "items": { "$ref": "#/definitions/Paragraph" }
     }
   },
-  "required": [
-    "type",
-    "children"
-  ],
+  "required": ["type", "children"],
   "definitions": {
     "Paragraph": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "paragraph"
-        },
+        "type": { "type": "string", "const": "paragraph" },
         "children": {
           "type": "array",
           "items": {
             "oneOf": [
-              {
-                "$ref": "#/definitions/Text"
-              },
-              {
-                "$ref": "#/definitions/Link"
-              },
-              {
-                "$ref": "#/definitions/Hashtag"
-              },
-              {
-                "$ref": "#/definitions/User"
-              },
-              {
-                "$ref": "#/definitions/Emoji"
-              }
+              { "$ref": "#/definitions/Text" },
+              { "$ref": "#/definitions/Link" },
+              { "$ref": "#/definitions/Hashtag" },
+              { "$ref": "#/definitions/User" },
+              { "$ref": "#/definitions/Emoji" }
             ]
           }
         }
       },
-      "required": [
-        "type",
-        "children"
-      ]
+      "required": ["type", "children"]
     },
     "Text": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "text"
-        },
-        "text": {
-          "type": "string"
-        },
-        "format": {
-          "type": "number"
-        }
+        "type": { "type": "string", "const": "text" },
+        "text": { "type": "string" },
+        "format": { "type": "number" }
       },
-      "required": [
-        "type",
-        "text",
-        "format"
-      ]
+      "required": ["type", "text", "format"]
     },
     "Link": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "link"
-        },
-        "url": {
-          "type": "string"
-        },
-        "target": {
-          "type": "string"
-        },
-        "rel": {
-          "type": "string"
-        },
+        "type": { "type": "string", "const": "link" },
+        "url": { "type": "string" },
         "children": {
           "type": "array",
           "minItems": 1,
@@ -191,84 +145,37 @@ select extensions.jsonb_matches_schema(
           }
         }
       },
-      "required": [
-        "type",
-        "url",
-        "target",
-        "rel",
-        "children"
-      ]
+      "required": ["type", "url", "children"]
     },
     "Hashtag": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "hashtag"
-        },
-        "text": {
-          "type": "string"
-        },
-        "format": {
-          "type": "number"
-        }
+        "type": { "type": "string", "const": "hashtag" },
+        "text": { "type": "string" },
+        "format": { "type": "number" }
       },
-      "required": [
-        "type",
-        "text",
-        "format"
-      ]
+      "required": ["type", "text", "format"]
     },
     "User": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "user"
-        },
-        "text": {
-          "type": "string"
-        },
-        "format": {
-          "type": "number"
-        },
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        }
+        "type": { "type": "string", "const": "user" },
+        "text": { "type": "string" },
+        "format": { "type": "number" },
+        "id": { "type": "string" },
+        "username": { "type": "string" }
       },
-      "required": [
-        "type",
-        "text",
-        "format",
-        "id",
-        "username"
-      ]
+      "required": ["type", "text", "format", "id", "username"]
     },
     "Emoji": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "emoji"
-        },
-        "text": {
-          "type": "string"
-        },
-        "unicode": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        }
+        "type": { "type": "string", "const": "emoji" },
+        "text": { "type": "string" },
+        "unicode": { "type": "string" },
+        "label": { "type": "string" }
       },
-      "required": [
-        "text",
-        "unicode",
-        "label"
-      ]
+      "required": ["text", "unicode", "label"]
     }
   }
 }',
