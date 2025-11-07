@@ -131,6 +131,7 @@ export type Database = {
           body: Json
           created: string
           id: number
+          media: string | null
           updated: string
           message_has_liked: boolean | null
           message_in_favorite: boolean | null
@@ -142,6 +143,7 @@ export type Database = {
           body: Json
           created?: string
           id?: number
+          media?: string | null
           updated?: string
         }
         Update: {
@@ -150,6 +152,7 @@ export type Database = {
           body?: Json
           created?: string
           id?: number
+          media?: string | null
           updated?: string
         }
         Relationships: [
@@ -236,6 +239,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_lexical_text_length: {
+        Args: { lexical_node: Json; result_length?: number }
+        Returns: number
+      }
       favorites_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
         Returns: number
@@ -271,6 +278,14 @@ export type Database = {
       messages_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
         Returns: number
+      }
+      process_lexical_node_with_children: {
+        Args: { lexical_node: Json; result_length?: number }
+        Returns: number
+      }
+      validate_message_body: {
+        Args: { message_body: Json }
+        Returns: boolean
       }
     }
     Enums: {

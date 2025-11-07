@@ -9,6 +9,7 @@ export function messageDto(data: {
   id: number;
   hasLiked: boolean | null;
   likesCount: number | null;
+  media: string | null;
   author: {
     id: string;
     username: string;
@@ -27,6 +28,7 @@ export function messageDto(data: {
       id: data.author.id,
       username: data.author.username,
     },
+    media: data.media,
     authorId: data.authorId,
     body: data.body as unknown as MessageBody,
     created: data.created,

@@ -15,7 +15,6 @@ export function useMessageCreateMutation({ answerId }: { answerId?: MessageType[
     },
     async onSuccess({ fail, success, error }) {
       await queryClient.invalidateQueries({ queryKey: [MessageListQueryOptionsBaseKey] });
-
       if (fail) toaster.error({ description: error.message });
       if (success) toaster.success({ description: 'Message created successfully!' });
     },

@@ -9,6 +9,8 @@ export interface MessageType {
   answerId?: number;
   authorId: string;
 
+  media: string | null;
+
   author: {
     id: string;
     username: string;

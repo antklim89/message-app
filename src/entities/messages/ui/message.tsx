@@ -1,15 +1,18 @@
 import type { ReactNode } from 'react';
-import { Box, Card, Flex, HStack, IconButton, Span } from '@chakra-ui/react';
+import { Box, Card, Flex, HStack, IconButton, Image, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
+import { useSupabasePublicUrl } from '@/shared/lib/supabase';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
+  const mediaUrl = useSupabasePublicUrl('message_media', message.media);
+
   return (
     <Card.Root w="full">
       <Card.Header alignItems="center" asChild gap={4}>
@@ -36,6 +39,7 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
           {menu}
         </HStack>
       </Card.Header>
+      {mediaUrl && <Image src={mediaUrl} w="full" aspectRatio="wide" />}
       <Card.Body>
         <Card.Body>
           <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">

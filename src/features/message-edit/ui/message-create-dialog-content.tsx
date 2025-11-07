@@ -13,7 +13,7 @@ export function MessageCreateDialogContent({ answerId }: { answerId: number | un
     ...messageEditFormOptions,
     async onSubmit({ value }) {
       if (!value.body) return;
-      const result = await messageCreateMutation.mutateAsync({ body: value.body });
+      const result = await messageCreateMutation.mutateAsync({ body: value.body, file: value.file });
       if (result.success) dialog.setOpen(false);
     },
   });

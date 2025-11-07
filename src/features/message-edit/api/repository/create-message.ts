@@ -1,4 +1,4 @@
-import { MESSAGE_SELECT, type MessageType } from '@/entities/messages';
+import type { MessageType } from '@/entities/messages';
 import { errAuthentication, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
 import type { Json } from '@/shared/model/supabase-types.generated';
@@ -9,12 +9,30 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
   const user = await getSupabaseSession();
   if (user == null) return errAuthentication();
 
-  const { error } = await supabase
+  const createMessageResult = await supabase
     .from('messages')
-    .insert({ body: input.body as unknown as Json, answerId, authorId: user.id })
-    .select(MESSAGE_SELECT);
+    .insert({
+      body: input.body as unknown as Json,
+      answerId,
+      authorId: user.id,
+    })
+    .select('id')
+    .single();
+  if (createMessageResult.error) return errUnexpected('Failed to create message.');
 
-  if (error != null) return errUnexpected('Failed to create message.');
+  if (input.file) {
+    const uploadMediaResult = await supabase.storage
+      .from('message_media')
+      .update(`${user.id}/${createMessageResult.data.id}`, input.file, { upsert: true });
+
+    if (uploadMediaResult.data) {
+      await supabase
+        .from('messages')
+        .update({ media: uploadMediaResult.data.path })
+        .eq('id', createMessageResult.data.id)
+        .eq('authorId', user.id);
+    }
+  }
 
   return ok(null);
 }
