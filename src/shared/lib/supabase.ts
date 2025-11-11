@@ -36,9 +36,9 @@ export async function getSupabaseSession(): Promise<User | null> {
   };
 }
 
-export function useSupabasePublicUrl(avatarUrl?: string | null) {
+export function useSupabasePublicUrl(storage: string, mediaUrl?: string | null) {
   const supabase = useSupabase();
-  if (!avatarUrl) return;
-  const { publicUrl } = supabase.storage.from('avatars').getPublicUrl(avatarUrl).data;
+  if (!mediaUrl) return;
+  const { publicUrl } = supabase.storage.from(storage).getPublicUrl(mediaUrl).data;
   return publicUrl;
 }

@@ -14,7 +14,7 @@ export function UserAvatar({
   fontSize?: AvatarFallbackProps['fontSize'];
 } & AvatarRootProps) {
   const isImage = src?.startsWith('http') || src?.startsWith('data:') || src?.startsWith('blob:');
-  const avatarUrl = useSupabasePublicUrl(isImage ? undefined : src);
+  const avatarUrl = useSupabasePublicUrl('avatars', isImage ? undefined : src);
 
   return (
     <Avatar.Root size={size} {...props}>
