@@ -2,11 +2,11 @@ import type { Json } from '@/shared/model/supabase-types.generated';
 import type { MessageBody, MessageType } from './types';
 
 export function messageDto(data: {
-  answerId: number | null;
+  id: string;
+  answerId: string | null;
   authorId: string;
   body: Json;
   created: string;
-  id: number;
   hasLiked: boolean | null;
   likesCount: number | null;
   media: string | null;

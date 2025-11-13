@@ -3,10 +3,10 @@ import type { SerializedRootNode } from 'lexical';
 export type MessageBody = SerializedRootNode;
 
 export interface MessageType {
-  id: number;
+  id: string;
   body: MessageBody;
   created: string;
-  answerId?: number;
+  answerId?: string;
   authorId: string;
 
   media: string | null;

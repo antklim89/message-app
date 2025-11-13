@@ -5,7 +5,7 @@ import { Dialog } from '@/shared/ui/dialog';
 import { MessageEditForm, messageEditFormOptions } from './message-edit-form';
 import { useMessageCreateMutation } from '../api/mutations/use-message-create-mutation';
 
-export function MessageCreateDialogContent({ answerId }: { answerId: number | undefined }) {
+export function MessageCreateDialogContent({ answerId }: { answerId: string | undefined }) {
   const dialog = useDialogContext();
   const messageCreateMutation = useMessageCreateMutation({ answerId });
 

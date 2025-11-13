@@ -1,7 +1,7 @@
 import { err, errAuthentication, errConflict, ok } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
 
-export async function removeLike({ messageId }: { messageId: number }) {
+export async function removeLike({ messageId }: { messageId: string }) {
   const supabase = await createSupabaseClient();
 
   const sessionResult = await supabase.auth.getSession();

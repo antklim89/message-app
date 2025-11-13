@@ -1,7 +1,7 @@
 import { errAuthentication, errConflict, errUnexpected, ok } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
 
-export async function addFavorite({ messageId }: { messageId: number }) {
+export async function addFavorite({ messageId }: { messageId: string }) {
   const supabase = await createSupabaseClient();
 
   const sessionResult = await supabase.auth.getSession();

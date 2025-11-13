@@ -10,7 +10,7 @@ import { Protected } from '@/shared/ui/protected';
 import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
-export function AnswersPage({ params }: { params: { answerId: number } }) {
+export function AnswersPage({ params }: { params: { answerId: string } }) {
   const dialog = useDialog();
   const messageListQuery = useInfiniteQuery(messageListQueryOptions({ answerId: params.answerId }));
   const messageQuery = useQuery(messageQueryOptions({ id: params.answerId }));
@@ -53,7 +53,7 @@ export function AnswersPage({ params }: { params: { answerId: number } }) {
                     <Button onClick={() => dialog.setOpen(true)}>
                       ANSWER TO THIS MESSAGE. <FaPlus />
                     </Button>
-                    <MessageCreateDialog answerId={message.answerId} dialog={dialog} />
+                    <MessageCreateDialog answerId={message.id} dialog={dialog} />
                   </>
                 }
                 publicElement={<Box h={30} />}

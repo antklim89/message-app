@@ -14,7 +14,7 @@ export function updateMessageQueryData(
     messageId,
   }: {
     queryClient: QueryClient;
-    messageId: number;
+    messageId: string;
   },
   updateMessage: (msg: MessageType) => Partial<MessageType>,
 ) {

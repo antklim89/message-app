@@ -17,7 +17,7 @@ export function messageListQueryOptions({
   isFavorites,
   authorId,
 }: {
-  answerId?: number;
+  answerId?: string;
   search?: string;
   isFavorites?: boolean;
   authorId?: MessageType['authorId'];
@@ -28,7 +28,7 @@ export function messageListQueryOptions({
       if (data.length < MESSAGES_PER_PAGE) return;
       return data.at(-1)?.id ?? undefined;
     },
-    initialPageParam: undefined as number | undefined,
+    initialPageParam: undefined as string | undefined,
     async queryFn({ client, pageParam: lastId }) {
       const { fail, error, result } = await getMessageList({ answerId, lastId, search, isFavorites, authorId });
       if (fail) throw error;

@@ -26,7 +26,7 @@ export async function getMessageList({
       ? supabase.from('messages').select(MESSAGE_SELECT_FAVORITES).eq('favorites.authorId', user?.id)
       : supabase.from('messages').select(MESSAGE_SELECT);
 
-  query.order('id', { ascending: false }).limit(MESSAGES_PER_PAGE);
+  query.order('created', { ascending: false }).limit(MESSAGES_PER_PAGE);
 
   if (answerId == null) query.is('answerId', null);
   else query.eq('answerId', answerId);

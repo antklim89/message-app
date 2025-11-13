@@ -37,15 +37,15 @@ export type Database = {
       favorites: {
         Row: {
           authorId: string
-          messageId: number
+          messageId: string
         }
         Insert: {
           authorId: string
-          messageId: number
+          messageId: string
         }
         Update: {
           authorId?: string
-          messageId?: number
+          messageId?: string
         }
         Relationships: [
           {
@@ -97,15 +97,15 @@ export type Database = {
       likes: {
         Row: {
           authorId: string
-          messageId: number
+          messageId: string
         }
         Insert: {
           authorId: string
-          messageId: number
+          messageId: string
         }
         Update: {
           authorId?: string
-          messageId?: number
+          messageId?: string
         }
         Relationships: [
           {
@@ -126,11 +126,11 @@ export type Database = {
       }
       messages: {
         Row: {
-          answerId: number | null
+          answerId: string | null
           authorId: string
           body: Json
           created: string
-          id: number
+          id: string
           media: string | null
           updated: string
           message_has_liked: boolean | null
@@ -138,20 +138,20 @@ export type Database = {
           message_likes_count: number | null
         }
         Insert: {
-          answerId?: number | null
-          authorId?: string
+          answerId?: string | null
+          authorId: string
           body: Json
           created?: string
-          id?: number
+          id?: string
           media?: string | null
           updated?: string
         }
         Update: {
-          answerId?: number | null
+          answerId?: string | null
           authorId?: string
           body?: Json
           created?: string
-          id?: number
+          id?: string
           media?: string | null
           updated?: string
         }
@@ -210,29 +210,21 @@ export type Database = {
           body: string
           created: string
           id: number
-          messageId: number
+          messageId: string
         }
         Insert: {
           body?: string
           created?: string
           id?: number
-          messageId: number
+          messageId: string
         }
         Update: {
           body?: string
           created?: string
           id?: number
-          messageId?: number
+          messageId?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "reports_messageId_fkey"
-            columns: ["messageId"]
-            isOneToOne: false
-            referencedRelation: "messages"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {

@@ -7,7 +7,7 @@ export function preloadAnswersPage({
   params: { answerId },
 }: {
   context: { queryClient: QueryClient };
-  params: { answerId: number };
+  params: { answerId: string };
 }) {
   queryClient.ensureInfiniteQueryData(messageListQueryOptions({ answerId }));
   queryClient.ensureQueryData(messageQueryOptions({ id: answerId }));

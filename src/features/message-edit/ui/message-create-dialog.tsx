@@ -8,7 +8,7 @@ const MessageCreateDialogContent = lazy(() =>
   import('./message-create-dialog-content').then(m => ({ default: m.MessageCreateDialogContent })),
 );
 
-export function MessageCreateDialog({ dialog, answerId }: { dialog: UseDialogReturn; answerId: number | undefined }) {
+export function MessageCreateDialog({ dialog, answerId }: { dialog: UseDialogReturn; answerId: string | undefined }) {
   return (
     <Dialog.Root fallback={<MessageEditFormFallback />} dialog={dialog}>
       <MessageCreateDialogContent answerId={answerId} />
