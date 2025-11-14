@@ -1,45 +1,33 @@
-import { Box, FileUpload, IconButton, Image, Text, useFileUpload } from '@chakra-ui/react';
+import { Box, FileUpload, IconButton, Image, SimpleGrid, Text, useFileUpload } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
 import { FaImage, FaTrash, FaTriangleExclamation } from 'react-icons/fa6';
-import { z } from 'zod/v4-mini';
+import type { z } from 'zod/v4-mini';
 
-import type { MessageBody } from '@/entities/messages';
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
-import { calculateLexicalTextLength } from '@/shared/lib/lexical';
 import { withForm } from '@/shared/lib/react-form';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
-import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../config/constants';
+import { ACCEPT_FILES, MAX_FILES, MAX_MESSAGE_BODY_LENGTH } from '../config/constants';
+import { MessageCreateSchema } from '../model/schemas';
 
 export const messageEditFormOptions = formOptions({
   validators: {
-    onSubmit: z.object({
-      body: z.custom<MessageBody>().check(
-        z.refine(v => {
-          const textLength = calculateLexicalTextLength(v);
-          return textLength <= MAX_MESSAGE_BODY_LENGTH && textLength > MIN_MESSAGE_BODY_LENGTH;
-        }, `The text should be between ${MIN_MESSAGE_BODY_LENGTH} and ${MAX_MESSAGE_BODY_LENGTH} characters long.`),
-      ),
-      file: z.optional(z.file()),
-    }),
+    onSubmit: MessageCreateSchema,
   },
-
   validationLogic: revalidateLogic(),
-  defaultValues: {} as { body: MessageBody; file?: File },
+  defaultValues: {} as z.infer<typeof MessageCreateSchema>,
 });
 
 export const MessageEditForm = withForm({
   ...messageEditFormOptions,
   render: ({ form }) => {
     const fileUpload = useFileUpload({
-      maxFiles: 1,
+      accept: ACCEPT_FILES,
+      maxFiles: MAX_FILES,
       onFileAccept(details) {
-        const [file] = details.files;
-        if (!file) return;
-        form.setFieldValue('file', file);
+        form.setFieldValue('files', details.files);
       },
     });
-    const [acceptedFile] = fileUpload.acceptedFiles;
 
     return (
       <FileUpload.RootProvider value={fileUpload}>
@@ -48,22 +36,26 @@ export const MessageEditForm = withForm({
         <FileUpload.Dropzone unstyled w="full">
           <FileUpload.DropzoneContent asChild>
             <form.AppForm>
-              {acceptedFile && (
-                <Box position="relative">
-                  <FileUpload.ClearTrigger position="absolute" top={2} right={2} asChild>
-                    <IconButton colorPalette="red" aria-label="Delete uploaded image">
-                      <FaTrash />
-                    </IconButton>
-                  </FileUpload.ClearTrigger>
-                  <Image
-                    src={URL.createObjectURL(new Blob([acceptedFile], { type: acceptedFile.type }))}
-                    alt="Uploaded file"
-                    w="full"
-                    aspectRatio="ultrawide"
-                    mb={2}
-                    borderRadius="md"
-                  />
-                </Box>
+              {fileUpload.acceptedFiles.length > 0 && (
+                <SimpleGrid columns={4} gap={1}>
+                  {fileUpload.acceptedFiles.map(acceptedFile => (
+                    <Box key={acceptedFile.name} position="relative">
+                      <FileUpload.ClearTrigger position="absolute" top={2} right={2} asChild>
+                        <IconButton size="xs" colorPalette="red" aria-label="Delete uploaded image">
+                          <FaTrash />
+                        </IconButton>
+                      </FileUpload.ClearTrigger>
+                      <Image
+                        src={URL.createObjectURL(new Blob([acceptedFile], { type: acceptedFile.type }))}
+                        alt="Uploaded file"
+                        w="full"
+                        aspectRatio="wide"
+                        mb={2}
+                        borderRadius="md"
+                      />
+                    </Box>
+                  ))}
+                </SimpleGrid>
               )}
               <RichTextEditor
                 onKeyDown={e => {
@@ -77,7 +69,7 @@ export const MessageEditForm = withForm({
                 plugins={
                   <>
                     <ProfileSelectLexicalPlugin />
-                    <form.AppField name="file">
+                    <form.AppField name="files">
                       {() => (
                         <FileUpload.Trigger asChild>
                           <IconButton>
@@ -93,7 +85,7 @@ export const MessageEditForm = withForm({
                           <OnChangePlugin onChange={e => field.handleChange(e.toJSON().root)} />
                           {!field.state.meta.isValid && (
                             <Text as="span" color="red.500" display="flex" alignItems="baseline" gap={1}>
-                              <FaTriangleExclamation />{' '}
+                              <FaTriangleExclamation />
                               {field.state.meta.errors.map(err => err?.message ?? err).join(',')}
                             </Text>
                           )}
