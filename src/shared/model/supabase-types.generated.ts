@@ -124,6 +124,32 @@ export type Database = {
           },
         ]
       }
+      message_media: {
+        Row: {
+          id: string
+          messageId: string
+          path: string
+        }
+        Insert: {
+          id?: string
+          messageId: string
+          path: string
+        }
+        Update: {
+          id?: string
+          messageId?: string
+          path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_media_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           answerId: string | null
@@ -131,7 +157,7 @@ export type Database = {
           body: Json
           created: string
           id: string
-          media: string | null
+          media: string[] | null
           updated: string
           message_has_liked: boolean | null
           message_in_favorite: boolean | null
@@ -143,7 +169,7 @@ export type Database = {
           body: Json
           created?: string
           id?: string
-          media?: string | null
+          media?: string[] | null
           updated?: string
         }
         Update: {
@@ -152,7 +178,7 @@ export type Database = {
           body?: Json
           created?: string
           id?: string
-          media?: string | null
+          media?: string[] | null
           updated?: string
         }
         Relationships: [
@@ -210,19 +236,19 @@ export type Database = {
           body: string
           created: string
           id: number
-          messageId: string
+          messageId: number
         }
         Insert: {
           body?: string
           created?: string
           id?: number
-          messageId: string
+          messageId: number
         }
         Update: {
           body?: string
           created?: string
           id?: number
-          messageId?: string
+          messageId?: number
         }
         Relationships: []
       }

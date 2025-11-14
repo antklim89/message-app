@@ -20,18 +20,13 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
     .single();
   if (createMessageResult.error) return errUnexpected('Failed to create message.');
 
-  if (input.file) {
-    const uploadMediaResult = await supabase.storage
-      .from('message_media')
-      .update(`${user.id}/${createMessageResult.data.id}`, input.file, { upsert: true });
-
-    if (uploadMediaResult.data) {
-      await supabase
-        .from('messages')
-        .update({ media: uploadMediaResult.data.path })
-        .eq('id', createMessageResult.data.id)
-        .eq('authorId', user.id);
-    }
+  if (input.files) {
+    await Promise.all(
+      input.files.map(async file => {
+        const path = `${createMessageResult.data.id}/${crypto.randomUUID()}`;
+        await supabase.storage.from('message_media').upload(path, file);
+      }),
+    );
   }
 
   return ok(null);

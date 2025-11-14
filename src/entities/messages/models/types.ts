@@ -9,7 +9,7 @@ export interface MessageType {
   answerId?: string;
   authorId: string;
 
-  media: string | null;
+  media: string[] | null;
 
   author: {
     id: string;
