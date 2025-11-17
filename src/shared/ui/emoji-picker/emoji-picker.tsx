@@ -43,27 +43,45 @@ export function EmojiPicker({
   const searchTermDebounced = useDebounceValue(searchTerm, 700);
 
   return (
-    <Dialog.RootProvider size="xs" motionPreset="slide-in-bottom" placement="bottom" {...props}>
+    <Dialog.RootProvider size="xs" motionPreset="slide-in-bottom" scrollBehavior="outside" placement="top" {...props}>
       <Portal>
         <Dialog.Positioner>
           <Dialog.Backdrop />
-          <Dialog.Content w="320px" h="280px">
+          <Dialog.Content w="320px">
             <Dialog.Header flexDirection="column" alignItems="center" pt={1} pb={1}>
               <Tabs.RootProvider value={tabs} lazyMount unmountOnExit asChild>
-                <Stack alignItems="center">
-                  <Tabs.List flexWrap="wrap">
-                    <Tabs.Trigger px={1} py={0} fontSize="xs" value="search">
+                <Stack alignItems="center" w="full">
+                  <Tabs.List justifyContent="space-around" flexWrap="wrap" w="full">
+                    <Tabs.Trigger
+                      minW={0}
+                      px={0}
+                      py={0}
+                      paddingInline={0}
+                      paddingBlock={0}
+                      fontSize="xs"
+                      value="search"
+                    >
                       <Icon size="sm" as={FaMagnifyingGlass} />
                     </Tabs.Trigger>
 
                     {Object.entries(emojiGroups).map(([key, group]) => (
-                      <Tabs.Trigger title={group.label} textTransform="uppercase" key={key} value={key}>
+                      <Tabs.Trigger
+                        title={group.label}
+                        minW={0}
+                        px={0}
+                        py={0}
+                        paddingInline={0}
+                        paddingBlock={0}
+                        fontSize="xs"
+                        key={key}
+                        value={key}
+                      >
                         <Icon size="sm" as={group.icon} />
                       </Tabs.Trigger>
                     ))}
                   </Tabs.List>
 
-                  <Tabs.Content value="1" display="flex" justifyContent="center">
+                  <Tabs.Content value="1" display="flex" justifyContent="center" p={0}>
                     <SegmentGroup.Root defaultValue="0">
                       <SegmentGroup.Indicator />
                       {skinTones.map((item, index) => (
@@ -89,7 +107,7 @@ export function EmojiPicker({
               </Tabs.RootProvider>
             </Dialog.Header>
 
-            <Dialog.Body overflow="hidden" height="200px" p={1}>
+            <Dialog.Body overflow="hidden" height="140px" p={4}>
               <Tabs.RootProvider value={tabs} lazyMount unmountOnExit>
                 {Object.keys(emojiGroups).map(group => (
                   <Tabs.Content p={0} key={group} value={group}>
@@ -129,11 +147,6 @@ export function EmojiPicker({
                 </Tabs.Content>
               </Tabs.RootProvider>
             </Dialog.Body>
-            <Dialog.Footer>
-              <Dialog.CloseTrigger position="static" asChild>
-                <Button>Close</Button>
-              </Dialog.CloseTrigger>
-            </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
@@ -153,7 +166,7 @@ const EmojisGrid = memo(
     search?: string;
     onEmojiSelect: (emoji: Emoji) => void;
   }) => {
-    const chunkSize = useBreakpointValue({ base: 6, sm: 8 }, { ssr: false }) || 4;
+    const chunkSize = useBreakpointValue({ base: 5, sm: 6 }, { ssr: false }) || 4;
     const emojis = use(emojisPromise) as Emoji[];
     const parentRef = useRef(null);
 
@@ -182,7 +195,7 @@ const EmojisGrid = memo(
     });
 
     return (
-      <Box ref={parentRef} height="180px" overflow="auto">
+      <Box ref={parentRef} height="140px" overflow="auto">
         <Box w="100%" position="relative" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
           {rowVirtualizer.getVirtualItems().map(virtualItem => {
             const emojisChunk = chunkedEmojis[virtualItem.index];

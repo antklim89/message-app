@@ -27,13 +27,9 @@ export function LexicalEmojiPlugin() {
             setTimeout(() => dialog.setOpen(false), 10);
           }}
           value={dialog}
-          scrollBehavior="inside"
-          motionPreset="slide-in-bottom"
           onExitComplete={() => {
             editor.focus();
           }}
-          placement="top"
-          size="xl"
         />
       </Suspense>
     </>
