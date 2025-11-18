@@ -17,14 +17,15 @@ export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null
     fileUpload.clearFiles();
     deleteAvatarDialog.setOpen(false);
   }
+
   const fileUpload = useFileUpload({
     maxFiles: 1,
   });
-  const file = fileUpload.acceptedFiles[0];
+  const [acceptedFile] = fileUpload.acceptedFiles;
 
   async function handleFileUpload() {
-    if (!file) return null;
-    await avatarUpdateMutation.mutateAsync(file);
+    if (!acceptedFile) return null;
+    await avatarUpdateMutation.mutateAsync(acceptedFile);
     fileUpload.clearFiles();
   }
 
@@ -32,9 +33,9 @@ export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null
     <Card.Root>
       <Dialog.Root dialog={deleteAvatarDialog}>
         <Dialog.Title fontSize="xl">Are you sure you want to delete your avatar?</Dialog.Title>
-        <Dialog.Body>
+        <Dialog.Footer>
           <Button
-            disabled={isPending || file == null}
+            disabled={isPending || avatarUrl == null}
             colorPalette="red"
             loading={avatarDeleteMutation.isPending}
             loadingText="Deleting..."
@@ -42,35 +43,36 @@ export function AvatarUpdate({ avatarUrl, username }: { avatarUrl: string | null
           >
             Delete
           </Button>
-        </Dialog.Body>
+        </Dialog.Footer>
       </Dialog.Root>
       <Card.Body>
         <FileUpload.RootProvider value={fileUpload}>
           <FileUpload.HiddenInput disabled={isPending} />
 
           <FileUpload.Dropzone cursor="pointer" width="full">
-            <FileUpload.DropzoneContent>
+            <FileUpload.Trigger>
               <UserAvatar
                 w="12rem"
                 h="12rem"
                 fontSize="6rem"
-                src={file ? URL.createObjectURL(file) : avatarUrl}
+                src={acceptedFile ? URL.createObjectURL(acceptedFile) : avatarUrl}
                 username={username}
               />
               <Box>Drag and drop files or click here to upload your new avatar.</Box>
-            </FileUpload.DropzoneContent>
+            </FileUpload.Trigger>
           </FileUpload.Dropzone>
         </FileUpload.RootProvider>
       </Card.Body>
       <Card.Footer justifyContent="flex-end">
-        <Button disabled={isPending || file == null} variant="ghost" onClick={() => fileUpload.clearFiles()}>
+        <Button disabled={isPending || acceptedFile == null} variant="ghost" onClick={() => fileUpload.clearFiles()}>
           Cancel
         </Button>
-        <Dialog.Trigger dialog={deleteAvatarDialog} disabled={isPending || file == null} colorPalette="red">
+
+        <Dialog.Trigger dialog={deleteAvatarDialog} disabled={isPending || avatarUrl == null} colorPalette="red">
           Delete
         </Dialog.Trigger>
         <Button
-          disabled={isPending || file == null}
+          disabled={isPending || acceptedFile == null}
           loading={avatarUpdateMutation.isPending}
           loadingText="Saving..."
           onClick={handleFileUpload}
