@@ -7,14 +7,20 @@ export async function deleteMessage(id: MessageType['id']): PromiseResult<null> 
   const user = await getSupabaseSession();
   if (user == null) return errAuthentication();
 
+  const mediaToDelete = await supabase.storage.from('message_media').list(id);
+  if (mediaToDelete.data) {
+    const pathsToDelete = mediaToDelete.data.map(i => `${id}/${i.name}`);
+    await supabase.storage.from('message_media').remove(pathsToDelete);
+  }
+
   const { count, error } = await supabase
     .from('messages')
     .delete({ count: 'exact' })
     .eq('authorId', user.id)
     .eq('id', id);
 
-  if (count == null || count <= 0) return errNotFound('The message has not been deleted.');
   if (error != null) return errUnexpected('Failed to delete message.');
+  if (count == null || count <= 0) return errNotFound('The message has not been deleted.');
 
   return ok(null);
 }
