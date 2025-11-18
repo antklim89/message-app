@@ -1,15 +1,17 @@
 import { lazy, Suspense } from 'react';
-import { IconButton, Menu, Portal, SkeletonText, useDialog } from '@chakra-ui/react';
+import { IconButton, Menu, Portal, Skeleton, useDialog } from '@chakra-ui/react';
 import { FaEllipsis, FaPencil, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { MessageDeleteDialog } from '@/features/message-delete';
 import { MessageUpdateDialog } from '@/features/message-edit';
 import { Protected } from '@/shared/ui/protected';
-import { MessageCardMenuCopyUrl } from './message-card-menu-copy-url';
 
 const MessageCardMenuCopyUser = lazy(() =>
   import('./message-card-menu-copy-user').then(m => ({ default: m.MessageCardMenuCopyUser })),
+);
+const MessageCardMenuCopyUrl = lazy(() =>
+  import('./message-card-menu-copy-url').then(m => ({ default: m.MessageCardMenuCopyUrl })),
 );
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
@@ -31,9 +33,23 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
           <Menu.Positioner>
             <Menu.Content>
               <Menu.ItemGroup cursor="pointer">
-                <MessageCardMenuCopyUrl answerId={message.id} />
+                <Suspense
+                  fallback={
+                    <Skeleton>
+                      <Menu.Item value="">Menu</Menu.Item>
+                    </Skeleton>
+                  }
+                >
+                  <MessageCardMenuCopyUrl message={message} />
+                </Suspense>
 
-                <Suspense fallback={<SkeletonText w="full" noOfLines={1} />}>
+                <Suspense
+                  fallback={
+                    <Skeleton>
+                      <Menu.Item value="">Menu</Menu.Item>
+                    </Skeleton>
+                  }
+                >
                   <MessageCardMenuCopyUser {...message.author} />
                 </Suspense>
 
