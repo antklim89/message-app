@@ -18,11 +18,11 @@ export function MessageCardMenuCopyUser(props: { id: string; username: string })
       <Box h={0} w={0} position="absolute" tabIndex={-1} top={-10000}>
         <ContentEditable />
       </Box>
-      <TestPlugin {...props} />
+      <MessageCardMenuCopyUserPlugin {...props} />
     </LexicalComposer>
   );
 }
-function TestPlugin({ id, username }: { id: string; username: string }) {
+function MessageCardMenuCopyUserPlugin({ id, username }: { id: string; username: string }) {
   const [editor] = useLexicalComposerContext();
 
   return (
