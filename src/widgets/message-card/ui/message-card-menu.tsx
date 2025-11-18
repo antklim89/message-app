@@ -1,10 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { IconButton, Menu, Portal, Skeleton, useDialog } from '@chakra-ui/react';
-import { FaEllipsis, FaPencil, FaTrash } from 'react-icons/fa6';
+import { FaEllipsis, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
 import { MessageDeleteDialog } from '@/features/message-delete';
-import { MessageUpdateDialog } from '@/features/message-edit';
 import { Protected } from '@/shared/ui/protected';
 
 const MessageCardMenuCopyUser = lazy(() =>
@@ -15,12 +14,10 @@ const MessageCardMenuCopyUrl = lazy(() =>
 );
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
-  const updateMessageDialog = useDialog();
   const deleteMessageDialog = useDialog();
 
   return (
     <>
-      <MessageUpdateDialog message={message} dialog={updateMessageDialog} />
       <MessageDeleteDialog id={message.id} deleteRedirectUrl={deleteRedirectUrl} dialog={deleteMessageDialog} />
 
       <Menu.Root lazyMount positioning={{ placement: 'bottom-end' }} size="md">
@@ -58,10 +55,6 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
                   privateElement={
                     <>
                       <Menu.Separator />
-
-                      <Menu.Item onClick={() => updateMessageDialog.setOpen(true)} value="update-message">
-                        <FaPencil /> Update
-                      </Menu.Item>
 
                       <Menu.Item
                         onClick={() => deleteMessageDialog.setOpen(true)}

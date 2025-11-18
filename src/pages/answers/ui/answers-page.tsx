@@ -4,7 +4,7 @@ import { Link, useRouter } from '@tanstack/react-router';
 import { FaChevronLeft, FaPlus } from 'react-icons/fa6';
 
 import { messageListQueryOptions, messageQueryOptions } from '@/entities/messages';
-import { MessageCreateDialog } from '@/features/message-edit';
+import { MessageCreateDialog } from '@/features/message-create';
 import { AwaitQuery } from '@/shared/ui/await-query';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard, MessageCardFallback } from '@/widgets/message-card';

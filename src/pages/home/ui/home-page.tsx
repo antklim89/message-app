@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { FaPlus } from 'react-icons/fa6';
 
 import { messageListQueryOptions } from '@/entities/messages';
-import { MessageCreateDialog } from '@/features/message-edit';
+import { MessageCreateDialog } from '@/features/message-create';
 import { AwaitQuery } from '@/shared/ui/await-query';
 import { Dialog } from '@/shared/ui/dialog';
 import { Protected } from '@/shared/ui/protected';
