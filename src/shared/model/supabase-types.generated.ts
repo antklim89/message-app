@@ -128,17 +128,17 @@ export type Database = {
         Row: {
           id: string
           messageId: string
-          path: string
+          objectId: string
         }
         Insert: {
           id?: string
           messageId: string
-          path: string
+          objectId: string
         }
         Update: {
           id?: string
           messageId?: string
-          path?: string
+          objectId?: string
         }
         Relationships: [
           {
@@ -157,7 +157,6 @@ export type Database = {
           body: Json
           created: string
           id: string
-          media: string[] | null
           updated: string
           message_has_liked: boolean | null
           message_in_favorite: boolean | null
@@ -169,7 +168,6 @@ export type Database = {
           body: Json
           created?: string
           id?: string
-          media?: string[] | null
           updated?: string
         }
         Update: {
@@ -178,7 +176,6 @@ export type Database = {
           body?: Json
           created?: string
           id?: string
-          media?: string[] | null
           updated?: string
         }
         Relationships: [
@@ -234,23 +231,34 @@ export type Database = {
       reports: {
         Row: {
           body: string
+          category: string
           created: string
           id: number
-          messageId: number
+          messageId: string
         }
         Insert: {
           body?: string
+          category?: string
           created?: string
           id?: number
-          messageId: number
+          messageId: string
         }
         Update: {
           body?: string
+          category?: string
           created?: string
           id?: number
-          messageId?: number
+          messageId?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reports_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

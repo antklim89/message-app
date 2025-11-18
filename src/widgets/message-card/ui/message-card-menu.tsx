@@ -3,6 +3,7 @@ import { IconButton, Menu, Portal, Skeleton, useDialog } from '@chakra-ui/react'
 import { FaEllipsis, FaTrash } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
+import { MessageCreateDialog } from '@/features/create-report';
 import { MessageDeleteDialog } from '@/features/message-delete';
 import { Protected } from '@/shared/ui/protected';
 
@@ -15,10 +16,12 @@ const MessageCardMenuCopyUrl = lazy(() =>
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
   const deleteMessageDialog = useDialog();
+  const createReportDialog = useDialog();
 
   return (
     <>
       <MessageDeleteDialog id={message.id} deleteRedirectUrl={deleteRedirectUrl} dialog={deleteMessageDialog} />
+      <MessageCreateDialog messageId={message.id} dialog={createReportDialog} />
 
       <Menu.Root lazyMount positioning={{ placement: 'bottom-end' }} size="md">
         <Menu.Trigger asChild>
@@ -49,6 +52,10 @@ export function MessageCardMenu({ message, deleteRedirectUrl }: { message: Messa
                 >
                   <MessageCardMenuCopyUser {...message.author} />
                 </Suspense>
+
+                <Menu.Item onClick={() => createReportDialog.setOpen(true)} as="button" value="create-report">
+                  <FaTrash /> Report
+                </Menu.Item>
 
                 <Protected
                   authorId={message.authorId}
