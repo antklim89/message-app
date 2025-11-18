@@ -1,4 +1,4 @@
-import { Box, Menu } from '@chakra-ui/react';
+import { Menu, VisuallyHidden } from '@chakra-ui/react';
 import { copyToClipboard } from '@lexical/clipboard';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -15,9 +15,9 @@ export function MessageCardMenuCopyUser(props: { id: string; username: string })
         namespace: RICH_TEXT_EDITOR_NAMESPACE,
       }}
     >
-      <Box h={0} w={0} position="absolute" tabIndex={-1} top={-10000}>
+      <VisuallyHidden>
         <ContentEditable />
-      </Box>
+      </VisuallyHidden>
       <MessageCardMenuCopyUserPlugin {...props} />
     </LexicalComposer>
   );
