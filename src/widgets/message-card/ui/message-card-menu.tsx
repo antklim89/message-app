@@ -7,12 +7,15 @@ import { MessageCreateDialog } from '@/features/create-report';
 import { MessageDeleteDialog } from '@/features/message-delete';
 import { Protected } from '@/shared/ui/protected';
 
-const MessageCardMenuCopyUser = lazy(() =>
-  import('./message-card-menu-copy-user').then(m => ({ default: m.MessageCardMenuCopyUser })),
-);
-const MessageCardMenuCopyUrl = lazy(() =>
-  import('./message-card-menu-copy-url').then(m => ({ default: m.MessageCardMenuCopyUrl })),
-);
+const MessageCardMenuCopyUserPromise = import('./message-card-menu-copy-user').then(m => ({
+  default: m.MessageCardMenuCopyUser,
+}));
+const MessageCardMenuCopyUrlPromise = import('./message-card-menu-copy-url').then(m => ({
+  default: m.MessageCardMenuCopyUrl,
+}));
+
+const MessageCardMenuCopyUser = lazy(() => MessageCardMenuCopyUserPromise);
+const MessageCardMenuCopyUrl = lazy(() => MessageCardMenuCopyUrlPromise);
 
 export function MessageCardMenu({ message, deleteRedirectUrl }: { message: MessageType; deleteRedirectUrl?: string }) {
   const deleteMessageDialog = useDialog();

@@ -3,7 +3,8 @@ import type { UseDialogReturn } from '@chakra-ui/react';
 
 import { Dialog } from '@/shared/ui/dialog';
 
-const AuthDialogContent = lazy(() => import('./auth-dialog-content').then(m => ({ default: m.AuthDialogContent })));
+const AuthDialogContentPromise = import('./auth-dialog-content').then(m => ({ default: m.AuthDialogContent }));
+const AuthDialogContent = lazy(() => AuthDialogContentPromise);
 
 export function AuthDialog({ dialog }: { dialog: UseDialogReturn }) {
   return (

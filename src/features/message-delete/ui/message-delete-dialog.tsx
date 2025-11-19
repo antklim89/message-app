@@ -4,9 +4,10 @@ import type { UseDialogReturn } from '@chakra-ui/react';
 import type { MessageType } from '@/entities/messages';
 import { Dialog } from '@/shared/ui/dialog';
 
-const MessageDeleteDialogContent = lazy(() =>
-  import('./message-delete-dialog-content').then(m => ({ default: m.MessageDeleteDialogContent })),
-);
+const MessageDeleteDialogContentPromise = import('./message-delete-dialog-content').then(m => ({
+  default: m.MessageDeleteDialogContent,
+}));
+const MessageDeleteDialogContent = lazy(() => MessageDeleteDialogContentPromise);
 
 export function MessageDeleteDialog({
   dialog,
