@@ -28,7 +28,7 @@ function Root({
         <ChakraDialog.Positioner>
           <ChakraDialog.Backdrop />
           <ChakraDialog.Content>
-            <ChakraDialog.CloseTrigger asChild>
+            <ChakraDialog.CloseTrigger asChild zIndex={10}>
               <CloseButton size="lg" />
             </ChakraDialog.CloseTrigger>
 

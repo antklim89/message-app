@@ -1,21 +1,16 @@
 import type { ReactNode } from 'react';
-import { Box, Card, Flex, HStack, IconButton, Image, SimpleGrid, Span } from '@chakra-ui/react';
+import { Box, Card, Flex, HStack, IconButton, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
-import { useSupabase } from '@/shared/lib/supabase';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
 import { UserAvatar } from '@/shared/ui/user-avatar';
+import { MessageGallery } from './message-gallery';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
-  const supabase = useSupabase();
-  const mediaUrls = message.media?.map(
-    media => supabase.storage.from('message_media').getPublicUrl(`${message.id}/${media}`).data.publicUrl,
-  );
-
   return (
     <Card.Root w="full">
       <Card.Header alignItems="center" asChild gap={4}>
@@ -42,13 +37,7 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
           {menu}
         </HStack>
       </Card.Header>
-      {mediaUrls && mediaUrls.length > 0 && (
-        <SimpleGrid columns={mediaUrls.length === 1 ? 1 : 2} gap={1}>
-          {mediaUrls?.map(media => (
-            <Image src={media} w="full" aspectRatio="wide" key={media} />
-          ))}
-        </SimpleGrid>
-      )}
+      <MessageGallery media={message.media} messageId={message.id} />
       <Card.Body>
         <Card.Body>
           <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">
