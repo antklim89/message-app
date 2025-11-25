@@ -7,8 +7,15 @@ import type { z } from 'zod/v4-mini';
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
-import { ACCEPT_FILES, MAX_FILES, MAX_MESSAGE_BODY_LENGTH } from '../config/constants';
+import {
+  ACCEPT_FILES,
+  MAX_FILES,
+  MAX_MESSAGE_BODY_LENGTH,
+  MESSAGE_IMAGE_MAX_HEIGHT,
+  MESSAGE_IMAGE_MAX_WIDTH,
+} from '../config/constants';
 import { MessageCreateSchema } from '../model/schemas';
+import { optimizeImage } from '../utils/optimize-image';
 
 export const messageEditFormOptions = formOptions({
   validators: {
@@ -27,6 +34,14 @@ export const MessageEditForm = withForm({
       onFileAccept(details) {
         form.setFieldValue('files', details.files);
       },
+      async transformFiles(files) {
+        const result = await Promise.all(
+          files.map(file =>
+            optimizeImage({ file, maxWidth: MESSAGE_IMAGE_MAX_WIDTH, maxHeight: MESSAGE_IMAGE_MAX_HEIGHT }),
+          ),
+        );
+        return result.filter(f => f != null);
+      },
     });
 
     return (
@@ -36,7 +51,7 @@ export const MessageEditForm = withForm({
           {fileUpload.acceptedFiles.length > 0 && (
             <SimpleGrid columns={4} gap={1}>
               {fileUpload.acceptedFiles.map(acceptedFile => (
-                <Box key={acceptedFile.name + Math.random() * 1000} position="relative" h={32}>
+                <Box key={acceptedFile.name} position="relative" h={32}>
                   <IconButton
                     size="xs"
                     colorPalette="red"
