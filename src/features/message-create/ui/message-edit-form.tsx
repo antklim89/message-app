@@ -1,4 +1,4 @@
-import { Box, FileUpload, IconButton, Image, SimpleGrid, Text, useFileUpload } from '@chakra-ui/react';
+import { Box, FileUpload, IconButton, Image, SimpleGrid, Text } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
 import { FaImage, FaTrash, FaTriangleExclamation } from 'react-icons/fa6';
@@ -7,15 +7,9 @@ import type { z } from 'zod/v4-mini';
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
-import {
-  ACCEPT_FILES,
-  MAX_FILES,
-  MAX_MESSAGE_BODY_LENGTH,
-  MESSAGE_IMAGE_MAX_HEIGHT,
-  MESSAGE_IMAGE_MAX_WIDTH,
-} from '../config/constants';
+import { MAX_MESSAGE_BODY_LENGTH } from '../config/constants';
+import { useMessageFilesUpload } from '../lib/useMessageFilesUpload';
 import { MessageCreateSchema } from '../model/schemas';
-import { optimizeImage } from '../utils/optimize-image';
 
 export const messageEditFormOptions = formOptions({
   validators: {
@@ -28,19 +22,9 @@ export const messageEditFormOptions = formOptions({
 export const MessageEditForm = withForm({
   ...messageEditFormOptions,
   render: ({ form }) => {
-    const fileUpload = useFileUpload({
-      accept: ACCEPT_FILES,
-      maxFiles: MAX_FILES,
-      onFileAccept(details) {
-        form.setFieldValue('files', details.files);
-      },
-      async transformFiles(files) {
-        const result = await Promise.all(
-          files.map(file =>
-            optimizeImage({ file, maxWidth: MESSAGE_IMAGE_MAX_WIDTH, maxHeight: MESSAGE_IMAGE_MAX_HEIGHT }),
-          ),
-        );
-        return result.filter(f => f != null);
+    const fileUpload = useMessageFilesUpload({
+      onFileAccept(files) {
+        form.setFieldValue('files', files);
       },
     });
 
@@ -64,7 +48,7 @@ export const MessageEditForm = withForm({
                     <FaTrash />
                   </IconButton>
                   <Image
-                    src={URL.createObjectURL(new Blob([acceptedFile], { type: acceptedFile.type }))}
+                    src={URL.createObjectURL(acceptedFile)}
                     alt="Uploaded file"
                     w="full"
                     aspectRatio="wide"
