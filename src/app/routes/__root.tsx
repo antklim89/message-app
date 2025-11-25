@@ -4,7 +4,7 @@ import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { sessionQueryOptions } from '@/shared/hooks/use-session';
-import { PageErrorComponent } from '@/shared/ui/page-error-component';
+import { ErrorComponent } from '@/shared/ui/error-component';
 import { MainLayout } from '@/widgets/main-layout';
 
 function RootComponent() {
@@ -30,5 +30,5 @@ export const Route = createRootRoute<undefined, undefined, { queryClient: QueryC
   loader({ context }) {
     context.queryClient.ensureQueryData(sessionQueryOptions());
   },
-  errorComponent: PageErrorComponent,
+  errorComponent: ErrorComponent,
 });

@@ -2,11 +2,11 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { FollowersPage } from '@/pages/followers';
 import { getSupabaseSession } from '@/shared/lib/supabase';
-import { PageErrorComponent } from '@/shared/ui/page-error-component';
+import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/followers')({
   component: FollowersPage,
-  errorComponent: PageErrorComponent,
+  errorComponent: ErrorComponent,
   async beforeLoad() {
     const session = await getSupabaseSession();
     if (!session) return redirect({ to: '/' });

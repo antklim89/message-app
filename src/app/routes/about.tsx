@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { PageErrorComponent } from '@/shared/ui/page-error-component';
+import { ErrorComponent } from '@/shared/ui/error-component';
 
 function About() {
   return <div>About!</div>;
@@ -8,5 +8,5 @@ function About() {
 
 export const Route = createFileRoute('/about')({
   component: About,
-  errorComponent: PageErrorComponent,
+  errorComponent: ErrorComponent,
 });

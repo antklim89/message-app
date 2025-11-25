@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { ProfilePage, preloadProfilePage } from '@/pages/profile';
-import { PageErrorComponent } from '@/shared/ui/page-error-component';
+import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/profile/$profileId/')({
   component() {
@@ -9,5 +9,5 @@ export const Route = createFileRoute('/profile/$profileId/')({
     return <ProfilePage params={params} />;
   },
   loader: preloadProfilePage,
-  errorComponent: PageErrorComponent,
+  errorComponent: ErrorComponent,
 });

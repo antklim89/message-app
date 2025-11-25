@@ -1,4 +1,4 @@
-import { Alert, Button, HStack } from '@chakra-ui/react';
+import { Alert, Button, HStack, Text } from '@chakra-ui/react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
@@ -23,7 +23,9 @@ export function AwaitQueryError<T>({ isLoading, refetch, error }: UseQueryResult
           {type === ErrType.AUTHENTICATION && ' Unauthenticated '}
           ERROR
         </Alert.Title>
-        <Alert.Description whiteSpace="pre">{message}</Alert.Description>
+        <Alert.Description fontSize="xl" asChild>
+          <Text whiteSpace="pre-wrap">{message}</Text>
+        </Alert.Description>
         <HStack justifyContent="end">
           <Button loading={isLoading} loadingText="Resetting..." onClick={() => refetch()} size="xs">
             Reset

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { ProfileMessagesPage, preloadMessagesPage } from '@/pages/profile-messages';
-import { PageErrorComponent } from '@/shared/ui/page-error-component';
+import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/profile/$profileId/messages')({
   component() {
@@ -9,5 +9,5 @@ export const Route = createFileRoute('/profile/$profileId/messages')({
     return <ProfileMessagesPage params={params} />;
   },
   loader: preloadMessagesPage,
-  errorComponent: PageErrorComponent,
+  errorComponent: ErrorComponent,
 });
