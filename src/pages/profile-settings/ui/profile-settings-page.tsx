@@ -7,7 +7,7 @@ import { AvatarUpdate, AvatarUpdateFallback } from '@/features/avatar-edit';
 import { ProfileUpdate, ProfileUpdateFallback } from '@/features/profile-edit';
 import { useSession } from '@/shared/hooks/use-session';
 import { errAuthentication } from '@/shared/lib/result';
-import { AwaitQuery } from '@/shared/ui/await-query';
+import { AwaitComponent } from '@/shared/ui/await-component';
 import { Dialog } from '@/shared/ui/dialog';
 
 export function ProfileSettingsPage() {
@@ -18,12 +18,12 @@ export function ProfileSettingsPage() {
 
   return (
     <>
-      <AwaitQuery query={profileQuery} fallback={<ProfileUpdateFallback />}>
+      <AwaitComponent promise={profileQuery.promise} fallback={<ProfileUpdateFallback />}>
         {profile => <AvatarUpdate username={profile.username} avatarUrl={profile.avatar} />}
-      </AwaitQuery>
-      <AwaitQuery query={profileQuery} fallback={<AvatarUpdateFallback />}>
+      </AwaitComponent>
+      <AwaitComponent promise={profileQuery.promise} fallback={<AvatarUpdateFallback />}>
         {profile => <ProfileUpdate profileEditValues={profile} />}
-      </AwaitQuery>
+      </AwaitComponent>
 
       <Card.Root justifyContent="flex-end">
         <Card.Body>

@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { messageListQueryOptions } from '@/entities/messages';
-import { AwaitQuery } from '@/shared/ui/await-query';
+import { AwaitComponent } from '@/shared/ui/await-component';
 import { MessageCard } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
@@ -9,7 +9,7 @@ export function ProfileMessagesPage({ params }: { params: { profileId: string } 
   const messageListQuery = useInfiniteQuery(messageListQueryOptions({ authorId: params.profileId }));
 
   return (
-    <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
+    <AwaitComponent promise={messageListQuery.promise} fallback={<MessageListFallback />}>
       {messages => (
         <MessageList emptyMessage="You have not added any messages" {...messageListQuery}>
           {messages.map(message => (
@@ -17,6 +17,6 @@ export function ProfileMessagesPage({ params }: { params: { profileId: string } 
           ))}
         </MessageList>
       )}
-    </AwaitQuery>
+    </AwaitComponent>
   );
 }

@@ -5,7 +5,7 @@ import { FaChevronLeft, FaPlus } from 'react-icons/fa6';
 
 import { messageListQueryOptions, messageQueryOptions } from '@/entities/messages';
 import { MessageCreateDialog } from '@/features/message-create';
-import { AwaitQuery } from '@/shared/ui/await-query';
+import { AwaitComponent } from '@/shared/ui/await-component';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard, MessageCardFallback } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
@@ -19,8 +19,8 @@ export function AnswersPage({ params }: { params: { answerId: string } }) {
 
   return (
     <>
-      <AwaitQuery
-        query={messageQuery}
+      <AwaitComponent
+        promise={messageQuery.promise}
         fallback={
           <>
             <Skeleton asChild>
@@ -61,9 +61,9 @@ export function AnswersPage({ params }: { params: { answerId: string } }) {
             </>
           );
         }}
-      </AwaitQuery>
+      </AwaitComponent>
 
-      <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
+      <AwaitComponent promise={messageListQuery.promise} fallback={<MessageListFallback />}>
         {messages => (
           <MessageList emptyMessage="There are no answers to this message yet" {...messageListQuery}>
             {messages.map(message => (
@@ -71,7 +71,7 @@ export function AnswersPage({ params }: { params: { answerId: string } }) {
             ))}
           </MessageList>
         )}
-      </AwaitQuery>
+      </AwaitComponent>
     </>
   );
 }

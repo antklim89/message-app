@@ -7,7 +7,6 @@ import { ErrType, isErr } from '@/shared/lib/result';
 
 export const ErrorComponent = ({ error }: ErrorComponentProps) => {
   const type = isErr(error) ? error.type : ErrType.UNEXPECTED;
-  const message = isErr(error) ? error.message : error.message;
 
   if (type === ErrType.AUTHENTICATION) return <Navigate to="/" />;
 
@@ -24,7 +23,7 @@ export const ErrorComponent = ({ error }: ErrorComponentProps) => {
           Error
         </Alert.Title>
         <Alert.Description fontSize="xl" asChild>
-          <Text whiteSpace="pre-wrap">{message}</Text>
+          <Text whiteSpace="pre-wrap">{error.message}</Text>
         </Alert.Description>
         <Button asChild>
           <Link reloadDocument to="/">

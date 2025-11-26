@@ -4,7 +4,7 @@ import { FaPlus } from 'react-icons/fa6';
 
 import { messageListQueryOptions } from '@/entities/messages';
 import { MessageCreateDialog } from '@/features/message-create';
-import { AwaitQuery } from '@/shared/ui/await-query';
+import { AwaitComponent } from '@/shared/ui/await-component';
 import { Dialog } from '@/shared/ui/dialog';
 import { Protected } from '@/shared/ui/protected';
 import { MessageCard } from '@/widgets/message-card';
@@ -28,7 +28,7 @@ export function HomePage() {
         publicElement={<Box h={30} />}
       />
 
-      <AwaitQuery query={messageQuery} fallback={<MessageListFallback />}>
+      <AwaitComponent promise={messageQuery.promise} fallback={<MessageListFallback />}>
         {messages => (
           <MessageList {...messageQuery}>
             {messages.map(message => (
@@ -36,7 +36,7 @@ export function HomePage() {
             ))}
           </MessageList>
         )}
-      </AwaitQuery>
+      </AwaitComponent>
     </>
   );
 }

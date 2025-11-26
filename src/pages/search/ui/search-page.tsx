@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { messageListQueryOptions } from '@/entities/messages';
-import { AwaitQuery } from '@/shared/ui/await-query';
+import { AwaitComponent } from '@/shared/ui/await-component';
 import { MessageCard } from '@/widgets/message-card';
 import { MessageList, MessageListFallback } from '@/widgets/message-list';
 
@@ -9,7 +9,7 @@ export function SearchPage({ searchParams }: { searchParams: { s: string } }) {
   const messageListQuery = useInfiniteQuery(messageListQueryOptions({ search: searchParams.s }));
 
   return (
-    <AwaitQuery query={messageListQuery} fallback={<MessageListFallback />}>
+    <AwaitComponent promise={messageListQuery.promise} fallback={<MessageListFallback />}>
       {messages => (
         <MessageList emptyMessage={`No messages with search term "${searchParams.s}" were found`} {...messageListQuery}>
           {messages.map(message => (
@@ -17,6 +17,6 @@ export function SearchPage({ searchParams }: { searchParams: { s: string } }) {
           ))}
         </MessageList>
       )}
-    </AwaitQuery>
+    </AwaitComponent>
   );
 }

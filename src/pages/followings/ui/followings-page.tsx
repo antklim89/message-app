@@ -8,13 +8,13 @@ import {
   getFollowingsQueryOptions,
 } from '@/entities/followers';
 import { FollowToggleButton } from '@/features/follow-toggle';
-import { AwaitQuery } from '@/shared/ui/await-query';
+import { AwaitComponent } from '@/shared/ui/await-component';
 
 export function FollowingsPage() {
   const followingsQuery = useQuery(getFollowingsQueryOptions());
 
   return (
-    <AwaitQuery fallback={<FollowersListFallback />} query={followingsQuery}>
+    <AwaitComponent fallback={<FollowersListFallback />} promise={followingsQuery.promise}>
       {followings => (
         <FollowersList>
           <Heading fontSize="4xl" textAlign="center" mb={8}>
@@ -29,6 +29,6 @@ export function FollowingsPage() {
           ))}
         </FollowersList>
       )}
-    </AwaitQuery>
+    </AwaitComponent>
   );
 }
