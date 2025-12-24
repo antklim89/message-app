@@ -4,7 +4,7 @@ import { galleryListQueryOptions } from '@/entities/gallery';
 import { toaster } from '@/shared/lib/toaster';
 import { uploadGalleryRepository } from '../repositories/upload-gallery-repository';
 
-export function useGalleryUploadMutation() {
+export function useGalleryUploadMutation({ authorId }: { authorId: string }) {
   return useMutation({
     async mutationFn(files: File[], { client }) {
       await Promise.all(
@@ -14,10 +14,16 @@ export function useGalleryUploadMutation() {
             toaster.error({ description: `Failed to upload image ${file.name}` });
             return;
           }
-          client.setQueryData(galleryListQueryOptions().queryKey, (oldData = { pageParams: [], pages: [] }) => ({
-            ...oldData,
-            pages: [{ urls: [result] }, ...oldData.pages],
-          }));
+          client.setQueryData(
+            galleryListQueryOptions({ authorId }).queryKey,
+            (oldData = { pageParams: [], pages: [] }) => ({
+              ...oldData,
+              pages: [
+                { images: [{ url: result, createdAt: new Date().toISOString() }], nextCursor: undefined },
+                ...oldData.pages,
+              ],
+            }),
+          );
         }),
       );
     },
