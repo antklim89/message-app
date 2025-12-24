@@ -21,6 +21,7 @@ import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
 import { Route as ProfileProfileIdIndexRouteImport } from './../../app/routes/profile.$profileId.index'
 import { Route as ProfileProfileIdMessagesRouteImport } from './../../app/routes/profile.$profileId.messages'
+import { Route as ProfileProfileIdGalleryRouteImport } from './../../app/routes/profile.$profileId.gallery'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -83,6 +84,11 @@ const ProfileProfileIdMessagesRoute =
     path: '/$profileId/messages',
     getParentRoute: () => ProfileRoute,
   } as any)
+const ProfileProfileIdGalleryRoute = ProfileProfileIdGalleryRouteImport.update({
+  id: '/$profileId/gallery',
+  path: '/$profileId/gallery',
+  getParentRoute: () => ProfileRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
+  '/profile/$profileId/gallery': typeof ProfileProfileIdGalleryRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexRoute
 }
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
+  '/profile/$profileId/gallery': typeof ProfileProfileIdGalleryRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexRoute
 }
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
+  '/profile/$profileId/gallery': typeof ProfileProfileIdGalleryRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
 }
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/gallery'
     | '/profile/$profileId/messages'
     | '/profile/$profileId'
   fileRoutesByTo: FileRoutesByTo
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/gallery'
     | '/profile/$profileId/messages'
     | '/profile/$profileId'
   id:
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/gallery'
     | '/profile/$profileId/messages'
     | '/profile/$profileId/'
   fileRoutesById: FileRoutesById
@@ -271,15 +283,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdMessagesRouteImport
       parentRoute: typeof ProfileRoute
     }
+    '/profile/$profileId/gallery': {
+      id: '/profile/$profileId/gallery'
+      path: '/$profileId/gallery'
+      fullPath: '/profile/$profileId/gallery'
+      preLoaderRoute: typeof ProfileProfileIdGalleryRouteImport
+      parentRoute: typeof ProfileRoute
+    }
   }
 }
 
 interface ProfileRouteChildren {
+  ProfileProfileIdGalleryRoute: typeof ProfileProfileIdGalleryRoute
   ProfileProfileIdMessagesRoute: typeof ProfileProfileIdMessagesRoute
   ProfileProfileIdIndexRoute: typeof ProfileProfileIdIndexRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileProfileIdGalleryRoute: ProfileProfileIdGalleryRoute,
   ProfileProfileIdMessagesRoute: ProfileProfileIdMessagesRoute,
   ProfileProfileIdIndexRoute: ProfileProfileIdIndexRoute,
 }
