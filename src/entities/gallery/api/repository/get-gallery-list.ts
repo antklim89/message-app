@@ -1,15 +1,13 @@
-import { errAuthentication, errUnexpected, ok } from '@/shared/lib/result';
-import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
+import { errUnexpected, ok } from '@/shared/lib/result';
+import { createSupabaseClient } from '@/shared/lib/supabase';
 import { GALLERY_IMAGES_LIMIT } from '../../config/constants';
 
-export async function getGalleryList({ nextCursor }: { nextCursor?: string } = {}) {
+export async function getGalleryList({ nextCursor, authorId }: { nextCursor?: string; authorId: string }) {
   const supabase = await createSupabaseClient();
-  const user = await getSupabaseSession();
-  if (user == null) return errAuthentication();
 
   const { data, error } = await supabase.storage.from('gallery').listV2({
     limit: GALLERY_IMAGES_LIMIT,
-    prefix: user.id,
+    prefix: authorId,
     cursor: nextCursor,
     sortBy: { column: 'updated_at', order: 'desc' },
   });
@@ -17,6 +15,9 @@ export async function getGalleryList({ nextCursor }: { nextCursor?: string } = {
 
   return ok({
     nextCursor: data.nextCursor,
-    urls: data.objects.map(object => object.name),
+    images: data.objects.map(object => ({
+      url: object.name,
+      createdAt: object.created_at,
+    })),
   });
 }
