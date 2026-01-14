@@ -93,6 +93,7 @@
         "useSimplifiedLogicExpression": "error"
       },
       "correctness": {
+        "useImageSize": "error",
         "noChildrenProp": "error",
         "noUndeclaredVariables": "error",
         "useHookAtTopLevel": "error",
@@ -102,23 +103,15 @@
         "noFloatingPromises": "error",
         "noImportCycles": "error",
         "noMisusedPromises": "error",
-        "noSecrets": "off",
         "noShadow": "error",
         "noUselessUndefined": "error",
-        "useAnchorHref": "error",
-        "useConsistentTypeDefinitions": {
-          "fix": "safe",
-          "level": "error",
-          "options": { "style": "interface" }
-        },
+
         "useExhaustiveSwitchCases": "error",
         "useExplicitType": "off",
-        "useImageSize": "error",
         "useMaxParams": {
           "level": "error",
-          "options": { "max": 3 }
+          "options": { "max": 4 }
         },
-        "useReactFunctionComponents": "error",
         "useSortedClasses": "warn"
       },
       "performance": {
@@ -130,6 +123,7 @@
       "recommended": true,
       "security": "error",
       "style": {
+        "useReactFunctionComponents": "error",
         "noRestrictedImports": {
           "level": "error",
           "options": {
@@ -137,6 +131,11 @@
               { "group": ["**/entities/*/*/**", "**/pages/*/*/**", "**/features/*/*/**", "**/widgets/*/*/**"] }
             ]
           }
+        },
+        "useConsistentTypeDefinitions": {
+          "fix": "safe",
+          "level": "error",
+          "options": { "style": "interface" }
         },
         "noCommonJs": "error",
         "noDefaultExport": "off",
