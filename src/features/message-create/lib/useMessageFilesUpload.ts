@@ -1,6 +1,6 @@
 import { useFileUpload } from '@chakra-ui/react';
 
-import { optimizeImage } from '@/shared/lib/optimize-image';
+import { optimizeImage } from '@/shared/lib/image-upload';
 import { toaster } from '@/shared/lib/toaster';
 import { ACCEPT_FILES, MAX_FILES, MESSAGE_IMAGE_MAX_HEIGHT, MESSAGE_IMAGE_MAX_WIDTH } from '../config/constants';
 

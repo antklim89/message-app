@@ -1,6 +1,6 @@
 import { Button, Skeleton } from '@chakra-ui/react';
 
-import { GalleryUploadButton } from '@/features/gallery-upload';
+import { GalleryUploadButton } from '@/features/gallery-edit';
 import { Protected } from '@/shared/ui/protected';
 
 export function UserGalleryUploadButton({ profileId }: { profileId: string }) {

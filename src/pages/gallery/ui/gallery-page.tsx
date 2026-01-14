@@ -16,7 +16,7 @@ export function GalleryPage({ params }: { params: { profileId: string } }) {
         galleryListQuery.isPending ? (
           <GalleryContentFallback />
         ) : (
-          <UserGalleryContent images={galleryListQuery.data} {...galleryListQuery} />
+          <UserGalleryContent authorId={params.profileId} images={galleryListQuery.data} {...galleryListQuery} />
         )
       }
     />
