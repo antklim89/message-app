@@ -79,7 +79,6 @@ BEGIN
       WHEN 'text' THEN length(lexical_node ->> 'text')
       WHEN 'user' THEN length(lexical_node ->> 'text')
       WHEN 'hashtag' THEN length(lexical_node ->> 'text')
-      WHEN 'user' THEN length(lexical_node ->> 'text')
       WHEN 'emoji' THEN length(lexical_node ->> 'text')
       ELSE 0
   END;
@@ -175,199 +174,16 @@ $_$;
 ALTER FUNCTION "public"."is_following"("public"."profiles") OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "jsonb") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select extensions.jsonb_matches_schema(
-  schema := '
-{
-  "type": "object",
-  "properties": {
-    "type": {
-      "type": "string",
-      "const": "root"
-    },
-    "children": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Paragraph"
-      }
-    }
-  },
-  "required": [
-    "type",
-    "children"
-  ],
-  "definitions": {
-    "Paragraph": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "paragraph"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "oneOf": [
-              {
-                "$ref": "#/definitions/Text"
-              },
-              {
-                "$ref": "#/definitions/Link"
-              },
-              {
-                "$ref": "#/definitions/Hashtag"
-              },
-              {
-                "$ref": "#/definitions/User"
-              },
-              {
-                "$ref": "#/definitions/Emoji"
-              }
-            ]
-          }
-        }
-      },
-      "required": [
-        "type",
-        "children"
-      ]
-    },
-    "Text": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "text"
-        },
-        "text": {
-          "type": "string"
-        },
-        "format": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "type",
-        "text",
-        "format"
-      ]
-    },
-    "Link": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "link"
-        },
-        "text": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 1,
-          "items": {
-            "$ref": "#/definitions/Text"
-          }
-        }
-      },
-      "required": [
-        "type",
-        "text",
-        "children"
-      ]
-    },
-    "Hashtag": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "hashtag"
-        },
-        "text": {
-          "type": "string"
-        },
-        "format": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "type",
-        "text",
-        "format"
-      ]
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "user"
-        },
-        "text": {
-          "type": "string"
-        },
-        "format": {
-          "type": "number"
-        },
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "text",
-        "format",
-        "id",
-        "username"
-      ]
-    },
-    "Emoji": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "emoji"
-        },
-        "text": {
-          "type": "string"
-        },
-        "unicode": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "text",
-        "unicode",
-        "label"
-      ]
-    }
-  }
-}',
-  instance := message_body
-);
-$_$;
-
-
-ALTER FUNCTION "public"."validate_message_body"("message_body" "jsonb") OWNER TO "postgres";
-
-
 CREATE TABLE IF NOT EXISTS "public"."messages" (
-    "id" bigint NOT NULL,
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated" timestamp without time zone DEFAULT "now"() NOT NULL,
-    "authorId" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "answerId" bigint,
+    "authorId" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "body" "jsonb" NOT NULL,
-    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body")))
+    "embeddedItems" "text"[],
+    "embeddedType" "text",
+    "answerId" "uuid",
+    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "extensions"."jsonb_matches_schema"('{"type":"object","properties":{"type":{"type":"string","const":"root"},"children":{"type":"array","items":{"$ref":"#/definitions/Paragraph"}}},"required":["type","children"],"definitions":{"Paragraph":{"type":"object","properties":{"type":{"type":"string","const":"paragraph"},"children":{"type":"array","items":{"oneOf":[{"$ref":"#/definitions/Text"},{"$ref":"#/definitions/Link"},{"$ref":"#/definitions/Hashtag"},{"$ref":"#/definitions/User"}]}}},"required":["type","children"]},"Text":{"type":"object","properties":{"type":{"type":"string","const":"text"},"text":{"type":"string"},"format":{"type":"number"}},"required":["type","text","format"]},"Link":{"type":"object","properties":{"type":{"type":"string","const":"link"},"url": {"type":"string"},"children":{"type":"array","minItems":1,"items":{"$ref":"#/definitions/Text"}}},"required":["type","url","children"]},"Hashtag":{"type":"object","properties":{"type":{"type":"string","const":"hashtag"},"text":{"type":"string"},"format":{"type":"number"}},"required":["type","text","format"]},"User":{"type":"object","properties":{"type":{"type":"string","const":"user"},"text":{"type":"string"},"format":{"type":"number"},"id":{"type":"string"},"username":{"type":"string"}},"required":["type","text","format","id","username"]}}}'::json, "body")))
 );
 
 
@@ -433,20 +249,108 @@ $$;
 ALTER FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) OWNER TO "postgres";
 
 
-ALTER TABLE "public"."messages" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME "public"."Messages_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
+CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "jsonb") RETURNS boolean
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $_$
+select extensions.jsonb_matches_schema(
+  schema := '
+{
+  "type": "object",
+  "properties": {
+    "type": { "type": "string", "const": "root" },
+    "children": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Paragraph" }
+    }
+  },
+  "required": ["type", "children"],
+  "definitions": {
+    "Paragraph": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "paragraph" },
+        "children": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/Text" },
+              { "$ref": "#/definitions/Link" },
+              { "$ref": "#/definitions/Hashtag" },
+              { "$ref": "#/definitions/User" },
+              { "$ref": "#/definitions/Emoji" }
+            ]
+          }
+        }
+      },
+      "required": ["type", "children"]
+    },
+    "Text": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "text" },
+        "text": { "type": "string" },
+        "format": { "type": "number" }
+      },
+      "required": ["type", "text", "format"]
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "link" },
+        "url": { "type": "string" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Text"
+          }
+        }
+      },
+      "required": ["type", "url", "children"]
+    },
+    "Hashtag": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "hashtag" },
+        "text": { "type": "string" },
+        "format": { "type": "number" }
+      },
+      "required": ["type", "text", "format"]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "user" },
+        "text": { "type": "string" },
+        "format": { "type": "number" },
+        "id": { "type": "string" },
+        "username": { "type": "string" }
+      },
+      "required": ["type", "text", "format", "id", "username"]
+    },
+    "Emoji": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "emoji" },
+        "text": { "type": "string" },
+        "unicode": { "type": "string" },
+        "label": { "type": "string" }
+      },
+      "required": ["text", "unicode", "label"]
+    }
+  }
+}',
+  instance := message_body
 );
+$_$;
 
+
+ALTER FUNCTION "public"."validate_message_body"("message_body" "jsonb") OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."favorites" (
     "authorId" "uuid" NOT NULL,
-    "messageId" bigint NOT NULL
+    "messageId" "uuid" NOT NULL
 );
 
 
@@ -464,7 +368,7 @@ ALTER TABLE "public"."followers" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."likes" (
     "authorId" "uuid" NOT NULL,
-    "messageId" bigint NOT NULL
+    "messageId" "uuid" NOT NULL
 );
 
 
@@ -475,7 +379,7 @@ CREATE TABLE IF NOT EXISTS "public"."reports" (
     "id" bigint NOT NULL,
     "created" timestamp with time zone DEFAULT "now"() NOT NULL,
     "body" "text" DEFAULT ''::"text" NOT NULL,
-    "messageId" bigint NOT NULL
+    "messageId" "uuid"
 );
 
 
@@ -493,23 +397,13 @@ ALTER TABLE "public"."reports" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDE
 
 
 
-ALTER TABLE ONLY "public"."messages"
-    ADD CONSTRAINT "Messages_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "public"."favorites"
-    ADD CONSTRAINT "favorites_pkey" PRIMARY KEY ("authorId", "messageId");
-
-
-
 ALTER TABLE ONLY "public"."followers"
     ADD CONSTRAINT "followers_pkey" PRIMARY KEY ("authorId", "followerId");
 
 
 
-ALTER TABLE ONLY "public"."likes"
-    ADD CONSTRAINT "likes_pkey" PRIMARY KEY ("authorId", "messageId");
+ALTER TABLE ONLY "public"."messages"
+    ADD CONSTRAINT "messages_pkey" PRIMARY KEY ("id");
 
 
 
@@ -549,7 +443,7 @@ ALTER TABLE ONLY "public"."favorites"
 
 
 ALTER TABLE ONLY "public"."favorites"
-    ADD CONSTRAINT "favorites_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "public"."messages"("id") ON DELETE CASCADE;
+    ADD CONSTRAINT "favorites_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "public"."messages"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
@@ -559,7 +453,7 @@ ALTER TABLE ONLY "public"."likes"
 
 
 ALTER TABLE ONLY "public"."likes"
-    ADD CONSTRAINT "likes_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "public"."messages"("id") ON DELETE CASCADE;
+    ADD CONSTRAINT "likes_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "public"."messages"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
@@ -574,7 +468,7 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 ALTER TABLE ONLY "public"."reports"
-    ADD CONSTRAINT "reports_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "public"."messages"("id") ON DELETE CASCADE;
+    ADD CONSTRAINT "reports_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "public"."messages"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
@@ -828,6 +722,12 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
+
+
+
+
+
+
 GRANT ALL ON FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) TO "anon";
 GRANT ALL ON FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) TO "service_role";
@@ -876,12 +776,6 @@ GRANT ALL ON FUNCTION "public"."is_following"("public"."profiles") TO "service_r
 
 
 
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "service_role";
-
-
-
 GRANT ALL ON TABLE "public"."messages" TO "anon";
 GRANT ALL ON TABLE "public"."messages" TO "authenticated";
 GRANT ALL ON TABLE "public"."messages" TO "service_role";
@@ -918,6 +812,9 @@ GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_nod
 
 
 
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "service_role";
 
 
 
@@ -933,9 +830,6 @@ GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_nod
 
 
 
-GRANT ALL ON SEQUENCE "public"."Messages_id_seq" TO "anon";
-GRANT ALL ON SEQUENCE "public"."Messages_id_seq" TO "authenticated";
-GRANT ALL ON SEQUENCE "public"."Messages_id_seq" TO "service_role";
 
 
 
@@ -1030,4 +924,3 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TAB
 
 
 
-RESET ALL;
