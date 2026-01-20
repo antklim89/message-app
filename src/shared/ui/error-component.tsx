@@ -2,9 +2,9 @@ import { Alert, AlertIndicator, Button, Text } from '@chakra-ui/react';
 import { Link, Navigate } from '@tanstack/react-router';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 
-import { ErrType, isErr } from '@/shared/lib/result';
+import { ErrType, type ErrVariant, isErr } from '@/shared/lib/result';
 
-export const ErrorComponent = ({ error }: { error: Error }) => {
+export const ErrorComponent = ({ error }: { error: Error | ErrVariant }) => {
   const type = isErr(error) ? error.type : ErrType.UNEXPECTED;
 
   if (type === ErrType.AUTHENTICATION) return <Navigate to="/" />;
