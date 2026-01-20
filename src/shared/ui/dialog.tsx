@@ -76,7 +76,7 @@ function Footer({
   children,
   ...props
 }: {
-  children: ReactNode;
+  children?: ReactNode;
 } & DialogFooterProps) {
   return (
     <ChakraDialog.Footer display="flex" justifyItems="flex-end" {...props}>
