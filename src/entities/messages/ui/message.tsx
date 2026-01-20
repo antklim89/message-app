@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment } from 'react-icons/fa6';
 
 import type { MessageType } from '@/entities/messages';
+import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
@@ -37,9 +38,9 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
           {menu}
         </HStack>
       </Card.Header>
-      {message.embeddedType === 'images' && message.embeddedItems && message.embeddedItems.length > 0 && (
-        <MessageImages images={message.embeddedItems} />
-      )}
+      {message.embeddedType === MessageEmbeddedType.IMAGES &&
+        message.embeddedItems &&
+        message.embeddedItems.length > 0 && <MessageImages images={message.embeddedItems} />}
       <Card.Body>
         <Card.Body>
           <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">

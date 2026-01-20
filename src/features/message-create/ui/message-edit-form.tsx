@@ -6,6 +6,7 @@ import type { z } from 'zod/v4-mini';
 
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
+import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { Dialog } from '@/shared/ui/dialog';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageEditImageDialog } from './message-edit-image-dialog';
@@ -39,7 +40,7 @@ export const MessageEditForm = withForm({
               onChange={v => {
                 field.handleChange(v);
                 v.length > 0
-                  ? field.form.setFieldValue('embeddedType', 'images')
+                  ? field.form.setFieldValue('embeddedType', MessageEmbeddedType.IMAGES)
                   : field.form.setFieldValue('embeddedType', undefined);
               }}
             />
