@@ -13,21 +13,14 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
     .from('messages')
     .insert({
       body: input.body as unknown as Json,
+      embeddedType: input.embeddedType,
+      embeddedItems: input.embeddedItems && input.embeddedItems.length > 0 ? input.embeddedItems : undefined,
       answerId,
       authorId: user.id,
     })
     .select('id')
     .single();
   if (createMessageResult.error) return errUnexpected('Failed to create message.');
-
-  if (input.files) {
-    await Promise.all(
-      input.files.map(async file => {
-        const path = `${createMessageResult.data.id}/${crypto.randomUUID()}`;
-        await supabase.storage.from('message_media').upload(path, file);
-      }),
-    );
-  }
 
   return ok(null);
 }

@@ -124,38 +124,14 @@ export type Database = {
           },
         ]
       }
-      message_media: {
-        Row: {
-          id: string
-          messageId: string
-          objectId: string
-        }
-        Insert: {
-          id?: string
-          messageId: string
-          objectId: string
-        }
-        Update: {
-          id?: string
-          messageId?: string
-          objectId?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "message_media_messageId_fkey"
-            columns: ["messageId"]
-            isOneToOne: false
-            referencedRelation: "messages"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       messages: {
         Row: {
           answerId: string | null
           authorId: string
           body: Json
           created: string
+          embeddedItems: string[] | null
+          embeddedType: string | null
           id: string
           updated: string
           message_has_liked: boolean | null
@@ -164,9 +140,11 @@ export type Database = {
         }
         Insert: {
           answerId?: string | null
-          authorId: string
+          authorId?: string
           body: Json
           created?: string
+          embeddedItems?: string[] | null
+          embeddedType?: string | null
           id?: string
           updated?: string
         }
@@ -175,6 +153,8 @@ export type Database = {
           authorId?: string
           body?: Json
           created?: string
+          embeddedItems?: string[] | null
+          embeddedType?: string | null
           id?: string
           updated?: string
         }
@@ -231,24 +211,21 @@ export type Database = {
       reports: {
         Row: {
           body: string
-          category: string
           created: string
           id: number
-          messageId: string
+          messageId: string | null
         }
         Insert: {
           body?: string
-          category?: string
           created?: string
           id?: number
-          messageId: string
+          messageId?: string | null
         }
         Update: {
           body?: string
-          category?: string
           created?: string
           id?: number
-          messageId?: string
+          messageId?: string | null
         }
         Relationships: [
           {
@@ -271,48 +248,63 @@ export type Database = {
       }
       favorites_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: number
+        Returns: {
+          error: true
+        } & "the function public.favorites_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       followers_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: number
+        Returns: {
+          error: true
+        } & "the function public.followers_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       followings_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: number
+        Returns: {
+          error: true
+        } & "the function public.followings_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       is_follower: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: boolean
+        Returns: {
+          error: true
+        } & "the function public.is_follower with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       is_following: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: boolean
+        Returns: {
+          error: true
+        } & "the function public.is_following with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       message_has_liked: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: boolean
+        Returns: {
+          error: true
+        } & "the function public.message_has_liked with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       message_in_favorite: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: boolean
+        Returns: {
+          error: true
+        } & "the function public.message_in_favorite with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       message_likes_count: {
         Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: number
+        Returns: {
+          error: true
+        } & "the function public.message_likes_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       messages_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: number
+        Returns: {
+          error: true
+        } & "the function public.messages_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
       process_lexical_node_with_children: {
         Args: { lexical_node: Json; result_length?: number }
         Returns: number
       }
-      validate_message_body: {
-        Args: { message_body: Json }
-        Returns: boolean
-      }
+      validate_message_body: { Args: { message_body: Json }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
