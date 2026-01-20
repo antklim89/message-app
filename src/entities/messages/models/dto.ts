@@ -18,6 +18,8 @@ export function messageDto(data: {
     count: number;
   }[];
   isFavorite: boolean | null;
+  embeddedItems: string[] | null;
+  embeddedType: string | null;
 }): MessageType {
   return {
     answerId: data.answerId ?? undefined,
@@ -27,7 +29,6 @@ export function messageDto(data: {
       id: data.author.id,
       username: data.author.username,
     },
-    media: [],
     authorId: data.authorId,
     body: data.body as unknown as MessageBody,
     created: data.created,
@@ -35,5 +36,8 @@ export function messageDto(data: {
     id: data.id,
     isFavorite: data.isFavorite ?? false,
     likesCount: data.likesCount ?? 0,
+
+    embeddedItems: data.embeddedItems ?? undefined,
+    embeddedType: data.embeddedType ?? undefined,
   };
 }

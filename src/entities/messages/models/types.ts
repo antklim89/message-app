@@ -9,8 +9,6 @@ export interface MessageType {
   answerId?: string;
   authorId: string;
 
-  media: string[] | null;
-
   author: {
     id: string;
     username: string;
@@ -21,4 +19,7 @@ export interface MessageType {
   likesCount: number;
   answersCount: number;
   isFavorite: boolean;
+
+  embeddedType?: string;
+  embeddedItems?: string[];
 }

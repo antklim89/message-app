@@ -8,7 +8,7 @@ import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
 import { UserAvatar } from '@/shared/ui/user-avatar';
-import { MessageGallery } from './message-gallery';
+import { MessageImages } from './message-images';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
   return (
@@ -37,7 +37,9 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
           {menu}
         </HStack>
       </Card.Header>
-      <MessageGallery media={message.media} messageId={message.id} />
+      {message.embeddedType === 'images' && message.embeddedItems && message.embeddedItems.length > 0 && (
+        <MessageImages images={message.embeddedItems} />
+      )}
       <Card.Body>
         <Card.Body>
           <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">

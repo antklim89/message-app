@@ -6,25 +6,20 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 
 import { useSupabase } from '@/shared/lib/supabase';
 import { Dialog } from '@/shared/ui/dialog';
-import type { MessageType } from '../models/types';
 
-export function MessageGallery({ media, messageId }: { messageId: MessageType['id']; media: MessageType['media'] }) {
+export function MessageImages({ images }: { images: string[] }) {
   const dialog = useDialog({});
   const supabase = useSupabase();
   const selectedImageIndexRef = useRef(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, startIndex: selectedImageIndexRef.current });
-  const mediaUrls = media?.map(
-    mediaItem => supabase.storage.from('message_media').getPublicUrl(`${messageId}/${mediaItem}`).data.publicUrl,
-  );
 
-  if (!mediaUrls || mediaUrls.length === 0) return null;
   return (
     <>
       <SimpleGrid gridTemplateColumns="1fr 1fr" gap={1} overflow="hidden" m={1} borderRadius="xl">
-        {mediaUrls.map((mediaUrl, index) => (
+        {images.map((imageUrl, index) => (
           <Button
-            gridColumn={mediaUrls.length % 2 === 1 && index === mediaUrls.length - 1 ? 'auto / span 2' : undefined}
-            key={mediaUrl}
+            gridColumn={images.length % 2 === 1 && index === images.length - 1 ? 'auto / span 2' : undefined}
+            key={imageUrl}
             cursor="pointer"
             unstyled
             onClick={() => {
@@ -32,21 +27,26 @@ export function MessageGallery({ media, messageId }: { messageId: MessageType['i
               selectedImageIndexRef.current = index;
             }}
           >
-            <Image src={mediaUrl} w="full" maxH="200px" />
+            <Image
+              src={supabase.storage.from('gallery').getPublicUrl(imageUrl).data.publicUrl}
+              w="full"
+              aspectRatio="wide"
+              alt="Message image"
+            />
           </Button>
         ))}
       </SimpleGrid>
-      <Dialog.Root size="xl" dialog={dialog}>
+      <Dialog.Root scrollBehavior="inside" size="xl" dialog={dialog}>
         <Dialog.Body p={0}>
           <Box display="grid" gridTemplateColumns="1fr" gridTemplateRows="1fr">
             <Box ref={emblaRef} overflow="hidden" gridArea="1 / 1">
               <Flex>
-                {mediaUrls.map(mediaUrl => (
+                {images.map(imageUrl => (
                   <Image
                     flex="0 0 100%"
                     minW={0}
-                    key={mediaUrl}
-                    src={mediaUrl}
+                    key={imageUrl}
+                    src={supabase.storage.from('gallery').getPublicUrl(imageUrl).data.publicUrl}
                     w="full"
                     aspectRatio="landscape"
                     objectFit="contain"
@@ -54,17 +54,20 @@ export function MessageGallery({ media, messageId }: { messageId: MessageType['i
                 ))}
               </Flex>
             </Box>
-            <Flex gridArea="1 / 1" flexDirection="column">
-              <Flex justifyContent="space-between" alignItems="center" flexBasis="100%">
-                <Button h="120px" size="xs" onClick={() => emblaApi?.scrollPrev()}>
-                  <FaChevronLeft />
-                </Button>
-                <Button h="120px" size="xs" onClick={() => emblaApi?.scrollNext()}>
-                  <FaChevronRight />
-                </Button>
+
+            {images.length > 1 && (
+              <Flex gridArea="1 / 1" flexDirection="column">
+                <Flex justifyContent="space-between" alignItems="center" flexBasis="100%">
+                  <Button variant="ghost" h="120px" size="xs" onClick={() => emblaApi?.scrollPrev()}>
+                    <FaChevronLeft />
+                  </Button>
+                  <Button variant="ghost" h="120px" size="xs" onClick={() => emblaApi?.scrollNext()}>
+                    <FaChevronRight />
+                  </Button>
+                </Flex>
+                <MessageGalleryDots emblaApi={emblaApi} />
               </Flex>
-              <MessageGalleryDots emblaApi={emblaApi} />
-            </Flex>
+            )}
           </Box>
         </Dialog.Body>
       </Dialog.Root>
@@ -74,6 +77,7 @@ export function MessageGallery({ media, messageId }: { messageId: MessageType['i
 
 function MessageGalleryDots({ emblaApi }: { emblaApi?: EmblaCarouselType }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -86,13 +90,19 @@ function MessageGalleryDots({ emblaApi }: { emblaApi?: EmblaCarouselType }) {
       emblaApi.off('select', listener).off('init', listener).off('reInit', listener);
     };
   }, [emblaApi]);
+
   return (
     <Flex gap={1} justifyContent="center">
       {emblaApi?.scrollSnapList().map((i, index) => (
         <IconButton
-          size="xs"
-          borderRadius="lg"
-          variant={selectedImageIndex === index ? 'subtle' : 'outline'}
+          zIndex={1}
+          unstyled
+          w={3}
+          h={3}
+          borderRadius="full"
+          border="sm"
+          borderColor="colorPalette.600"
+          bgColor={selectedImageIndex === index ? 'colorPalette.600' : 'transparent'}
           key={i}
           onClick={() => emblaApi.scrollTo(index)}
         >
