@@ -14,6 +14,12 @@ export const MessageCreateSchema = z.object({
       }, `The text should be between ${MIN_MESSAGE_BODY_LENGTH} and ${MAX_MESSAGE_BODY_LENGTH} characters long.`),
     ),
   ),
-  embeddedItems: z.optional(z.array(z.string())),
-  embeddedType: z.optional(z.enum(Object.values(MessageEmbeddedType))),
+  embedded: z.optional(
+    z.union([
+      z.object({
+        type: z.literal(MessageEmbeddedType.IMAGES),
+        images: z.array(z.file()).check(z.maxLength(4)),
+      }),
+    ]),
+  ),
 });

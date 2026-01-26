@@ -1,7 +1,5 @@
-import type { MessageBody } from '@/entities/messages';
+import type { z } from 'zod/v4-mini';
 
-export interface MessageEditType {
-  body: MessageBody;
-  embeddedType?: string;
-  embeddedItems?: string[];
-}
+import type { MessageCreateSchema } from './schemas';
+
+export type MessageEditType = z.infer<typeof MessageCreateSchema>;

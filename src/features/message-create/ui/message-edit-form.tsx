@@ -1,16 +1,16 @@
-import { Badge, IconButton, Text, useDialog } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
-import { FaImage, FaTriangleExclamation } from 'react-icons/fa6';
+import { FaTriangleExclamation } from 'react-icons/fa6';
 import type { z } from 'zod/v4-mini';
 
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
-import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
-import { Dialog } from '@/shared/ui/dialog';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
-import { MessageEditImageDialog } from './message-edit-image-dialog';
+import { MessageImageUploadButton } from './message-image-upload-button';
+import { MessageUploadedImages } from './message-uploaded-images';
 import { MAX_MESSAGE_BODY_LENGTH } from '../config/constants';
+import { useMessageImagesUpload } from '../lib/hooks/use-message-images-upload';
 import { MessageCreateSchema } from '../model/schemas';
 
 export const messageEditFormOptions = formOptions({
@@ -18,34 +18,21 @@ export const messageEditFormOptions = formOptions({
     onSubmit: MessageCreateSchema,
   },
   validationLogic: revalidateLogic(),
-  defaultValues: {
-    body: undefined,
-    embeddedItems: [],
-    embeddedType: undefined,
-  } as z.infer<typeof MessageCreateSchema>,
+  defaultValues: {} as z.infer<typeof MessageCreateSchema>,
 });
 
 export const MessageEditForm = withForm({
   ...messageEditFormOptions,
   render: ({ form }) => {
-    const dialog = useDialog();
+    const upload = useMessageImagesUpload({
+      onUpload(files) {
+        form.setFieldValue('embedded', { type: 'images', images: files });
+      },
+    });
 
     return (
       <form.AppForm>
-        <form.AppField name="embeddedItems">
-          {field => (
-            <MessageEditImageDialog
-              dialog={dialog}
-              selectedImages={field.state.value ?? []}
-              onChange={v => {
-                field.handleChange(v);
-                v.length > 0
-                  ? field.form.setFieldValue('embeddedType', MessageEmbeddedType.IMAGES)
-                  : field.form.setFieldValue('embeddedType', undefined);
-              }}
-            />
-          )}
-        </form.AppField>
+        <MessageUploadedImages upload={upload} />
         <RichTextEditor
           onKeyDown={e => {
             if (!e) return;
@@ -58,22 +45,7 @@ export const MessageEditForm = withForm({
           plugins={
             <>
               <ProfileSelectLexicalPlugin />
-              <Dialog.Trigger dialog={dialog} asChild>
-                <IconButton position="relative">
-                  <FaImage />
-
-                  <form.AppField name="embeddedItems">
-                    {field =>
-                      field.state.value &&
-                      field.state.value.length > 0 && (
-                        <Badge as="span" variant="subtle" colorPalette="red" position="absolute" top={-2} right={-2}>
-                          {field.state.value.length}
-                        </Badge>
-                      )
-                    }
-                  </form.AppField>
-                </IconButton>
-              </Dialog.Trigger>
+              <MessageImageUploadButton upload={upload} />
 
               <form.AppField name="body">
                 {field => (

@@ -1,26 +1,27 @@
 import type { MessageType } from '@/entities/messages';
 import { errAuthentication, errNotFound, errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
+import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 
 export async function deleteMessage(id: MessageType['id']): PromiseResult<null> {
   const supabase = await createSupabaseClient();
   const user = await getSupabaseSession();
   if (user == null) return errAuthentication();
 
-  const mediaToDelete = await supabase.storage.from('message_media').list(id);
-  if (mediaToDelete.data) {
-    const pathsToDelete = mediaToDelete.data.map(i => `${id}/${i.name}`);
-    await supabase.storage.from('message_media').remove(pathsToDelete);
-  }
-
-  const { count, error } = await supabase
+  const { count, error, data } = await supabase
     .from('messages')
     .delete({ count: 'exact' })
+    .select('embeddedItems, embeddedType')
     .eq('authorId', user.id)
-    .eq('id', id);
+    .eq('id', id)
+    .single();
 
   if (error != null) return errUnexpected('Failed to delete message.');
   if (count == null || count <= 0) return errNotFound('The message has not been deleted.');
+
+  if (data.embeddedType === MessageEmbeddedType.IMAGES && data.embeddedItems) {
+    await supabase.storage.from('gallery').remove(data.embeddedItems);
+  }
 
   return ok(null);
 }
