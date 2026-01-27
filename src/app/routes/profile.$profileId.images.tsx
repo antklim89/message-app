@@ -1,12 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { GalleryPage } from '@/pages/gallery';
+import { ProfileImagesPage } from '@/pages/profile-images';
 import { ErrorComponent } from '@/shared/ui/error-component';
 
-export const Route = createFileRoute('/profile/$profileId/gallery')({
+export const Route = createFileRoute('/profile/$profileId/images')({
   component() {
     const params = Route.useParams();
-    return <GalleryPage params={params} />;
+    return <ProfileImagesPage params={params} />;
   },
   errorComponent: ErrorComponent,
 });

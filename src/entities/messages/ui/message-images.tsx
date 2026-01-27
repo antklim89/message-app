@@ -65,7 +65,7 @@ export function MessageImages({ images }: { images: string[] }) {
                     <FaChevronRight />
                   </Button>
                 </Flex>
-                <MessageGalleryDots emblaApi={emblaApi} />
+                <MessageImagesDots emblaApi={emblaApi} />
               </Flex>
             )}
           </Box>
@@ -75,7 +75,7 @@ export function MessageImages({ images }: { images: string[] }) {
   );
 }
 
-function MessageGalleryDots({ emblaApi }: { emblaApi?: EmblaCarouselType }) {
+function MessageImagesDots({ emblaApi }: { emblaApi?: EmblaCarouselType }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {

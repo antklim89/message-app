@@ -10,7 +10,7 @@ export const tabs = [
     label: 'Messages',
   },
   {
-    to: '/profile/$profileId/gallery',
-    label: 'Gallery',
+    to: '/profile/$profileId/images',
+    label: 'Images',
   },
 ] as const satisfies { label: string; to: keyof FileRoutesByTo }[];

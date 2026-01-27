@@ -1,5 +1,6 @@
 import { errUnexpected, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient } from '@/shared/lib/supabase';
+import type { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { MESSAGE_SELECT, MESSAGE_SELECT_FAVORITES, MESSAGES_PER_PAGE } from '../../config/constants';
 import { messageDto } from '../../models/dto';
 import type { MessageType } from '../../models/types';
@@ -9,12 +10,14 @@ export async function getMessageList({
   lastId,
   search,
   isFavorites,
+  embeddedType,
   authorId,
 }: {
   answerId?: MessageType['answerId'];
   lastId?: MessageType['id'];
   search?: string;
   isFavorites?: boolean;
+  embeddedType?: MessageEmbeddedType;
   authorId?: MessageType['authorId'];
 } = {}): PromiseResult<{ items: MessageType[] }> {
   const supabase = await createSupabaseClient();
@@ -31,6 +34,7 @@ export async function getMessageList({
   if (answerId == null) query.is('answerId', null);
   else query.eq('answerId', answerId);
 
+  if (embeddedType) query.eq('embeddedType', embeddedType);
   if (authorId) query.eq('authorId', authorId);
   if (search) query.textSearch('body', search);
   if (lastId != null) query.lt('id', lastId);
