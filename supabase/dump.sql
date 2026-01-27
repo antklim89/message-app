@@ -13,6 +13,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 
+CREATE EXTENSION IF NOT EXISTS "pg_cron" WITH SCHEMA "pg_catalog";
+
+
+
+
+
+
 CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
 
 
@@ -174,85 +181,9 @@ $_$;
 ALTER FUNCTION "public"."is_following"("public"."profiles") OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."messages" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated" timestamp without time zone DEFAULT "now"() NOT NULL,
-    "authorId" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "body" "jsonb" NOT NULL,
-    "embeddedItems" "text"[],
-    "embeddedType" "text",
-    "answerId" "uuid",
-    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "extensions"."jsonb_matches_schema"('{"type":"object","properties":{"type":{"type":"string","const":"root"},"children":{"type":"array","items":{"$ref":"#/definitions/Paragraph"}}},"required":["type","children"],"definitions":{"Paragraph":{"type":"object","properties":{"type":{"type":"string","const":"paragraph"},"children":{"type":"array","items":{"oneOf":[{"$ref":"#/definitions/Text"},{"$ref":"#/definitions/Link"},{"$ref":"#/definitions/Hashtag"},{"$ref":"#/definitions/User"}]}}},"required":["type","children"]},"Text":{"type":"object","properties":{"type":{"type":"string","const":"text"},"text":{"type":"string"},"format":{"type":"number"}},"required":["type","text","format"]},"Link":{"type":"object","properties":{"type":{"type":"string","const":"link"},"url": {"type":"string"},"children":{"type":"array","minItems":1,"items":{"$ref":"#/definitions/Text"}}},"required":["type","url","children"]},"Hashtag":{"type":"object","properties":{"type":{"type":"string","const":"hashtag"},"text":{"type":"string"},"format":{"type":"number"}},"required":["type","text","format"]},"User":{"type":"object","properties":{"type":{"type":"string","const":"user"},"text":{"type":"string"},"format":{"type":"number"},"id":{"type":"string"},"username":{"type":"string"}},"required":["type","text","format","id","username"]}}}'::json, "body")))
-);
-
-
-ALTER TABLE "public"."messages" OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."message_has_liked"("public"."messages") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select auth.uid() = (select "authorId" from likes where "authorId" = auth.uid() and "messageId" = $1.id)
-$_$;
-
-
-ALTER FUNCTION "public"."message_has_liked"("public"."messages") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."message_in_favorite"("public"."messages") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select auth.uid() = (select "authorId" from favorites where "authorId" = auth.uid() and "messageId" = $1.id)
-$_$;
-
-
-ALTER FUNCTION "public"."message_in_favorite"("public"."messages") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."message_likes_count"("public"."messages") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select count(1) from likes where "messageId" = $1.id
-$_$;
-
-
-ALTER FUNCTION "public"."message_likes_count"("public"."messages") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."messages_count"("public"."profiles") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select count(1) from messages where "authorId" = $1.id
-$_$;
-
-
-ALTER FUNCTION "public"."messages_count"("public"."profiles") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer DEFAULT 0) RETURNS integer
-    LANGUAGE "plpgsql"
-    AS $$
-DECLARE
-    lexical_node_child jsonb;
-BEGIN
-  FOR lexical_node_child IN SELECT * FROM jsonb_array_elements((lexical_node -> 'children'))
-  LOOP
-      result_length := result_length + calculate_lexical_text_length(lexical_node_child, result_length);
-  END LOOP;
-
-  return result_length;
-END;
-$$;
-
-
-ALTER FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) OWNER TO "postgres";
-
-
 CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "jsonb") RETURNS boolean
     LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select extensions.jsonb_matches_schema(
+    AS $_$select extensions.jsonb_matches_schema(
   schema := '
 {
   "type": "object",
@@ -336,16 +267,91 @@ select extensions.jsonb_matches_schema(
         "unicode": { "type": "string" },
         "label": { "type": "string" }
       },
-      "required": ["text", "unicode", "label"]
+      "required": ["type", "text", "unicode", "label"]
     }
   }
 }',
   instance := message_body
-);
-$_$;
+);$_$;
 
 
 ALTER FUNCTION "public"."validate_message_body"("message_body" "jsonb") OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."messages" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated" timestamp without time zone DEFAULT "now"() NOT NULL,
+    "authorId" "uuid" DEFAULT "auth"."uid"() NOT NULL,
+    "body" "jsonb" NOT NULL,
+    "embeddedItems" "text"[],
+    "embeddedType" "text",
+    "answerId" "uuid",
+    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body"))),
+    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text")))
+);
+
+
+ALTER TABLE "public"."messages" OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."message_has_liked"("public"."messages") RETURNS boolean
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $_$
+select auth.uid() = (select "authorId" from likes where "authorId" = auth.uid() and "messageId" = $1.id)
+$_$;
+
+
+ALTER FUNCTION "public"."message_has_liked"("public"."messages") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."message_in_favorite"("public"."messages") RETURNS boolean
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $_$
+select auth.uid() = (select "authorId" from favorites where "authorId" = auth.uid() and "messageId" = $1.id)
+$_$;
+
+
+ALTER FUNCTION "public"."message_in_favorite"("public"."messages") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."message_likes_count"("public"."messages") RETURNS bigint
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $_$
+select count(1) from likes where "messageId" = $1.id
+$_$;
+
+
+ALTER FUNCTION "public"."message_likes_count"("public"."messages") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."messages_count"("public"."profiles") RETURNS bigint
+    LANGUAGE "sql" STABLE SECURITY DEFINER
+    AS $_$
+select count(1) from messages where "authorId" = $1.id
+$_$;
+
+
+ALTER FUNCTION "public"."messages_count"("public"."profiles") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer DEFAULT 0) RETURNS integer
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    lexical_node_child jsonb;
+BEGIN
+  FOR lexical_node_child IN SELECT * FROM jsonb_array_elements((lexical_node -> 'children'))
+  LOOP
+      result_length := result_length + calculate_lexical_text_length(lexical_node_child, result_length);
+  END LOOP;
+
+  return result_length;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."favorites" (
@@ -553,10 +559,34 @@ ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 
 
 
+
+
+
 GRANT USAGE ON SCHEMA "public" TO "postgres";
 GRANT USAGE ON SCHEMA "public" TO "anon";
 GRANT USAGE ON SCHEMA "public" TO "authenticated";
 GRANT USAGE ON SCHEMA "public" TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -776,6 +806,12 @@ GRANT ALL ON FUNCTION "public"."is_following"("public"."profiles") TO "service_r
 
 
 
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."messages" TO "anon";
 GRANT ALL ON TABLE "public"."messages" TO "authenticated";
 GRANT ALL ON TABLE "public"."messages" TO "service_role";
@@ -812,9 +848,9 @@ GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_nod
 
 
 
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "service_role";
+
+
+
 
 
 
