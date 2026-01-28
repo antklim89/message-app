@@ -36,40 +36,40 @@ export function MessageImages({ images }: { images: string[] }) {
           </Button>
         ))}
       </SimpleGrid>
-      <Dialog.Root scrollBehavior="inside" size="xl" dialog={dialog}>
-        <Dialog.Body p={0}>
-          <Box display="grid" gridTemplateColumns="1fr" gridTemplateRows="1fr">
-            <Box ref={emblaRef} overflow="hidden" gridArea="1 / 1">
-              <Flex>
-                {images.map(imageUrl => (
-                  <Image
-                    flex="0 0 100%"
-                    minW={0}
-                    key={imageUrl}
-                    src={supabase.storage.from('gallery').getPublicUrl(imageUrl).data.publicUrl}
-                    w="full"
-                    aspectRatio="landscape"
-                    objectFit="contain"
-                  />
-                ))}
-              </Flex>
-            </Box>
-
-            {images.length > 1 && (
-              <Flex gridArea="1 / 1" flexDirection="column">
-                <Flex justifyContent="space-between" alignItems="center" flexBasis="100%">
-                  <Button variant="ghost" h="120px" size="xs" onClick={() => emblaApi?.scrollPrev()}>
-                    <FaChevronLeft />
-                  </Button>
-                  <Button variant="ghost" h="120px" size="xs" onClick={() => emblaApi?.scrollNext()}>
-                    <FaChevronRight />
-                  </Button>
-                </Flex>
-                <MessageImagesDots emblaApi={emblaApi} />
-              </Flex>
-            )}
+      <Dialog.Root size="cover" dialog={dialog}>
+        <Box h="full" display="grid" gridTemplateColumns="1fr" gridTemplateRows="1fr">
+          <Box h="full" ref={emblaRef} overflow="hidden" gridArea="1 / 1">
+            <Flex h="full">
+              {images.map(imageUrl => (
+                <Image
+                  onClick={() => dialog.setOpen(false)}
+                  flex="0 0 100%"
+                  minW={0}
+                  key={imageUrl}
+                  src={supabase.storage.from('gallery').getPublicUrl(imageUrl).data.publicUrl}
+                  w="full"
+                  h="full"
+                  aspectRatio="golden"
+                  objectFit="contain"
+                />
+              ))}
+            </Flex>
           </Box>
-        </Dialog.Body>
+
+          {images.length > 1 && (
+            <Flex gridArea="1 / 1" flexDirection="column">
+              <Flex justifyContent="space-between" alignItems="center" flexBasis="100%">
+                <Button variant="ghost" h="120px" size="xs" onClick={() => emblaApi?.scrollPrev()}>
+                  <FaChevronLeft />
+                </Button>
+                <Button variant="ghost" h="120px" size="xs" onClick={() => emblaApi?.scrollNext()}>
+                  <FaChevronRight />
+                </Button>
+              </Flex>
+              <MessageImagesDots emblaApi={emblaApi} />
+            </Flex>
+          )}
+        </Box>
       </Dialog.Root>
     </>
   );
