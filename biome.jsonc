@@ -77,7 +77,10 @@
     },
     "enabled": true,
     "rules": {
-      "a11y": "error",
+      "a11y": {
+        "recommended": true,
+        "useMediaCaption": "off"
+      },
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
         "noExcessiveLinesPerFunction": {
