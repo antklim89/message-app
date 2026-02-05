@@ -1,16 +1,16 @@
-import { Text } from '@chakra-ui/react';
+import { Image, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
-import { FaTriangleExclamation } from 'react-icons/fa6';
+import { FaImage, FaTriangleExclamation, FaVideo } from 'react-icons/fa6';
 import type { z } from 'zod/v4-mini';
 
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
+import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
-import { MessageImageUploadButton } from './message-image-upload-button';
-import { MessageUploadedImages } from './message-uploaded-images';
-import { MAX_MESSAGE_BODY_LENGTH } from '../config/constants';
-import { useMessageImagesUpload } from '../lib/hooks/use-message-images-upload';
+import { MessageCreateTabTrigger } from './message-create-tab-trigger';
+import { MessageUploadSection } from './message-upload-section';
+import { MAX_MESSAGE_BODY_LENGTH, MAX_UPLOADED_IMAGES, MAX_UPLOADED_VIDEOS } from '../config/constants';
 import { MessageCreateSchema } from '../model/schemas';
 
 export const messageEditFormOptions = formOptions({
@@ -23,47 +23,88 @@ export const messageEditFormOptions = formOptions({
 
 export const MessageEditForm = withForm({
   ...messageEditFormOptions,
-  render: ({ form }) => {
-    const upload = useMessageImagesUpload({
-      onUpload(files) {
-        form.setFieldValue('embedded', { type: 'images', images: files });
-      },
-    });
-
+  props: {} as { imagesUpload: UseFileUploadReturn; videoUpload: UseFileUploadReturn },
+  render: ({ form, imagesUpload, videoUpload }) => {
     return (
-      <form.AppForm>
-        <MessageUploadedImages upload={upload} />
-        <RichTextEditor
-          onKeyDown={e => {
-            if (!e) return;
-            if (e.key !== 'Enter' || !e.ctrlKey) return;
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-          value={form.getFieldValue('body')}
-          maxLength={MAX_MESSAGE_BODY_LENGTH}
-          plugins={
-            <>
-              <ProfileSelectLexicalPlugin />
-              <MessageImageUploadButton upload={upload} />
-
-              <form.AppField name="body">
-                {field => (
-                  <>
-                    <OnChangePlugin onChange={e => field.handleChange(e.toJSON().root)} />
-                    {!field.state.meta.isValid && (
-                      <Text as="span" color="red.500" display="flex" alignItems="baseline" gap={1}>
-                        <FaTriangleExclamation />
-                        {field.state.meta.errors.map(err => err?.message ?? err).join(',')}
-                      </Text>
-                    )}
-                  </>
-                )}
-              </form.AppField>
-            </>
+      <Tabs.Root
+        onValueChange={({ value }) => {
+          switch (value) {
+            case MessageEmbeddedType.IMAGES:
+              return form.setFieldValue('embedded', { type: value, files: imagesUpload.acceptedFiles });
+            case MessageEmbeddedType.VIDEOS:
+              return form.setFieldValue('embedded', { type: value, files: videoUpload.acceptedFiles });
+            default:
+              return form.setFieldValue('embedded', undefined);
           }
-        />
-      </form.AppForm>
+        }}
+      >
+        <form.AppForm>
+          <Tabs.ContentGroup mb={8}>
+            <Tabs.Content value={MessageEmbeddedType.IMAGES}>
+              <MessageUploadSection
+                render={file => <Image src={URL.createObjectURL(file)} w="full" h="full" objectFit="cover" />}
+                fileIcon={<FaImage />}
+                maxUploadedFiles={MAX_UPLOADED_IMAGES}
+                upload={imagesUpload}
+              />
+            </Tabs.Content>
+            <Tabs.Content value={MessageEmbeddedType.VIDEOS}>
+              <MessageUploadSection
+                render={file => <video width="100%" src={URL.createObjectURL(file)} controls />}
+                fileIcon={<FaVideo />}
+                maxUploadedFiles={MAX_UPLOADED_VIDEOS}
+                upload={videoUpload}
+              />
+            </Tabs.Content>
+          </Tabs.ContentGroup>
+          <RichTextEditor
+            onKeyDown={e => {
+              if (!e) return;
+              if (e.key !== 'Enter' || !e.ctrlKey) return;
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+            value={form.getFieldValue('body')}
+            maxLength={MAX_MESSAGE_BODY_LENGTH}
+            plugins={
+              <>
+                <ProfileSelectLexicalPlugin />
+
+                <form.AppField name="embedded.type">
+                  {({ state: { value } }) => (
+                    <>
+                      <MessageCreateTabTrigger
+                        embeddedType={MessageEmbeddedType.IMAGES}
+                        value={value}
+                        icon={<FaImage />}
+                      />
+                      <MessageCreateTabTrigger
+                        embeddedType={MessageEmbeddedType.VIDEOS}
+                        value={value}
+                        icon={<FaVideo />}
+                      />
+                    </>
+                  )}
+                </form.AppField>
+
+                <form.AppField name="body">
+                  {field => (
+                    <>
+                      <OnChangePlugin onChange={e => field.handleChange(e.toJSON().root)} />
+                      {!field.state.meta.isValid && (
+                        <Text as="span" color="red.500" display="flex" alignItems="baseline" gap={1}>
+                          <FaTriangleExclamation />
+                          {field.state.meta.errors.map(err => err?.message ?? err).join(',')}
+                        </Text>
+                      )}
+                    </>
+                  )}
+                </form.AppField>
+              </>
+            }
+          />
+        </form.AppForm>
+      </Tabs.Root>
     );
   },
 });

@@ -1,16 +1,20 @@
 import { useFileUpload } from '@chakra-ui/react';
 
-import { fileUploadErrorMap, optimizeImage } from '@/shared/lib/image-upload';
+import { fileUploadErrorMap, resizeImage } from '@/shared/lib/file-upload';
 import { toaster } from '@/shared/lib/toaster';
+import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { MAX_UPLOADED_IMAGES } from '../../config/constants';
 
-export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[]) => void }) {
+export function useMessageImagesUpload({
+  onUpload,
+}: {
+  onUpload: (args: { files: File[]; type: Extract<MessageEmbeddedType, 'images'> }) => void;
+}) {
   const fileUpload = useFileUpload({
     accept: 'image/*',
     maxFiles: MAX_UPLOADED_IMAGES,
     onFileAccept({ files }) {
-      if (files.length === 0) return;
-      onUpload(files);
+      onUpload({ files, type: MessageEmbeddedType.IMAGES });
     },
     validate(file, { acceptedFiles }) {
       const set = new Set([file.name + file.lastModified]);
@@ -22,7 +26,7 @@ export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[])
     },
     async transformFiles(files) {
       const transformedFiles = await Promise.all(
-        files.map(file => optimizeImage({ file, maxWidth: 1280, maxHeight: 1024 })),
+        files.map(file => resizeImage({ file, maxWidth: 1280, maxHeight: 1024 })),
       );
       return transformedFiles.filter(file => file != null);
     },

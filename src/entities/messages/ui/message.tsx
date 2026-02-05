@@ -10,6 +10,7 @@ import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { MessageImages } from './message-images';
+import { MessageVideos } from './message-videos';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
   return (
@@ -41,6 +42,8 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
       {message.embeddedType === MessageEmbeddedType.IMAGES &&
         message.embeddedItems &&
         message.embeddedItems.length > 0 && <MessageImages images={message.embeddedItems} />}
+
+      {message.embeddedType === MessageEmbeddedType.VIDEOS && <MessageVideos videos={message.embeddedItems} />}
       <Card.Body>
         <Card.Body>
           <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">

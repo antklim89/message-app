@@ -28,7 +28,7 @@ export function MessageImages({ images }: { images: string[] }) {
             }}
           >
             <Image
-              src={supabase.storage.from('gallery').getPublicUrl(imageUrl).data.publicUrl}
+              src={supabase.storage.from('message_images').getPublicUrl(imageUrl).data.publicUrl}
               w="full"
               aspectRatio="wide"
               alt="Message image"
@@ -46,7 +46,7 @@ export function MessageImages({ images }: { images: string[] }) {
                   flex="0 0 100%"
                   minW={0}
                   key={imageUrl}
-                  src={supabase.storage.from('gallery').getPublicUrl(imageUrl).data.publicUrl}
+                  src={supabase.storage.from('message_images').getPublicUrl(imageUrl).data.publicUrl}
                   w="full"
                   h="full"
                   aspectRatio="golden"

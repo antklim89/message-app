@@ -3,7 +3,12 @@ import { z } from 'zod/v4-mini';
 import type { MessageBody } from '@/entities/messages';
 import { calculateLexicalTextLength } from '@/shared/lib/lexical';
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
-import { MAX_MESSAGE_BODY_LENGTH, MIN_MESSAGE_BODY_LENGTH } from '../config/constants';
+import {
+  MAX_MESSAGE_BODY_LENGTH,
+  MAX_UPLOADED_IMAGES,
+  MAX_UPLOADED_VIDEOS,
+  MIN_MESSAGE_BODY_LENGTH,
+} from '../config/constants';
 
 export const MessageCreateSchema = z.object({
   body: z.optional(
@@ -18,7 +23,11 @@ export const MessageCreateSchema = z.object({
     z.union([
       z.object({
         type: z.literal(MessageEmbeddedType.IMAGES),
-        images: z.array(z.file()).check(z.maxLength(4)),
+        files: z.optional(z.array(z.file()).check(z.maxLength(MAX_UPLOADED_IMAGES))),
+      }),
+      z.object({
+        type: z.literal(MessageEmbeddedType.VIDEOS),
+        files: z.optional(z.array(z.file()).check(z.maxLength(MAX_UPLOADED_VIDEOS))),
       }),
     ]),
   ),
