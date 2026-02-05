@@ -288,6 +288,7 @@ CREATE TABLE IF NOT EXISTS "public"."messages" (
     "embeddedType" "text",
     "answerId" "uuid",
     CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body"))),
+    CONSTRAINT "messages_embeddedItems_check" CHECK ((("cardinality"("embeddedItems") > 0) AND ("cardinality"("embeddedItems") <= 4))),
     CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text")))
 );
 
@@ -525,10 +526,6 @@ CREATE POLICY "Enable select for all" ON "public"."favorites" FOR SELECT USING (
 
 
 CREATE POLICY "Enable select for all" ON "public"."profiles" FOR SELECT USING (true);
-
-
-
-CREATE POLICY "Enable update for authors only" ON "public"."messages" FOR UPDATE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "authorId")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
 
 
 
