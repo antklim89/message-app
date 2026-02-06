@@ -32,16 +32,7 @@ export const MessageEditForm = withForm({
       <Tabs.Root
         lazyMount={true}
         onValueChange={({ value }) => {
-          switch (value) {
-            case MessageEmbeddedType.IMAGES:
-              return form.setFieldValue('embedded', { type: value, files: imagesUpload.acceptedFiles });
-            case MessageEmbeddedType.VIDEOS:
-              return form.setFieldValue('embedded', { type: value, files: videoUpload.acceptedFiles });
-            case MessageEmbeddedType.LINK:
-              return form.setFieldValue('embedded', { type: value, link: linkInputRef.current?.value || '' });
-            default:
-              return form.setFieldValue('embedded', undefined);
-          }
+          form.setFieldValue('embeddedType', value as MessageEmbeddedType);
         }}
       >
         <form.AppForm>
@@ -63,7 +54,7 @@ export const MessageEditForm = withForm({
               />
             </Tabs.Content>
             <Tabs.Content value={MessageEmbeddedType.LINK}>
-              <form.AppField name="embedded.link">
+              <form.AppField name="embeddedLink">
                 {field => (
                   <Field.Root invalid={!field.state.meta.isValid}>
                     <Field.Label>External link</Field.Label>
@@ -72,7 +63,7 @@ export const MessageEditForm = withForm({
                       defaultValue="https://"
                       placeholder="https://example.com"
                       onChange={e => {
-                        form.setFieldValue('embedded', { type: MessageEmbeddedType.LINK, link: e.target.value });
+                        field.handleChange(e.target.value);
                       }}
                     />
                     <Field.ErrorText>{field.state.meta.errors.map(err => err?.message)}</Field.ErrorText>
@@ -95,7 +86,7 @@ export const MessageEditForm = withForm({
               <>
                 <ProfileSelectLexicalPlugin />
 
-                <form.AppField name="embedded.type">
+                <form.AppField name="embeddedType">
                   {({ state: { value } }) => (
                     <>
                       <MessageCreateTabTrigger

@@ -21,11 +21,11 @@ export function MessageCreateDialogContent({ answerId }: { answerId: string | un
   });
 
   const imagesUpload = useMessageImagesUpload({
-    onUpload: value => form.setFieldValue('embedded', value),
+    onUpload: files => form.setFieldValue('embeddedImages', files),
   });
 
   const videoUpload = useMessageVideosUpload({
-    onUpload: value => form.setFieldValue('embedded', value),
+    onUpload: files => form.setFieldValue('embeddedVideos', files),
   });
 
   const disabled = imagesUpload.transforming || videoUpload.transforming;
