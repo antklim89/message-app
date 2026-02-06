@@ -36,6 +36,11 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
     }
   }
 
+  if (input.embedded && input.embedded.type === 'link') {
+    insert.embeddedItems = [input.embedded.link];
+    insert.embeddedType = input.embedded.type;
+  }
+
   const createMessageResult = await supabase
     .from('messages')
     .insert({

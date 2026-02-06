@@ -1,7 +1,8 @@
-import { Image, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
+import { useRef } from 'react';
+import { Field, Image, Input, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
-import { FaImage, FaTriangleExclamation, FaVideo } from 'react-icons/fa6';
+import { FaImage, FaLink, FaTriangleExclamation, FaVideo } from 'react-icons/fa6';
 import type { z } from 'zod/v4-mini';
 
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
@@ -15,7 +16,7 @@ import { MessageCreateSchema } from '../model/schemas';
 
 export const messageEditFormOptions = formOptions({
   validators: {
-    onSubmit: MessageCreateSchema,
+    onDynamic: MessageCreateSchema,
   },
   validationLogic: revalidateLogic(),
   defaultValues: {} as z.infer<typeof MessageCreateSchema>,
@@ -25,14 +26,19 @@ export const MessageEditForm = withForm({
   ...messageEditFormOptions,
   props: {} as { imagesUpload: UseFileUploadReturn; videoUpload: UseFileUploadReturn },
   render: ({ form, imagesUpload, videoUpload }) => {
+    const linkInputRef = useRef<HTMLInputElement>(null);
+
     return (
       <Tabs.Root
+        lazyMount={true}
         onValueChange={({ value }) => {
           switch (value) {
             case MessageEmbeddedType.IMAGES:
               return form.setFieldValue('embedded', { type: value, files: imagesUpload.acceptedFiles });
             case MessageEmbeddedType.VIDEOS:
               return form.setFieldValue('embedded', { type: value, files: videoUpload.acceptedFiles });
+            case MessageEmbeddedType.LINK:
+              return form.setFieldValue('embedded', { type: value, link: linkInputRef.current?.value || '' });
             default:
               return form.setFieldValue('embedded', undefined);
           }
@@ -56,7 +62,26 @@ export const MessageEditForm = withForm({
                 upload={videoUpload}
               />
             </Tabs.Content>
+            <Tabs.Content value={MessageEmbeddedType.LINK}>
+              <form.AppField name="embedded.link">
+                {field => (
+                  <Field.Root invalid={!field.state.meta.isValid}>
+                    <Field.Label>External link</Field.Label>
+                    <Input
+                      ref={linkInputRef}
+                      defaultValue="https://"
+                      placeholder="https://example.com"
+                      onChange={e => {
+                        form.setFieldValue('embedded', { type: MessageEmbeddedType.LINK, link: e.target.value });
+                      }}
+                    />
+                    <Field.ErrorText>{field.state.meta.errors.map(err => err?.message)}</Field.ErrorText>
+                  </Field.Root>
+                )}
+              </form.AppField>
+            </Tabs.Content>
           </Tabs.ContentGroup>
+
           <RichTextEditor
             onKeyDown={e => {
               if (!e) return;
@@ -82,6 +107,11 @@ export const MessageEditForm = withForm({
                         embeddedType={MessageEmbeddedType.VIDEOS}
                         value={value}
                         icon={<FaVideo />}
+                      />
+                      <MessageCreateTabTrigger
+                        embeddedType={MessageEmbeddedType.LINK}
+                        value={value}
+                        icon={<FaLink />}
                       />
                     </>
                   )}

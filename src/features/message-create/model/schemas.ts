@@ -29,6 +29,10 @@ export const MessageCreateSchema = z.object({
         type: z.literal(MessageEmbeddedType.VIDEOS),
         files: z.optional(z.array(z.file()).check(z.maxLength(MAX_UPLOADED_VIDEOS))),
       }),
+      z.object({
+        type: z.literal(MessageEmbeddedType.LINK),
+        link: z.string().check(z.url()),
+      }),
     ]),
   ),
 });
