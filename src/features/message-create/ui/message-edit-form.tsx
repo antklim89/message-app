@@ -32,7 +32,8 @@ export const MessageEditForm = withForm({
       <Tabs.Root
         lazyMount={true}
         onValueChange={({ value }) => {
-          form.setFieldValue('embeddedType', value as MessageEmbeddedType);
+          const type = value === 'null' ? undefined : value;
+          form.setFieldValue('embeddedType', type as MessageEmbeddedType);
         }}
       >
         <form.AppForm>

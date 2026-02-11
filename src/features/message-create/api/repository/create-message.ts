@@ -56,7 +56,7 @@ async function uploadFiles({
     return errUnexpected('Failed to upload images.');
   }
 
-  const files = input.embeddedType !== MessageEmbeddedType.IMAGES ? input.embeddedImages : input.embeddedVideos;
+  const files = input.embeddedType === MessageEmbeddedType.IMAGES ? input.embeddedImages : input.embeddedVideos;
   if (!files || files.length === 0) return errValidation('No files to upload.');
 
   const bucket = input.embeddedType !== MessageEmbeddedType.IMAGES ? 'message_images' : 'message_videos';
