@@ -75,22 +75,21 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE OR REPLACE FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer DEFAULT 0) RETURNS integer
     LANGUAGE "plpgsql"
-    AS $$
-DECLARE
+    AS $$DECLARE
   result int;
 BEGIN
   return CASE lexical_node ->> 'type'
       WHEN 'root' THEN process_lexical_node_with_children(lexical_node, result_length)
       WHEN 'paragraph' THEN process_lexical_node_with_children(lexical_node, result_length)
       WHEN 'link' THEN process_lexical_node_with_children(lexical_node, result_length)
+      WHEN 'autolink' THEN process_lexical_node_with_children(lexical_node, result_length)
       WHEN 'text' THEN length(lexical_node ->> 'text')
       WHEN 'user' THEN length(lexical_node ->> 'text')
       WHEN 'hashtag' THEN length(lexical_node ->> 'text')
       WHEN 'emoji' THEN length(lexical_node ->> 'text')
       ELSE 0
   END;
-END;
-$$;
+END;$$;
 
 
 ALTER FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) OWNER TO "postgres";
@@ -206,6 +205,7 @@ CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "json
             "oneOf": [
               { "$ref": "#/definitions/Text" },
               { "$ref": "#/definitions/Link" },
+              { "$ref": "#/definitions/Autolink" },
               { "$ref": "#/definitions/Hashtag" },
               { "$ref": "#/definitions/User" },
               { "$ref": "#/definitions/Emoji" }
@@ -228,6 +228,21 @@ CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "json
       "type": "object",
       "properties": {
         "type": { "type": "string", "const": "link" },
+        "url": { "type": "string" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Text"
+          }
+        }
+      },
+      "required": ["type", "url", "children"]
+    },
+    "Autolink": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "autolink" },
         "url": { "type": "string" },
         "children": {
           "type": "array",
@@ -289,7 +304,7 @@ CREATE TABLE IF NOT EXISTS "public"."messages" (
     "answerId" "uuid",
     CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body"))),
     CONSTRAINT "messages_embeddedItems_check" CHECK ((("cardinality"("embeddedItems") > 0) AND ("cardinality"("embeddedItems") <= 4))),
-    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text")))
+    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text") OR ("embeddedType" = 'link'::"text")))
 );
 
 
