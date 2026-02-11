@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Box, HStack, Span, Stack, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
-import { LinkNode } from '@lexical/link';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable, type ContentEditableProps } from '@lexical/react/LexicalContentEditable';
@@ -15,11 +15,11 @@ import type { LexicalEditor, SerializedRootNode } from 'lexical';
 import { RICH_TEXT_EDITOR_NAMESPACE } from '@/shared/lib/lexical/constants';
 import { EmojiNode } from '@/shared/lib/lexical/nodes/emoji-node';
 import { UserNode } from '@/shared/lib/lexical/nodes/user-node';
+import { LexicalAutoLinkPlugin } from './plugins/lexical-autolink-plugin';
 import { LexicalBodyLengthPlugin } from './plugins/lexical-body-length-plugin';
 import { LexicalEmojiPlugin } from './plugins/lexical-emoji-plugin';
 import { LexicalFormatButtonsPlugin } from './plugins/lexical-format-buttons-plugin';
 import { LexicalKeyDownPlugin } from './plugins/lexical-key-down-plugin';
-import { LexicalLinkPlugin } from './plugins/lexical-link-plugin';
 import { LexicalUserPlugin } from './plugins/lexical-user-plugin';
 
 export function RichTextEditor({
@@ -48,13 +48,14 @@ export function RichTextEditor({
             bold: 'editor-text-bold',
             italic: 'editor-text-italic',
             underline: 'editor-text-underline',
+            // biome-ignore lint/security/noSecrets: this is not a secret
             underlineStrikethrough: 'editor-text-underlineStrikethrough',
             strikethrough: 'editor-text-strikethrough',
           },
           link: 'editor-link',
         },
         onError,
-        nodes: [HashtagNode, UserNode, LinkNode, EmojiNode],
+        nodes: [HashtagNode, UserNode, LinkNode, EmojiNode, AutoLinkNode],
         editorState(editor) {
           try {
             if (value) editor.setEditorState(editor.parseEditorState({ root: value }));
@@ -91,7 +92,6 @@ export function RichTextEditor({
         />
         <Stack>
           <HStack mt={2}>
-            <LexicalLinkPlugin />
             <LexicalEmojiPlugin />
             {plugins}
             <Box flexGrow={1} />
@@ -103,6 +103,7 @@ export function RichTextEditor({
         </Stack>
       </Box>
 
+      <LexicalAutoLinkPlugin />
       <LexicalKeyDownPlugin onKeyDown={onKeyDown} />
       <HashtagPlugin />
       <LexicalUserPlugin />

@@ -9,6 +9,7 @@ export function calculateLexicalTextLength(data?: SerializedLexicalNode): number
   switch (data.type) {
     case 'root':
     case 'paragraph':
+    case 'autolink':
     case 'link': {
       const { children } = data as SerializedRootNode | SerializedParagraphNode | SerializedLinkNode;
       return children.reduce((acc, i) => acc + calculateLexicalTextLength(i), 0);
