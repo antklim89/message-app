@@ -43,6 +43,7 @@ export class EmojiNode extends TextNode {
 
   createDOM(config: EditorConfig): HTMLElement {
     const element = super.createDOM(config);
+    element.style.marginLeft = '0.1px';
     return element;
   }
 

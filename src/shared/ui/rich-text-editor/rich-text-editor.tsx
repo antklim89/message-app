@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, HStack, Span, Stack, Textarea } from '@chakra-ui/react';
+import { Box, Collapsible, HStack, IconButton, Span, Stack, Textarea } from '@chakra-ui/react';
 import { HashtagNode } from '@lexical/hashtag';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -11,6 +11,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import type { LexicalEditor, SerializedRootNode } from 'lexical';
+import { FaFaceSmile } from 'react-icons/fa6';
 
 import { RICH_TEXT_EDITOR_NAMESPACE } from '@/shared/lib/lexical/constants';
 import { EmojiNode } from '@/shared/lib/lexical/nodes/emoji-node';
@@ -90,17 +91,28 @@ export function RichTextEditor({
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
-        <Stack>
-          <HStack mt={2}>
-            <LexicalEmojiPlugin />
-            {plugins}
-            <Box flexGrow={1} />
-            <LexicalBodyLengthPlugin maxLength={maxLength} />
-          </HStack>
-          <HStack mt={2}>
-            <LexicalFormatButtonsPlugin />
-          </HStack>
-        </Stack>
+        <Collapsible.Root lazyMount>
+          <Stack>
+            <HStack mt={2}>
+              <Collapsible.Trigger asChild>
+                <IconButton variant="outline">
+                  <FaFaceSmile />
+                </IconButton>
+              </Collapsible.Trigger>
+              {plugins}
+              <Box flexGrow={1} />
+              <LexicalBodyLengthPlugin maxLength={maxLength} />
+            </HStack>
+
+            <Collapsible.Content>
+              <LexicalEmojiPlugin />
+            </Collapsible.Content>
+
+            <HStack mt={2}>
+              <LexicalFormatButtonsPlugin />
+            </HStack>
+          </Stack>
+        </Collapsible.Root>
       </Box>
 
       <LexicalAutoLinkPlugin />

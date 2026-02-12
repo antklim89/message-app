@@ -1,237 +1,160 @@
-import { memo, Suspense, startTransition, use, useMemo, useRef, useState } from 'react';
+import { type ReactNode, startTransition, use, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
-  Center,
   ColorSwatch,
-  Dialog,
+  HStack,
   Icon,
   IconButton,
   Input,
-  Portal,
+  InputGroup,
   SegmentGroup,
   SimpleGrid,
-  Spinner,
   Stack,
   Tabs,
   useBreakpointValue,
-  useTabs,
 } from '@chakra-ui/react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { FaX } from 'react-icons/fa6';
 
 import { useDebounceValue } from '@/shared/hooks/use-debounce-value';
 import type { Emoji } from '@/shared/model/emoji';
-import { emojiGroups } from './emoji-groups';
+import { emojiIconsMap } from './emoji-icons-map';
 
 const emojisPromise = import('./emoji-list.json').then(m => m.default);
 
 const skinTones = ['#FDE030', '#FFDBAC', '#F1C27D', '#E0AC69', '#C68642', '#8D5524'] as const;
 
-export function EmojiPicker({
-  onEmojiSelect,
-  ...props
-}: {
-  onEmojiSelect: (emoji: Emoji) => void;
-} & Omit<Dialog.RootProviderProps, 'children'>) {
-  const tabs = useTabs({
-    defaultValue: '0',
-    onValueChange: () => startTransition(() => {}),
-  });
+export function EmojiPicker({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji) => void }) {
+  const emojiGroups = use(emojisPromise);
   const [searchTerm, setSearchTerm] = useState('');
   const [skinToneIndex, setSkinToneIndex] = useState(0);
   const searchTermDebounced = useDebounceValue(searchTerm, 700);
 
+  const filteredEmojis = useMemo(
+    () =>
+      emojiGroups.map(emojiGroup => ({
+        ...emojiGroup,
+        items: emojiGroup.items.filter(i => {
+          if (searchTermDebounced.length >= 2) return i.tags.some(tags => tags.includes(searchTermDebounced));
+          return true;
+        }),
+      })),
+    [searchTermDebounced, emojiGroups],
+  );
+
   return (
-    <Dialog.RootProvider size="xs" motionPreset="slide-in-bottom" scrollBehavior="outside" placement="top" {...props}>
-      <Portal>
-        <Dialog.Positioner>
-          <Dialog.Backdrop />
-          <Dialog.Content w="320px">
-            <Dialog.Header flexDirection="column" alignItems="center" pt={1} pb={1}>
-              <Tabs.RootProvider value={tabs} lazyMount unmountOnExit asChild>
-                <Stack alignItems="center" w="full">
-                  <Tabs.List justifyContent="space-around" flexWrap="wrap" w="full">
-                    <Tabs.Trigger
-                      minW={0}
-                      px={0}
-                      py={0}
-                      paddingInline={0}
-                      paddingBlock={0}
-                      fontSize="xs"
-                      value="search"
-                    >
-                      <Icon size="sm" as={FaMagnifyingGlass} />
-                    </Tabs.Trigger>
+    <Tabs.Root
+      orientation="vertical"
+      onValueChange={() => startTransition(() => {})}
+      defaultValue={emojiGroups[0]?.label}
+      lazyMount
+      asChild
+    >
+      <HStack gap={2} alignItems="sta">
+        <Stack flexGrow={1} w="full" gap={4}>
+          <InputGroup
+            endAddon={
+              <IconButton variant="ghost" colorPalette="red" size="2xs" onClick={() => setSearchTerm('')}>
+                <FaX />
+              </IconButton>
+            }
+          >
+            <Input size="2xs" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+          </InputGroup>
 
-                    {Object.entries(emojiGroups).map(([key, group]) => (
-                      <Tabs.Trigger
-                        title={group.label}
-                        minW={0}
-                        px={0}
-                        py={0}
-                        paddingInline={0}
-                        paddingBlock={0}
-                        fontSize="xs"
-                        key={key}
-                        value={key}
-                      >
-                        <Icon size="sm" as={group.icon} />
-                      </Tabs.Trigger>
-                    ))}
-                  </Tabs.List>
+          <Tabs.Content value="people body" unstyled w="full">
+            <SegmentGroup.Root defaultValue="0" size="xs" w="full">
+              <SegmentGroup.Indicator />
+              {skinTones.map((skinTone, index) => (
+                <Button unstyled key={skinTone} asChild onClick={() => startTransition(() => setSkinToneIndex(index))}>
+                  <SegmentGroup.Item w="full" value={index.toString()} key={skinTone}>
+                    <ColorSwatch key={skinTone} value={skinTone} h="full" w="full" />
+                    <SegmentGroup.ItemHiddenInput />
+                  </SegmentGroup.Item>
+                </Button>
+              ))}
+            </SegmentGroup.Root>
+          </Tabs.Content>
 
-                  <Tabs.Content value="1" display="flex" justifyContent="center" p={0}>
-                    <SegmentGroup.Root defaultValue="0">
-                      <SegmentGroup.Indicator />
-                      {skinTones.map((item, index) => (
-                        <Button
-                          unstyled
-                          key={item}
-                          asChild
-                          onClick={() => startTransition(() => setSkinToneIndex(index))}
-                        >
-                          <SegmentGroup.Item value={index.toString()} key={item}>
-                            <ColorSwatch key={item} value={item} />
-                            <SegmentGroup.ItemHiddenInput />
-                          </SegmentGroup.Item>
-                        </Button>
-                      ))}
-                    </SegmentGroup.Root>
-                  </Tabs.Content>
-
-                  <Tabs.Content p={0} value="search">
-                    <Input mb={4} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-                  </Tabs.Content>
-                </Stack>
-              </Tabs.RootProvider>
-            </Dialog.Header>
-
-            <Dialog.Body overflow="hidden" height="140px" p={4}>
-              <Tabs.RootProvider value={tabs} lazyMount unmountOnExit>
-                {Object.keys(emojiGroups).map(group => (
-                  <Tabs.Content p={0} key={group} value={group}>
-                    <Suspense
-                      key={group}
-                      fallback={
-                        <Center>
-                          <Spinner />
-                        </Center>
-                      }
-                    >
-                      <EmojisGrid
-                        skinToneIndex={skinToneIndex}
-                        group={Number.parseInt(group, 10)}
-                        onEmojiSelect={onEmojiSelect}
-                      />
-                    </Suspense>
-                  </Tabs.Content>
-                ))}
-                <Tabs.Content p={0} value="search">
-                  {searchTerm.length >= 2 && (
-                    <Suspense
-                      fallback={
-                        <Center>
-                          <Spinner />
-                        </Center>
-                      }
-                    >
-                      <EmojisGrid
-                        group={-1}
-                        skinToneIndex={skinToneIndex}
-                        search={searchTermDebounced}
-                        onEmojiSelect={onEmojiSelect}
-                      />
-                    </Suspense>
+          <Box>
+            {filteredEmojis.map(emojiGroup => (
+              <Tabs.Content key={emojiGroup.key} p={0} value={emojiGroup.label}>
+                <EmojiPickerGrid emojis={emojiGroup.items}>
+                  {emoji => (
+                    <EmojiPickerItem
+                      key={emoji.label}
+                      emoji={emoji}
+                      skinToneIndex={skinToneIndex}
+                      onEmojiSelect={onEmojiSelect}
+                    />
                   )}
-                </Tabs.Content>
-              </Tabs.RootProvider>
-            </Dialog.Body>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.RootProvider>
+                </EmojiPickerGrid>
+              </Tabs.Content>
+            ))}
+          </Box>
+        </Stack>
+        <Tabs.List flexGrow={0} alignItems="center">
+          {filteredEmojis.map(group => (
+            <Tabs.Trigger
+              disabled={group.items.length === 0}
+              opacity={group.items.length === 0 ? 0.1 : 1}
+              title={group.label}
+              minW={0}
+              h="1.5rem"
+              fontSize="xs"
+              key={group.label}
+              value={group.label}
+            >
+              <Icon size="sm" as={emojiIconsMap[group.label]} />
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+      </HStack>
+    </Tabs.Root>
   );
 }
 
-const EmojisGrid = memo(
-  ({
-    group,
-    search,
-    onEmojiSelect,
-    skinToneIndex,
-  }: {
-    skinToneIndex: number;
-    group: number;
-    search?: string;
-    onEmojiSelect: (emoji: Emoji) => void;
-  }) => {
-    const chunkSize = useBreakpointValue({ base: 5, sm: 6 }, { ssr: false }) || 4;
-    const emojis = use(emojisPromise) as Emoji[];
-    const parentRef = useRef(null);
+function EmojiPickerGrid({ emojis, children }: { emojis: Emoji[]; children: (emoji: Emoji) => ReactNode }) {
+  const columns = useBreakpointValue({ base: 6, sm: 8 }, { ssr: false }) || 6;
+  const parentRef = useRef(null);
+  const rowVirtualizer = useVirtualizer({
+    count: Math.ceil(emojis.length / columns),
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 26,
+    gap: 2,
+    overscan: 5,
+  });
 
-    const filteredEmojis = useMemo(() => {
-      return emojis.filter(i => {
-        if (i.tags && group === -1 && search && search.length >= 2) {
-          return i.tags.some(tags => tags.includes(search));
-        }
-        return i.group === group;
-      });
-    }, [search, group, emojis]);
+  return (
+    <Box ref={parentRef} height="14rem" overflow="auto">
+      <Box w="full" position="relative" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+        {rowVirtualizer.getVirtualItems().map(virtualItem => {
+          const emojiChunk = emojis.slice(virtualItem.index * columns, virtualItem.index * columns + columns);
 
-    const chunkedEmojis = useMemo(() => {
-      const numberOfChunks = Math.ceil(filteredEmojis.length / 5);
-
-      return Array.from({ length: numberOfChunks }, (_, index) =>
-        filteredEmojis.slice(index * chunkSize, (index + 1) * chunkSize),
-      );
-    }, [filteredEmojis, chunkSize]);
-
-    const rowVirtualizer = useVirtualizer({
-      count: chunkedEmojis.length,
-      getScrollElement: () => parentRef.current,
-      estimateSize: () => 24,
-      gap: 2,
-    });
-
-    return (
-      <Box ref={parentRef} height="140px" overflow="auto">
-        <Box w="100%" position="relative" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
-          {rowVirtualizer.getVirtualItems().map(virtualItem => {
-            const emojisChunk = chunkedEmojis[virtualItem.index];
-            if (!emojisChunk) return null;
-
-            return (
-              <SimpleGrid
-                columns={chunkSize}
-                position="absolute"
-                top={0}
-                left={0}
-                w="100%"
-                key={virtualItem.index}
-                style={{
-                  height: `${virtualItem.size}px`,
-                  transform: `translateY(${virtualItem.start}px)`,
-                }}
-              >
-                {emojisChunk.map(emoji => (
-                  <EmojiItem
-                    onEmojiSelect={onEmojiSelect}
-                    emoji={emoji}
-                    skinToneIndex={skinToneIndex}
-                    key={emoji.hexcode}
-                  />
-                ))}
-              </SimpleGrid>
-            );
-          })}
-        </Box>
+          return (
+            <SimpleGrid
+              columns={columns}
+              position="absolute"
+              top={0}
+              left={0}
+              w="full"
+              key={virtualItem.index}
+              style={{
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              {emojiChunk.map(children)}
+            </SimpleGrid>
+          );
+        })}
       </Box>
-    );
-  },
-);
+    </Box>
+  );
+}
 
-function EmojiItem({
+function EmojiPickerItem({
   emoji,
   skinToneIndex,
   onEmojiSelect,
@@ -251,8 +174,8 @@ function EmojiItem({
       title={emojisSkinTone.label}
       onClick={handleEmojiSelect}
       variant="ghost"
-      size="xl"
-      fontSize="2xl"
+      size="2xs"
+      fontSize={{ base: 'xl', sm: '2xl' }}
       key={emojisSkinTone.hexcode}
       aria-label={emojisSkinTone.label}
     >
