@@ -2,7 +2,7 @@ import { useFileUpload } from '@chakra-ui/react';
 
 import { fileUploadErrorMap, resizeImage } from '@/shared/lib/file-upload';
 import { toaster } from '@/shared/lib/toaster';
-import { MAX_UPLOADED_IMAGES } from '../../config/constants';
+import { MAX_IMAGE_SIZE_IN_BYTES, MAX_UPLOADED_IMAGES } from '../../config/constants';
 
 export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[]) => void }) {
   const fileUpload = useFileUpload({
@@ -21,7 +21,9 @@ export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[])
     },
     async transformFiles(files) {
       const transformedFiles = await Promise.all(
-        files.map(file => resizeImage({ file, maxWidth: 1280, maxHeight: 1024 })),
+        files.map(file =>
+          resizeImage({ maxImageSize: MAX_IMAGE_SIZE_IN_BYTES, file, maxWidth: 1280, maxHeight: 1024 }),
+        ),
       );
       return transformedFiles.filter(file => file != null);
     },

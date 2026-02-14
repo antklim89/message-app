@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { MessageType } from '@/entities/messages';
-import { errAuthentication, errUnexpected, errValidation, ok, type PromiseResult } from '@/shared/lib/result';
+import { err, errAuthentication, errUnexpected, errValidation, ok, type PromiseResult } from '@/shared/lib/result';
 import { createSupabaseClient, getSupabaseSession } from '@/shared/lib/supabase';
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import type { Database, Json } from '@/shared/model/supabase-types.generated';
@@ -16,7 +16,10 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
   const insert: Partial<Database['public']['Tables']['messages']['Insert']> = {};
 
   if (input.embeddedType === MessageEmbeddedType.VIDEOS || input.embeddedType === MessageEmbeddedType.IMAGES) {
-    await uploadFiles({ input, supabase, user });
+    const { fail, error, result } = await uploadFiles({ input, supabase, user });
+    if (fail) return err(error);
+    insert.embeddedType = input.embeddedType;
+    insert.embeddedItems = result;
   }
 
   if (input.embeddedType === MessageEmbeddedType.LINK) {
@@ -59,12 +62,12 @@ async function uploadFiles({
   const files = input.embeddedType === MessageEmbeddedType.IMAGES ? input.embeddedImages : input.embeddedVideos;
   if (!files || files.length === 0) return errValidation('No files to upload.');
 
-  const bucket = input.embeddedType !== MessageEmbeddedType.IMAGES ? 'message_images' : 'message_videos';
-  const path = `${user.id}/${crypto.randomUUID()}`;
+  const bucket = input.embeddedType === MessageEmbeddedType.IMAGES ? 'message_images' : 'message_videos';
 
   try {
     const paths = await Promise.all(
       files.map(async file => {
+        const path = `${user.id}/${crypto.randomUUID()}`;
         const { data, error } = await supabase.storage.from(bucket).upload(path, file);
         if (error) throw new Error('Failed to upload files.');
         return data.path;

@@ -1,15 +1,20 @@
 import type { FileUploadFileError } from '@chakra-ui/react';
 
-export function resizeImage({
+export async function resizeImage({
   file,
   maxWidth,
   maxHeight,
+  maxImageSize,
+  quality = 0.8,
 }: {
   file: File;
   maxWidth: number;
   maxHeight: number;
+  maxImageSize: number;
+  quality?: number;
 }): Promise<File | null> {
-  return new Promise<File | null>(resolve => {
+  if (quality <= 0) return null;
+  const result = await new Promise<File | null>(resolve => {
     const img = new Image();
     img.src = URL.createObjectURL(file);
 
@@ -27,14 +32,18 @@ export function resizeImage({
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         blob => {
-          if (blob) void resolve(new File([blob], file.name, file));
+          if (blob) void resolve(new File([blob], file.name, { type: 'image/webp' }));
           else void resolve(null);
         },
-        file.type,
-        0.8,
+        'image/webp',
+        quality,
       );
     };
   });
+  if (!result) return null;
+
+  if (result.size <= maxImageSize) return result;
+  return resizeImage({ maxImageSize, file: result, maxHeight, maxWidth, quality: quality - 0.05 });
 }
 
 export function resizeVideo({
