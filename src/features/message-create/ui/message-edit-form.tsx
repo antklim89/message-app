@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Field, Image, Input, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
@@ -7,6 +7,7 @@ import type { z } from 'zod/v4-mini';
 
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
+import { useSupabase } from '@/shared/lib/supabase';
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageCreateTabTrigger } from './message-create-tab-trigger';
@@ -68,6 +69,7 @@ export const MessageEditForm = withForm({
                       }}
                     />
                     <Field.ErrorText>{field.state.meta.errors.map(err => err?.message)}</Field.ErrorText>
+                    {field.state.meta.isValid && <EmbeddedSite url={field.state.value} />}
                   </Field.Root>
                 )}
               </form.AppField>
@@ -130,3 +132,16 @@ export const MessageEditForm = withForm({
     );
   },
 });
+
+function EmbeddedSite({ url }: { url: string }) {
+  const supabase = useSupabase();
+  useEffect(() => {
+    supabase.functions
+      .invoke('get-site-metadata', {
+        body: { url },
+      })
+      .then(data => console.log(data));
+  }, [url, supabase]);
+
+  return null;
+}

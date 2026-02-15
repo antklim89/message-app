@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@/": "../../../",
+    "edge-runtime": "jsr:@supabase/functions-js/edge-runtime.d.ts",
+    "parse5": "npm:parse5"
+  }
+}

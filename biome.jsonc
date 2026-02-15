@@ -38,7 +38,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["src/**/*", "supabase/seed.ts", "!**/*.generated.*"]
+    "includes": ["src/**/*", "supabase/functions/**/*", "supabase/seed.ts", "!**/*.generated.*"]
   },
   "formatter": {
     "attributePosition": "auto",
@@ -58,6 +58,7 @@
     }
   },
   "javascript": {
+    "globals": ["Deno"],
     "formatter": {
       "arrowParentheses": "asNeeded",
       "enabled": true,
