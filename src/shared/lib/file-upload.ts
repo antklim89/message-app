@@ -46,80 +46,71 @@ export async function resizeImage({
   return resizeImage({ maxImageSize, file: result, maxHeight, maxWidth, quality: quality - 0.05 });
 }
 
-export function resizeVideo({
+export async function resizeVideo({
   file,
   maxWidth = 640,
   maxHeight = 480,
   fps = 24,
+  videoLength = 60 * 2,
+  maxVideoSize,
 }: {
   file: File;
   maxWidth?: number;
   maxHeight?: number;
   fps?: number;
+  videoLength?: number;
+  maxVideoSize: number;
 }): Promise<File | null> {
-  return new Promise(resolve => {
-    const video = document.createElement('video');
-    video.muted = true;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.preload = 'auto';
+  const {
+    ALL_FORMATS,
+    BlobSource,
+    BufferTarget,
+    Conversion,
+    Input,
+    Output,
+    QUALITY_MEDIUM,
+    QUALITY_VERY_LOW,
+    WebMOutputFormat,
+  } = await import('mediabunny');
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      console.error('Failed to create context.');
-      void resolve(null);
-      return;
-    }
+  const input = new Input({ formats: ALL_FORMATS, source: new BlobSource(file) });
+  const output = new Output({ format: new WebMOutputFormat(), target: new BufferTarget() });
 
-    const url = URL.createObjectURL(file);
-    video.src = url;
-
-    video.onloadeddata = () => {
-      let width = video.videoWidth;
-      let height = video.videoHeight;
-      const ratio = Math.min(maxWidth / width, maxHeight / height);
-
-      width *= ratio;
-      height *= ratio;
-
-      canvas.width = width;
-      canvas.height = height;
-
-      const stream = canvas.captureStream(fps);
-      const chunks: Blob[] = [];
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: file.type });
-
-      mediaRecorder.ondataavailable = e => chunks.push(e.data);
-      mediaRecorder.onstop = () => {
-        URL.revokeObjectURL(url);
-        const transformedFile = new File(chunks, file.name, file);
-        void resolve(transformedFile);
-      };
-
-      mediaRecorder.start();
-
-      const renderFrame = () => {
-        if (!(video.paused || video.ended)) {
-          ctx.drawImage(video, 0, 0, width, height);
-          requestAnimationFrame(renderFrame);
-        }
-      };
-
-      video.play();
-      renderFrame();
-
-      video.onended = () => {
-        mediaRecorder.stop();
-      };
-    };
-
-    video.onerror = () => {
-      URL.revokeObjectURL(url);
-      console.error('Video resize failed.');
-      void resolve(null);
-    };
+  const conversion = await Conversion.init({
+    input,
+    output,
+    video: {
+      width: maxWidth,
+      height: maxHeight,
+      fit: 'contain',
+      frameRate: fps,
+      bitrate: QUALITY_MEDIUM,
+    },
+    audio: {
+      bitrate: QUALITY_VERY_LOW,
+      sampleRate: 48000,
+    },
+    tags: {},
+    trim: { end: videoLength },
   });
+  if (!conversion.isValid) {
+    console.error('Conversion init error\n', conversion.discardedTracks);
+    return null;
+  }
+
+  await conversion.execute();
+  if (!output.target.buffer) {
+    console.error('Conversion error. No Buffer.');
+    return null;
+  }
+
+  const result = new File([output.target.buffer], crypto.randomUUID(), { type: output.format.mimeType });
+
+  if (result.size > maxVideoSize) {
+    console.error('File too big.');
+    return null;
+  }
+  return result;
 }
 
 export const fileUploadErrorMap = (error: FileUploadFileError, file: File, max: number = 1) => {
