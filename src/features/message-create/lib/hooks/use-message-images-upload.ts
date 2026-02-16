@@ -20,7 +20,7 @@ export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[])
             maxWidth: 1280,
             maxHeight: 1024,
           });
-          if (fail) return toaster.error({ description: error.message });
+          if (fail) return void toaster.error({ description: error.message });
           return result;
         }),
       );

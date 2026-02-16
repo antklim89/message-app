@@ -22,7 +22,7 @@ export function useMessageVideosUpload({ onUpload }: { onUpload: (files: File[])
             videoLength: VIDEO_LENGTH_SECONDS,
             maxVideoSize: MAX_VIDEO_SIZE_IN_BYTES,
           });
-          if (fail) return toaster.error({ description: error.message });
+          if (fail) return void toaster.error({ description: error.message });
           return result;
         }),
       );
