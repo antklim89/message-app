@@ -22,7 +22,8 @@ export function HomePage() {
         fallback={<Skeleton h={30} />}
         privateElement={
           <Dialog.Trigger dialog={dialog}>
-            ADD NEW MESSAGE. <FaPlus />
+            ADD NEW MESSAGE
+            <FaPlus />
           </Dialog.Trigger>
         }
         publicElement={<Box h={30} />}

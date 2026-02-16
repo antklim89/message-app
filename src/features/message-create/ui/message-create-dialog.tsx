@@ -11,7 +11,7 @@ const MessageCreateDialogContent = lazy(() => MessageCreateDialogContentPromise)
 
 export function MessageCreateDialog({ dialog, answerId }: { dialog: UseDialogReturn; answerId: string | undefined }) {
   return (
-    <Dialog.Root fallback={<MessageEditFormFallback />} dialog={dialog}>
+    <Dialog.Root fallback={<MessageEditFormFallback />} dialog={dialog} size="lg">
       <MessageCreateDialogContent answerId={answerId} />
     </Dialog.Root>
   );

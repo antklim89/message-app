@@ -51,7 +51,8 @@ export function AnswersPage({ params }: { params: { answerId: string } }) {
                 privateElement={
                   <>
                     <Button onClick={() => dialog.setOpen(true)}>
-                      ANSWER TO THIS MESSAGE. <FaPlus />
+                      ANSWER TO THIS MESSAGE
+                      <FaPlus />
                     </Button>
                     <MessageCreateDialog answerId={message.id} dialog={dialog} />
                   </>

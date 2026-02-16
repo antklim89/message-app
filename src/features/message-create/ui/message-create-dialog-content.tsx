@@ -32,7 +32,6 @@ export function MessageCreateDialogContent({ answerId }: { answerId: string | un
 
   return (
     <>
-      <Dialog.Title>Create New Message</Dialog.Title>
       <Dialog.Body>
         <MessageEditForm form={form} imagesUpload={imagesUpload} videoUpload={videoUpload} />
       </Dialog.Body>
