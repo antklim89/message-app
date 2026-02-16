@@ -1,5 +1,7 @@
 import type { FileUploadFileError } from '@chakra-ui/react';
 
+import { err, errUnexpected, ok, type Result } from './result';
+
 export async function resizeImage({
   file,
   maxWidth,
@@ -12,9 +14,9 @@ export async function resizeImage({
   maxHeight: number;
   maxImageSize: number;
   quality?: number;
-}): Promise<File | null> {
-  if (quality <= 0) return null;
-  const result = await new Promise<File | null>(resolve => {
+}) {
+  if (quality <= 0) return errUnexpected('Failed to transform image.');
+  const { fail, error, result } = await new Promise<Result<File, 'unexpected'>>(resolve => {
     const img = new Image();
     img.src = URL.createObjectURL(file);
 
@@ -25,24 +27,24 @@ export async function resizeImage({
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      if (!ctx) return resolve(null);
+      if (!ctx) return resolve(errUnexpected('Failed to create canvas context'));
 
       canvas.width = width;
       canvas.height = height;
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         blob => {
-          if (blob) void resolve(new File([blob], file.name, { type: 'image/webp' }));
-          else void resolve(null);
+          if (blob) void resolve(ok(new File([blob], crypto.randomUUID(), { type: 'image/webp' })));
+          else void resolve(errUnexpected('Failed to transform image.'));
         },
         'image/webp',
         quality,
       );
     };
   });
-  if (!result) return null;
+  if (fail) return err(error);
 
-  if (result.size <= maxImageSize) return result;
+  if (result.size <= maxImageSize) return ok(result);
   return resizeImage({ maxImageSize, file: result, maxHeight, maxWidth, quality: quality - 0.05 });
 }
 
@@ -60,7 +62,7 @@ export async function resizeVideo({
   fps?: number;
   videoLength?: number;
   maxVideoSize: number;
-}): Promise<File | null> {
+}) {
   const {
     ALL_FORMATS,
     BlobSource,
@@ -94,23 +96,20 @@ export async function resizeVideo({
     trim: { end: videoLength },
   });
   if (!conversion.isValid) {
-    console.error('Conversion init error\n', conversion.discardedTracks);
-    return null;
+    return errUnexpected('Video transformation failed. File is not valid.');
   }
 
   await conversion.execute();
   if (!output.target.buffer) {
-    console.error('Conversion error. No Buffer.');
-    return null;
+    return errUnexpected('Video transformation failed.');
   }
 
   const result = new File([output.target.buffer], crypto.randomUUID(), { type: output.format.mimeType });
 
   if (result.size > maxVideoSize) {
-    console.error('File too big.');
-    return null;
+    return errUnexpected('The video file is too big.');
   }
-  return result;
+  return ok(result);
 }
 
 export const fileUploadErrorMap = (error: FileUploadFileError, file: File, max: number = 1) => {
@@ -121,7 +120,7 @@ export const fileUploadErrorMap = (error: FileUploadFileError, file: File, max: 
         FILE_TOO_LARGE: `The file "${file.name}" is too large.`,
         FILE_TOO_SMALL: `The file "${file.name}" is too small.`,
         FILE_EXISTS: `The file "${file.name}" already exists.`,
-        FILE_INVALID_TYPE: `The file "${file.name}" is not an image.`,
+        FILE_INVALID_TYPE: `The file "${file.name}" is invalid.`,
       } as Record<FileUploadFileError, string>
     )[error] || `The file "${file.name}" is invalid.`
   );

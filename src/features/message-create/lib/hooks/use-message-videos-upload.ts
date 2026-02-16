@@ -13,16 +13,18 @@ export function useMessageVideosUpload({ onUpload }: { onUpload: (files: File[])
     },
     async transformFiles(files) {
       const transformedFiles = await Promise.all(
-        files.map(file =>
-          resizeVideo({
+        files.map(async file => {
+          const { fail, error, result } = await resizeVideo({
             file,
             maxWidth: 1280,
             maxHeight: 1024,
             fps: VIDEO_FPS,
             videoLength: VIDEO_LENGTH_SECONDS,
             maxVideoSize: MAX_VIDEO_SIZE_IN_BYTES,
-          }),
-        ),
+          });
+          if (fail) return toaster.error({ description: error.message });
+          return result;
+        }),
       );
       return transformedFiles.filter(file => file != null);
     },

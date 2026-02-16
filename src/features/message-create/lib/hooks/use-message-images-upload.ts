@@ -11,19 +11,18 @@ export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[])
     onFileAccept({ files }) {
       onUpload(files);
     },
-    validate(file, { acceptedFiles }) {
-      const set = new Set([file.name + file.lastModified]);
-      for (const acceptedFile of acceptedFiles) {
-        if (set.has(acceptedFile.name + acceptedFile.lastModified)) return ['FILE_EXISTS'];
-        set.add(acceptedFile.name + acceptedFile.lastModified);
-      }
-      return null;
-    },
     async transformFiles(files) {
       const transformedFiles = await Promise.all(
-        files.map(file =>
-          resizeImage({ maxImageSize: MAX_IMAGE_SIZE_IN_BYTES, file, maxWidth: 1280, maxHeight: 1024 }),
-        ),
+        files.map(async file => {
+          const { fail, error, result } = await resizeImage({
+            maxImageSize: MAX_IMAGE_SIZE_IN_BYTES,
+            file,
+            maxWidth: 1280,
+            maxHeight: 1024,
+          });
+          if (fail) return toaster.error({ description: error.message });
+          return result;
+        }),
       );
       return transformedFiles.filter(file => file != null);
     },
