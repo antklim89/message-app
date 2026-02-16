@@ -28,8 +28,8 @@ function Root({
         <ChakraDialog.Positioner>
           <ChakraDialog.Backdrop />
           <ChakraDialog.Content>
-            <ChakraDialog.CloseTrigger asChild zIndex={10}>
-              <CloseButton size="lg" />
+            <ChakraDialog.CloseTrigger asChild top={0} right={0}>
+              <CloseButton size="md" />
             </ChakraDialog.CloseTrigger>
 
             <Suspense fallback={fallback}>{children}</Suspense>
