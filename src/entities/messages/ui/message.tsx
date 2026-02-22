@@ -3,14 +3,15 @@ import { Box, Card, Flex, HStack, IconButton, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaCircleCheck, FaComment } from 'react-icons/fa6';
 
-import type { MessageType } from '@/entities/messages';
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
+import { EmbeddedSite } from '@/shared/ui/embedded-site';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import { MessageImages } from './message-images';
 import { MessageVideos } from './message-videos';
+import type { MessageType } from '../models/types';
 
 export function Message({ message, footer, menu }: { message: MessageType; footer?: ReactNode; menu: ReactNode }) {
   return (
@@ -44,6 +45,10 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
         message.embeddedItems.length > 0 && <MessageImages images={message.embeddedItems} />}
 
       {message.embeddedType === MessageEmbeddedType.VIDEOS && <MessageVideos videos={message.embeddedItems} />}
+
+      {message.embeddedType === MessageEmbeddedType.LINK && message.embeddedItems?.[0] && (
+        <EmbeddedSite url={message.embeddedItems[0]} mx={1} w="auto" />
+      )}
       <Card.Body>
         <Card.Body>
           <Box textWrap="wrap" w="fit-content" whiteSpace="pre-wrap">

@@ -35,7 +35,7 @@ export const MessageCreateSchema = z.union([
   }),
   z.object({
     body: BodySchema,
-    embeddedLink: z.string().check(z.url()),
+    embeddedLink: z.string().check(z.httpUrl()),
     embeddedType: z.literal(MessageEmbeddedType.LINK),
   }),
 ]);
