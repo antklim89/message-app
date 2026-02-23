@@ -1,16 +1,27 @@
 import type { ReactNode } from 'react';
-import { Box, FileUpload, Float, IconButton, SimpleGrid, Spinner, type UseFileUploadReturn } from '@chakra-ui/react';
+import {
+  Box,
+  FileUpload,
+  Float,
+  IconButton,
+  SimpleGrid,
+  Spinner,
+  Text,
+  type UseFileUploadReturn,
+} from '@chakra-ui/react';
 import { FaEraser, FaFile } from 'react-icons/fa6';
 
 export function MessageUploadSection({
   upload,
   maxUploadedFiles,
   fileIcon = <FaFile />,
+  uploadMessage,
   render,
 }: {
   upload: UseFileUploadReturn;
   maxUploadedFiles: number;
   fileIcon?: ReactNode;
+  uploadMessage: string;
   render: (file: File) => ReactNode;
 }) {
   return (
@@ -38,6 +49,7 @@ export function MessageUploadSection({
           <FileUpload.Dropzone w="full" minHeight="auto" aspectRatio="wide">
             <FileUpload.DropzoneContent>
               <FileUpload.Trigger>{upload.transforming ? <Spinner /> : fileIcon}</FileUpload.Trigger>
+              <Text>{uploadMessage}</Text>
             </FileUpload.DropzoneContent>
           </FileUpload.Dropzone>
         </FileUpload.RootProvider>

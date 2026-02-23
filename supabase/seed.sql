@@ -24,4 +24,4 @@ create or replace trigger on_auth_user_created
 INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types", "owner_id", "type") VALUES
  ('avatars', 'avatars', null, '2026-01-19 07:55:56.023631+00', '2026-01-19 07:55:56.023631+00', 'true', 'false', '8192', ARRAY['image/*'], null, 'STANDARD'),
  ('message_images', 'message_images', null, '2026-02-02 07:18:06.879623+00', '2026-02-02 07:18:06.879623+00', 'true', 'false', '262144', ARRAY['image/*'], null, 'STANDARD'),
- ('message_videos', 'message_videos', null, '2026-02-02 07:22:13.291023+00', '2026-02-02 07:22:13.291023+00', 'true', 'false', '20971520', ARRAY['video/*'], null, 'STANDARD');
+ ('message_videos', 'message_videos', null, '2026-02-02 07:22:13.291023+00', '2026-02-02 07:22:13.291023+00', 'true', 'false', '52428800', ARRAY['video/*'], null, 'STANDARD');

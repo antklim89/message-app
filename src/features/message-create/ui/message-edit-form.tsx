@@ -12,7 +12,12 @@ import { EmbeddedSite } from '@/shared/ui/embedded-site';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageCreateTabTrigger } from './message-create-tab-trigger';
 import { MessageUploadSection } from './message-upload-section';
-import { MAX_MESSAGE_BODY_LENGTH, MAX_UPLOADED_IMAGES, MAX_UPLOADED_VIDEOS } from '../config/constants';
+import {
+  MAX_MESSAGE_BODY_LENGTH,
+  MAX_UPLOADED_IMAGES,
+  MAX_UPLOADED_VIDEOS,
+  MAX_VIDEO_SIZE_IN_BYTES,
+} from '../config/constants';
 import { MessageCreateSchema } from '../model/schemas';
 
 export const messageEditFormOptions = formOptions({
@@ -45,6 +50,7 @@ export const MessageEditForm = withForm({
                 fileIcon={<FaImage />}
                 maxUploadedFiles={MAX_UPLOADED_IMAGES}
                 upload={imagesUpload}
+                uploadMessage=""
               />
             </Tabs.Content>
             <Tabs.Content value={MessageEmbeddedType.VIDEOS}>
@@ -53,6 +59,7 @@ export const MessageEditForm = withForm({
                 fileIcon={<FaVideo />}
                 maxUploadedFiles={MAX_UPLOADED_VIDEOS}
                 upload={videoUpload}
+                uploadMessage={`Upload video lower than ${MAX_VIDEO_SIZE_IN_BYTES / 1024 / 1024} MB.`}
               />
             </Tabs.Content>
             <Tabs.Content value={MessageEmbeddedType.LINK}>

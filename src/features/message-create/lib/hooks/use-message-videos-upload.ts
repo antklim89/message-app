@@ -1,32 +1,18 @@
 import { useFileUpload } from '@chakra-ui/react';
 
-import { fileUploadErrorMap, resizeVideo } from '@/shared/lib/file-upload';
+import { fileUploadErrorMap } from '@/shared/lib/file-upload';
 import { toaster } from '@/shared/lib/toaster';
-import { MAX_UPLOADED_VIDEOS, MAX_VIDEO_SIZE_IN_BYTES, VIDEO_FPS, VIDEO_LENGTH_SECONDS } from '../../config/constants';
+import { MAX_UPLOADED_VIDEOS, MAX_VIDEO_SIZE_IN_BYTES } from '../../config/constants';
 
 export function useMessageVideosUpload({ onUpload }: { onUpload: (files: File[]) => void }) {
   const fileUpload = useFileUpload({
-    accept: ['video/mp4', 'video/quicktime', 'video/x-matroska', 'video/webm'],
+    accept: ['video/mp4', 'video/x-matroska', 'video/webm'],
     maxFiles: MAX_UPLOADED_VIDEOS,
+    maxFileSize: MAX_VIDEO_SIZE_IN_BYTES,
+
     onFileAccept({ files }) {
+      console.log('🚀 ~ files: \n', files[0]?.size);
       onUpload(files);
-    },
-    async transformFiles(files) {
-      const transformedFiles = await Promise.all(
-        files.map(async file => {
-          const { fail, error, result } = await resizeVideo({
-            file,
-            maxWidth: 1280,
-            maxHeight: 1024,
-            fps: VIDEO_FPS,
-            videoLength: VIDEO_LENGTH_SECONDS,
-            maxVideoSize: MAX_VIDEO_SIZE_IN_BYTES,
-          });
-          if (fail) return void toaster.error({ description: error.message });
-          return result;
-        }),
-      );
-      return transformedFiles.filter(file => file != null);
     },
     onFileReject({ files }) {
       files.forEach(({ file, errors }) => {
