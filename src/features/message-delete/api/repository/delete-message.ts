@@ -20,7 +20,10 @@ export async function deleteMessage(id: MessageType['id']): PromiseResult<null> 
   if (count == null || count <= 0) return errNotFound('The message has not been deleted.');
 
   if (data.embeddedType === MessageEmbeddedType.IMAGES && data.embeddedItems) {
-    await supabase.storage.from('gallery').remove(data.embeddedItems);
+    await supabase.storage.from('message_images').remove(data.embeddedItems);
+  }
+  if (data.embeddedType === MessageEmbeddedType.VIDEOS && data.embeddedItems) {
+    await supabase.storage.from('message_videos').remove(data.embeddedItems);
   }
 
   return ok(null);
