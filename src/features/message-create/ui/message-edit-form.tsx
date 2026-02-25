@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { Field, Image, Input, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
+import { Image, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
 import { FaImage, FaLink, FaTriangleExclamation, FaVideo } from 'react-icons/fa6';
@@ -8,9 +7,9 @@ import type { z } from 'zod/v4-mini';
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
 import { withForm } from '@/shared/lib/react-form';
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
-import { EmbeddedSite } from '@/shared/ui/embedded-site';
 import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageCreateTabTrigger } from './message-create-tab-trigger';
+import { MessageEmbeddedSiteSection } from './message-embedded-site-section';
 import { MessageUploadSection } from './message-upload-section';
 import {
   MAX_MESSAGE_BODY_LENGTH,
@@ -32,8 +31,6 @@ export const MessageEditForm = withForm({
   ...messageEditFormOptions,
   props: {} as { imagesUpload: UseFileUploadReturn; videoUpload: UseFileUploadReturn },
   render: ({ form, imagesUpload, videoUpload }) => {
-    const linkInputRef = useRef<HTMLInputElement>(null);
-
     return (
       <Tabs.Root
         lazyMount={true}
@@ -63,23 +60,7 @@ export const MessageEditForm = withForm({
               />
             </Tabs.Content>
             <Tabs.Content value={MessageEmbeddedType.LINK}>
-              <form.AppField name="embeddedLink">
-                {field => (
-                  <Field.Root invalid={!field.state.meta.isValid}>
-                    <Field.Label>External link</Field.Label>
-                    <Input
-                      ref={linkInputRef}
-                      defaultValue="https://"
-                      placeholder="https://example.com"
-                      onChange={e => {
-                        field.handleChange(e.target.value);
-                      }}
-                    />
-                    <Field.ErrorText>{field.state.meta.errors.map(err => err?.message)}</Field.ErrorText>
-                    {field.state.meta.isValid && <EmbeddedSite url={field.state.value} />}
-                  </Field.Root>
-                )}
-              </form.AppField>
+              <form.AppField name="embeddedLink">{field => <MessageEmbeddedSiteSection field={field} />}</form.AppField>
             </Tabs.Content>
           </Tabs.ContentGroup>
 
