@@ -5,6 +5,7 @@ import { FaCircleCheck, FaComment } from 'react-icons/fa6';
 
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { EmbeddedSite } from '@/shared/ui/embedded-site';
+import { EmbeddedYoutube } from '@/shared/ui/embedded-youtube';
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { RichText } from '@/shared/ui/rich-text';
@@ -48,6 +49,9 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
 
       {message.embeddedType === MessageEmbeddedType.LINK && message.embeddedItems?.[0] && (
         <EmbeddedSite url={message.embeddedItems[0]} mx={1} w="auto" />
+      )}
+      {message.embeddedType === MessageEmbeddedType.YOUTUBE && message.embeddedItems?.[0] && (
+        <EmbeddedYoutube videoId={message.embeddedItems[0]} mx={1} w="auto" />
       )}
       <Card.Body>
         <Card.Body>

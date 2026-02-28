@@ -1,7 +1,7 @@
 import { Image, Tabs, Text, type UseFileUploadReturn } from '@chakra-ui/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { formOptions, revalidateLogic } from '@tanstack/react-form';
-import { FaImage, FaLink, FaTriangleExclamation, FaVideo } from 'react-icons/fa6';
+import { FaImage, FaLink, FaTriangleExclamation, FaVideo, FaYoutube } from 'react-icons/fa6';
 import type { z } from 'zod/v4-mini';
 
 import { ProfileSelectLexicalPlugin } from '@/entities/profiles';
@@ -11,6 +11,7 @@ import { RichTextEditor } from '@/shared/ui/rich-text-editor';
 import { MessageCreateTabTrigger } from './message-create-tab-trigger';
 import { MessageEmbeddedSiteSection } from './message-embedded-site-section';
 import { MessageUploadSection } from './message-upload-section';
+import { MessageYoutubeSection } from './message-youtube-section';
 import {
   MAX_MESSAGE_BODY_LENGTH,
   MAX_UPLOADED_IMAGES,
@@ -33,7 +34,7 @@ export const MessageEditForm = withForm({
   render: ({ form, imagesUpload, videoUpload }) => {
     return (
       <Tabs.Root
-        lazyMount={true}
+        lazyMount
         onValueChange={({ value }) => {
           const type = value === 'null' ? undefined : value;
           form.setFieldValue('embeddedType', type as MessageEmbeddedType);
@@ -61,6 +62,9 @@ export const MessageEditForm = withForm({
             </Tabs.Content>
             <Tabs.Content value={MessageEmbeddedType.LINK}>
               <form.AppField name="embeddedLink">{field => <MessageEmbeddedSiteSection field={field} />}</form.AppField>
+            </Tabs.Content>
+            <Tabs.Content value={MessageEmbeddedType.YOUTUBE}>
+              <form.AppField name="embeddedLink">{field => <MessageYoutubeSection field={field} />}</form.AppField>
             </Tabs.Content>
           </Tabs.ContentGroup>
 
@@ -94,6 +98,11 @@ export const MessageEditForm = withForm({
                         embeddedType={MessageEmbeddedType.LINK}
                         value={value}
                         icon={<FaLink />}
+                      />
+                      <MessageCreateTabTrigger
+                        embeddedType={MessageEmbeddedType.YOUTUBE}
+                        value={value}
+                        icon={<FaYoutube />}
                       />
                     </>
                   )}

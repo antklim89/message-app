@@ -304,7 +304,7 @@ CREATE TABLE IF NOT EXISTS "public"."messages" (
     "answerId" "uuid",
     CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body"))),
     CONSTRAINT "messages_embeddedItems_check" CHECK ((("cardinality"("embeddedItems") > 0) AND ("cardinality"("embeddedItems") <= 4))),
-    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text") OR ("embeddedType" = 'link'::"text")))
+    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text") OR ("embeddedType" = 'link'::"text") OR ("embeddedType" = 'youtube'::"text")))
 );
 
 

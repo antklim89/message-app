@@ -22,7 +22,7 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
     insert.embeddedItems = result;
   }
 
-  if (input.embeddedType === MessageEmbeddedType.LINK) {
+  if (input.embeddedType === MessageEmbeddedType.LINK || input.embeddedType === MessageEmbeddedType.YOUTUBE) {
     insert.embeddedItems = [input.embeddedLink];
     insert.embeddedType = input.embeddedType;
   }

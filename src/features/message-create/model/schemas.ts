@@ -3,6 +3,7 @@ import { z } from 'zod/v4-mini';
 import type { MessageBody } from '@/entities/messages';
 import { calculateLexicalTextLength } from '@/shared/lib/lexical';
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
+import { checkYoutubeVideoId } from '@/shared/model/schema-checks';
 import {
   MAX_MESSAGE_BODY_LENGTH,
   MAX_UPLOADED_IMAGES,
@@ -37,5 +38,10 @@ export const MessageCreateSchema = z.union([
     body: BodySchema,
     embeddedLink: z.string().check(z.httpUrl()),
     embeddedType: z.literal(MessageEmbeddedType.LINK),
+  }),
+  z.object({
+    body: BodySchema,
+    embeddedLink: z.string().check(checkYoutubeVideoId),
+    embeddedType: z.literal(MessageEmbeddedType.YOUTUBE),
   }),
 ]);
