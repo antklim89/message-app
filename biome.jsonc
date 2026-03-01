@@ -124,8 +124,11 @@
         "noReExportAll": "error",
         "useTopLevelRegex": "error"
       },
+      "security": {
+        "recommended": true,
+        "noSecrets": { "level": "error", "options": { "entropyThreshold": 50 } }
+      },
       "recommended": true,
-      "security": "error",
       "style": {
         "useReactFunctionComponents": "error",
         "noRestrictedImports": {
