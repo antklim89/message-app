@@ -508,6 +508,10 @@ CREATE POLICY "Enable delete for authors only" ON "public"."favorites" FOR DELET
 
 
 
+CREATE POLICY "Enable delete for authors only" ON "public"."followers" FOR DELETE USING ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
+
+
+
 CREATE POLICY "Enable delete for authors only" ON "public"."likes" FOR DELETE TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
 
 
@@ -521,6 +525,10 @@ CREATE POLICY "Enable insert for all" ON "public"."reports" FOR INSERT WITH CHEC
 
 
 CREATE POLICY "Enable insert for authors only" ON "public"."favorites" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
+
+
+
+CREATE POLICY "Enable insert for authors only" ON "public"."followers" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "authorId"));
 
 
 
@@ -548,7 +556,14 @@ CREATE POLICY "Enable update for owners only" ON "public"."profiles" FOR UPDATE 
 
 
 
+CREATE POLICY "Enable users to view their own data only" ON "public"."followers" FOR SELECT TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "authorId") OR (( SELECT "auth"."uid"() AS "uid") = "followerId")));
+
+
+
 ALTER TABLE "public"."favorites" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."followers" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."likes" ENABLE ROW LEVEL SECURITY;
