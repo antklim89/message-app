@@ -94,6 +94,24 @@ export type Database = {
           },
         ]
       }
+      hashtags: {
+        Row: {
+          date: string
+          hashtag: string
+          id: number
+        }
+        Insert: {
+          date?: string
+          hashtag: string
+          id?: number
+        }
+        Update: {
+          date?: string
+          hashtag?: string
+          id?: number
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           authorId: string
@@ -239,12 +257,29 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      hashtags_month_top_view: {
+        Row: {
+          count: number | null
+          hashtag: string | null
+        }
+        Relationships: []
+      }
+      hashtags_week_top_view: {
+        Row: {
+          count: number | null
+          hashtag: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_lexical_text_length: {
         Args: { lexical_node: Json; result_length?: number }
         Returns: number
+      }
+      extract_and_insert_hashtags: {
+        Args: { lexical_node: Json }
+        Returns: undefined
       }
       favorites_count: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
@@ -264,6 +299,7 @@ export type Database = {
           error: true
         } & "the function public.followings_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
+      handle_new_message: { Args: { lexical_node: Json }; Returns: undefined }
       is_follower: {
         Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
         Returns: {
@@ -304,6 +340,7 @@ export type Database = {
         Args: { lexical_node: Json; result_length?: number }
         Returns: number
       }
+      validate_lexical_text: { Args: { lexical_node: Json }; Returns: number }
       validate_message_body: { Args: { message_body: Json }; Returns: boolean }
     }
     Enums: {

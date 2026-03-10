@@ -1,0 +1,1 @@
+export const hashtagsPeriods = ['month', 'week'] as const;
