@@ -29,13 +29,13 @@ export function messageListQueryOptions({
     queryKey: [MessageListQueryOptionsBaseKey, { answerId, search, isFavorites, authorId, embeddedType }],
     getNextPageParam(data: MessageType[]) {
       if (data.length < MESSAGES_PER_PAGE) return;
-      return data.at(-1)?.id ?? undefined;
+      return data.at(-1) ?? undefined;
     },
-    initialPageParam: undefined as string | undefined,
-    async queryFn({ client, pageParam: lastId }) {
+    initialPageParam: undefined as MessageType | undefined,
+    async queryFn({ client, pageParam: lastMessage }) {
       const { fail, error, result } = await getMessageList({
         answerId,
-        lastId,
+        lastMessage,
         search,
         isFavorites,
         authorId,

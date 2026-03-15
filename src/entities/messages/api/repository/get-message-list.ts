@@ -7,14 +7,14 @@ import type { MessageType } from '../../models/types';
 
 export async function getMessageList({
   answerId,
-  lastId,
+  lastMessage,
   search,
   isFavorites,
   embeddedType,
   authorId,
 }: {
   answerId?: MessageType['answerId'];
-  lastId?: MessageType['id'];
+  lastMessage?: MessageType;
   search?: string;
   isFavorites?: boolean;
   embeddedType?: MessageEmbeddedType;
@@ -37,7 +37,7 @@ export async function getMessageList({
   if (embeddedType) query.eq('embeddedType', embeddedType);
   if (authorId) query.eq('authorId', authorId);
   if (search) query.textSearch('body', search);
-  if (lastId != null) query.lt('id', lastId);
+  if (lastMessage != null) query.lt('created', lastMessage.created);
 
   const { data, error } = await query;
   if (error != null) return errUnexpected('Failed to fetch messages');
