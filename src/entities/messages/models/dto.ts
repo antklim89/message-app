@@ -1,39 +1,20 @@
-import type { Json } from '@/shared/model/supabase-types.generated';
+import type { Database } from '@/shared/model/supabase-types.generated';
 import type { MessageBody, MessageType } from './types';
 
-export function messageDto(data: {
-  id: string;
-  answerId: string | null;
-  authorId: string;
-  body: Json;
-  created: string;
-  hasLiked: boolean | null;
-  likesCount: number | null;
-  author: {
-    id: string;
-    username: string;
-    avatar: string | null;
-  };
-  answersCount: {
-    count: number;
-  }[];
-  isFavorite: boolean | null;
-  embeddedItems: string[] | null;
-  embeddedType: string | null;
-}): MessageType {
+export function messageDto(data: Database['public']['Views']['messages_view']['Row']): MessageType {
   return {
     answerId: data.answerId ?? undefined,
-    answersCount: data.answersCount[0]?.count ?? 0,
+    answersCount: data.answersCount ?? 0,
     author: {
-      avatar: data.author.avatar ?? undefined,
-      id: data.author.id,
-      username: data.author.username,
+      avatar: data.avatar ?? undefined,
+      id: data.answerId as string,
+      username: data.username as string,
     },
-    authorId: data.authorId,
+    authorId: data.authorId as string,
     body: data.body as unknown as MessageBody,
-    created: data.created,
+    created: data.created as string,
     hasLiked: data.hasLiked ?? false,
-    id: data.id,
+    id: data.id as string,
     isFavorite: data.isFavorite ?? false,
     likesCount: data.likesCount ?? 0,
 

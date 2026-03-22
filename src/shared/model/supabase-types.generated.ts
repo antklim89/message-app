@@ -62,6 +62,13 @@ export type Database = {
             referencedRelation: "messages"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "favorites_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "messages_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       followers: {
@@ -140,6 +147,13 @@ export type Database = {
             referencedRelation: "messages"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "likes_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "messages_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       messages: {
@@ -182,6 +196,13 @@ export type Database = {
             columns: ["answerId"]
             isOneToOne: false
             referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_answerId_fkey"
+            columns: ["answerId"]
+            isOneToOne: false
+            referencedRelation: "messages_view"
             referencedColumns: ["id"]
           },
           {
@@ -253,6 +274,13 @@ export type Database = {
             referencedRelation: "messages"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reports_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "messages_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
@@ -271,10 +299,59 @@ export type Database = {
         }
         Relationships: []
       }
+      messages_view: {
+        Row: {
+          answerId: string | null
+          answersCount: number | null
+          authorId: string | null
+          avatar: string | null
+          body: Json | null
+          created: string | null
+          embeddedItems: string[] | null
+          embeddedType: string | null
+          favoriteAuthorId: string | null
+          hasLiked: boolean | null
+          id: string | null
+          isFavorite: boolean | null
+          likesCount: number | null
+          updated: string | null
+          username: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_authorId_fkey"
+            columns: ["favoriteAuthorId"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_answerId_fkey"
+            columns: ["answerId"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_answerId_fkey"
+            columns: ["answerId"]
+            isOneToOne: false
+            referencedRelation: "messages_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Messages_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       calculate_lexical_text_length: {
-        Args: { lexical_node: Json; result_length?: number }
+        Args: { lexical_node: Json }
         Returns: number
       }
       extract_and_insert_hashtags: {
@@ -336,11 +413,6 @@ export type Database = {
           error: true
         } & "the function public.messages_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
       }
-      process_lexical_node_with_children: {
-        Args: { lexical_node: Json; result_length?: number }
-        Returns: number
-      }
-      validate_lexical_text: { Args: { lexical_node: Json }; Returns: number }
       validate_message_body: { Args: { message_body: Json }; Returns: boolean }
     }
     Enums: {
