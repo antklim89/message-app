@@ -13,6 +13,7 @@
     "lint": "biome check",
     "typecheck": "tsc --noEmit -w --preserveWatchOutput -p tsconfig.app.json",
     "typegen": "supabase gen types --local > ./src/shared/model/supabase-types.generated.ts",
+    "seed": "bun ./supabase/seed.ts",
     "dump": "bunx supabase db dump --local > supabase/dump.sql",
     "pull": "bunx supabase db pull --local"
   },
