@@ -309,7 +309,6 @@ export type Database = {
           created: string | null
           embeddedItems: string[] | null
           embeddedType: string | null
-          favoriteAuthorId: string | null
           hasLiked: boolean | null
           id: string | null
           isFavorite: boolean | null
@@ -318,13 +317,6 @@ export type Database = {
           username: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "favorites_authorId_fkey"
-            columns: ["favoriteAuthorId"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "messages_answerId_fkey"
             columns: ["answerId"]
