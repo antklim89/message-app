@@ -31,6 +31,12 @@ COMMENT ON SCHEMA "public" IS 'standard public schema';
 
 
 
+CREATE SCHEMA IF NOT EXISTS "utils";
+
+
+ALTER SCHEMA "utils" OWNER TO "postgres";
+
+
 CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
 
 
@@ -73,76 +79,73 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 
-CREATE OR REPLACE FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer DEFAULT 0) RETURNS integer
+CREATE OR REPLACE FUNCTION "utils"."calculate_lexical_text_length"("lexical_node" "jsonb") RETURNS integer
     LANGUAGE "plpgsql"
-    AS $$DECLARE
-  result int;
-BEGIN
-  return CASE lexical_node ->> 'type'
-      WHEN 'root' THEN process_lexical_node_with_children(lexical_node, result_length)
-      WHEN 'paragraph' THEN process_lexical_node_with_children(lexical_node, result_length)
-      WHEN 'link' THEN process_lexical_node_with_children(lexical_node, result_length)
-      WHEN 'autolink' THEN process_lexical_node_with_children(lexical_node, result_length)
-      WHEN 'text' THEN length(lexical_node ->> 'text')
-      WHEN 'user' THEN length(lexical_node ->> 'text')
-      WHEN 'hashtag' THEN length(lexical_node ->> 'text')
-      WHEN 'emoji' THEN length(lexical_node ->> 'text')
-      ELSE 0
-  END;
-END;$$;
-
-
-ALTER FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) OWNER TO "postgres";
-
-SET default_tablespace = '';
-
-SET default_table_access_method = "heap";
-
-
-CREATE TABLE IF NOT EXISTS "public"."profiles" (
-    "id" "uuid" NOT NULL,
-    "created" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "username" "text" DEFAULT ''::"text" NOT NULL,
-    "avatar" "text" DEFAULT ''::"text",
-    "bio" "text" DEFAULT ''::"text" NOT NULL,
-    "displayname" "text" DEFAULT ''::"text" NOT NULL
-);
-
-
-ALTER TABLE "public"."profiles" OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."favorites_count"("public"."profiles") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
-select count(1) from favorites where "authorId" = auth.uid()
+DECLARE
+  acc int = 0;
+  lexical_node_child jsonb;
+  type text := lexical_node ->> 'type';
+BEGIN
+  if type = 'root' or type = 'paragraph' or type = 'link' or type = 'autolink' then
+    for lexical_node_child IN select * from jsonb_array_elements((lexical_node -> 'children'))
+    LOOP acc := acc + utils.calculate_lexical_text_length(lexical_node_child);
+    end LOOP;
+
+    return acc;
+
+  elsif type = 'hashtag' or type = 'text' or type = 'user' or type = 'emoji' then
+    return length(lexical_node ->> 'text');
+  end if;
+
+  return 0;
+END;
 $$;
 
 
-ALTER FUNCTION "public"."favorites_count"("public"."profiles") OWNER TO "postgres";
+ALTER FUNCTION "utils"."calculate_lexical_text_length"("lexical_node" "jsonb") OWNER TO "supabase_admin";
 
 
-CREATE OR REPLACE FUNCTION "public"."followers_count"("public"."profiles") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select count(1) from followers where "followerId" = $1.id
-$_$;
+CREATE OR REPLACE FUNCTION "utils"."extract_and_insert_hashtags"("lexical_node" "jsonb") RETURNS "void"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
+    AS $$
+DECLARE
+  lexical_node_child jsonb;
+  type text := lexical_node ->> 'type';
+BEGIN
+  if type = 'root' or type = 'paragraph' or type = 'link' or type = 'autolink' then
+    FOR lexical_node_child IN SELECT * FROM jsonb_array_elements((lexical_node -> 'children'))
+    LOOP
+      perform utils.extract_and_insert_hashtags(lexical_node_child);
+    END LOOP;
+
+  elsif type = 'hashtag' then
+    insert into public.hashtags (hashtag) values (lexical_node ->> 'text');
+  end if;
+END;
+$$;
 
 
-ALTER FUNCTION "public"."followers_count"("public"."profiles") OWNER TO "postgres";
+ALTER FUNCTION "utils"."extract_and_insert_hashtags"("lexical_node" "jsonb") OWNER TO "supabase_admin";
 
 
-CREATE OR REPLACE FUNCTION "public"."followings_count"("public"."profiles") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select count(1) from followers where "authorId" = $1.id
-$_$;
+CREATE OR REPLACE FUNCTION "utils"."handle_new_message"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
+    AS $$
+BEGIN
+  perform utils.extract_and_insert_hashtags(new.body);
+  return new;
+END;
+$$;
 
 
-ALTER FUNCTION "public"."followings_count"("public"."profiles") OWNER TO "postgres";
+ALTER FUNCTION "utils"."handle_new_message"() OWNER TO "supabase_admin";
 
 
-CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "utils"."handle_new_user"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
     AS $_$
@@ -150,39 +153,19 @@ begin
   insert into public.profiles (id, username)
   values (
     new.id,
-    json_value(new.raw_user_meta_data, '$.username' default 'anon' on empty)
+    json_value(new.raw_user_meta_data, '$.username' default 'anon_'||gen_random_uuid() on empty)
   );
   return new;
 end;
 $_$;
 
 
-ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
+ALTER FUNCTION "utils"."handle_new_user"() OWNER TO "supabase_admin";
 
 
-CREATE OR REPLACE FUNCTION "public"."is_follower"("public"."profiles") RETURNS boolean
+CREATE OR REPLACE FUNCTION "utils"."validate_message_body"("message_body" "jsonb") RETURNS boolean
     LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select auth.uid() = (select "followerId" from followers where "followerId" = auth.uid() and "authorId" = $1.id)
-$_$;
-
-
-ALTER FUNCTION "public"."is_follower"("public"."profiles") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."is_following"("public"."profiles") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select auth.uid() = (select "authorId" from followers where "authorId" = auth.uid() and "followerId" = $1.id)
-$_$;
-
-
-ALTER FUNCTION "public"."is_following"("public"."profiles") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "jsonb") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$select extensions.jsonb_matches_schema(
+    AS $_$ select extensions.jsonb_matches_schema(
   schema := '
 {
   "type": "object",
@@ -290,84 +273,11 @@ CREATE OR REPLACE FUNCTION "public"."validate_message_body"("message_body" "json
 );$_$;
 
 
-ALTER FUNCTION "public"."validate_message_body"("message_body" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION "utils"."validate_message_body"("message_body" "jsonb") OWNER TO "supabase_admin";
 
+SET default_tablespace = '';
 
-CREATE TABLE IF NOT EXISTS "public"."messages" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated" timestamp without time zone DEFAULT "now"() NOT NULL,
-    "authorId" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "body" "jsonb" NOT NULL,
-    "embeddedItems" "text"[],
-    "embeddedType" "text",
-    "answerId" "uuid",
-    CONSTRAINT "messages_body_check" CHECK ((("public"."calculate_lexical_text_length"("body") < 600) AND "public"."validate_message_body"("body"))),
-    CONSTRAINT "messages_embeddedItems_check" CHECK ((("cardinality"("embeddedItems") > 0) AND ("cardinality"("embeddedItems") <= 4))),
-    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text") OR ("embeddedType" = 'link'::"text") OR ("embeddedType" = 'youtube'::"text")))
-);
-
-
-ALTER TABLE "public"."messages" OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."message_has_liked"("public"."messages") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select auth.uid() = (select "authorId" from likes where "authorId" = auth.uid() and "messageId" = $1.id)
-$_$;
-
-
-ALTER FUNCTION "public"."message_has_liked"("public"."messages") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."message_in_favorite"("public"."messages") RETURNS boolean
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select auth.uid() = (select "authorId" from favorites where "authorId" = auth.uid() and "messageId" = $1.id)
-$_$;
-
-
-ALTER FUNCTION "public"."message_in_favorite"("public"."messages") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."message_likes_count"("public"."messages") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select count(1) from likes where "messageId" = $1.id
-$_$;
-
-
-ALTER FUNCTION "public"."message_likes_count"("public"."messages") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."messages_count"("public"."profiles") RETURNS bigint
-    LANGUAGE "sql" STABLE SECURITY DEFINER
-    AS $_$
-select count(1) from messages where "authorId" = $1.id
-$_$;
-
-
-ALTER FUNCTION "public"."messages_count"("public"."profiles") OWNER TO "postgres";
-
-
-CREATE OR REPLACE FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer DEFAULT 0) RETURNS integer
-    LANGUAGE "plpgsql"
-    AS $$
-DECLARE
-    lexical_node_child jsonb;
-BEGIN
-  FOR lexical_node_child IN SELECT * FROM jsonb_array_elements((lexical_node -> 'children'))
-  LOOP
-      result_length := result_length + calculate_lexical_text_length(lexical_node_child, result_length);
-  END LOOP;
-
-  return result_length;
-END;
-$$;
-
-
-ALTER FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) OWNER TO "postgres";
+SET default_table_access_method = "heap";
 
 
 CREATE TABLE IF NOT EXISTS "public"."favorites" (
@@ -388,6 +298,81 @@ CREATE TABLE IF NOT EXISTS "public"."followers" (
 ALTER TABLE "public"."followers" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."profiles" (
+    "id" "uuid" NOT NULL,
+    "created" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "username" "text" DEFAULT ''::"text" NOT NULL,
+    "avatar" "text" DEFAULT ''::"text",
+    "bio" "text" DEFAULT ''::"text" NOT NULL,
+    "displayname" "text" DEFAULT ''::"text" NOT NULL
+);
+
+
+ALTER TABLE "public"."profiles" OWNER TO "postgres";
+
+
+CREATE OR REPLACE VIEW "public"."followers_view" WITH ("security_invoker"='on') AS
+ SELECT "f"."followerId",
+    "f"."authorId",
+    "p"."username",
+    "p"."avatar",
+    (EXISTS ( SELECT 1
+           FROM "public"."followers"
+          WHERE (("followers"."authorId" = "auth"."uid"()) AND ("followers"."followerId" = "p"."id")))) AS "isFollowing"
+   FROM ("public"."followers" "f"
+     JOIN "public"."profiles" "p" ON (("p"."id" = "f"."authorId")));
+
+
+ALTER VIEW "public"."followers_view" OWNER TO "supabase_admin";
+
+
+CREATE TABLE IF NOT EXISTS "public"."hashtags" (
+    "id" bigint NOT NULL,
+    "date" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "hashtag" "text" NOT NULL
+);
+
+
+ALTER TABLE "public"."hashtags" OWNER TO "supabase_admin";
+
+
+ALTER TABLE "public"."hashtags" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME "public"."hashtags_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+CREATE OR REPLACE VIEW "public"."hashtags_month_top_view" WITH ("security_invoker"='on') AS
+ SELECT "hashtag",
+    "count"(*) AS "count"
+   FROM "public"."hashtags"
+  WHERE ("date" >= "date_trunc"('day'::"text", ("now"() - '1 mon'::interval)))
+  GROUP BY "hashtag"
+  ORDER BY ("count"(*)) DESC
+ LIMIT 20;
+
+
+ALTER VIEW "public"."hashtags_month_top_view" OWNER TO "supabase_admin";
+
+
+CREATE OR REPLACE VIEW "public"."hashtags_week_top_view" WITH ("security_invoker"='on') AS
+ SELECT "hashtag",
+    "count"(*) AS "count"
+   FROM "public"."hashtags"
+  WHERE ("date" >= "date_trunc"('day'::"text", ("now"() - '7 days'::interval)))
+  GROUP BY "hashtag"
+  ORDER BY ("count"(*)) DESC
+ LIMIT 20;
+
+
+ALTER VIEW "public"."hashtags_week_top_view" OWNER TO "supabase_admin";
+
+
 CREATE TABLE IF NOT EXISTS "public"."likes" (
     "authorId" "uuid" NOT NULL,
     "messageId" "uuid" NOT NULL
@@ -395,6 +380,85 @@ CREATE TABLE IF NOT EXISTS "public"."likes" (
 
 
 ALTER TABLE "public"."likes" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."messages" (
+    "id" "uuid" DEFAULT "extensions"."uuid_generate_v1mc"() NOT NULL,
+    "created" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated" timestamp without time zone DEFAULT "now"() NOT NULL,
+    "authorId" "uuid" DEFAULT "auth"."uid"() NOT NULL,
+    "body" "jsonb" NOT NULL,
+    "embeddedItems" "text"[],
+    "embeddedType" "text",
+    "answerId" "uuid",
+    CONSTRAINT "messages_body_check" CHECK ((("utils"."calculate_lexical_text_length"("body") < 600) AND "utils"."validate_message_body"("body"))),
+    CONSTRAINT "messages_embeddedItems_check" CHECK ((("cardinality"("embeddedItems") > 0) AND ("cardinality"("embeddedItems") <= 4))),
+    CONSTRAINT "messages_embeddedType_check" CHECK ((("embeddedType" = 'images'::"text") OR ("embeddedType" = 'videos'::"text") OR ("embeddedType" = 'link'::"text") OR ("embeddedType" = 'youtube'::"text")))
+);
+
+
+ALTER TABLE "public"."messages" OWNER TO "postgres";
+
+
+CREATE OR REPLACE VIEW "public"."messages_view" WITH ("security_invoker"='on') AS
+ SELECT "m"."answerId",
+    "m"."authorId",
+    "m"."body",
+    "m"."created",
+    "m"."embeddedItems",
+    "m"."embeddedType",
+    "m"."id",
+    "m"."updated",
+    "p"."username",
+    "p"."avatar",
+    (EXISTS ( SELECT "likes"."messageId"
+           FROM "public"."likes"
+          WHERE (("likes"."messageId" = "m"."id") AND ("likes"."authorId" = "auth"."uid"())))) AS "hasLiked",
+    (EXISTS ( SELECT "favorites"."messageId"
+           FROM "public"."favorites"
+          WHERE (("favorites"."messageId" = "m"."id") AND ("favorites"."authorId" = "auth"."uid"())))) AS "isFavorite",
+    ( SELECT "count"(1) AS "count"
+           FROM "public"."likes" "l"
+          WHERE ("l"."messageId" = "m"."id")) AS "likesCount",
+    ( SELECT "count"(1) AS "count"
+           FROM "public"."messages" "a"
+          WHERE ("a"."answerId" = "m"."id")) AS "answersCount"
+   FROM ("public"."messages" "m"
+     JOIN "public"."profiles" "p" ON (("p"."id" = "m"."authorId")));
+
+
+ALTER VIEW "public"."messages_view" OWNER TO "supabase_admin";
+
+
+CREATE OR REPLACE VIEW "public"."profiles_view" WITH ("security_invoker"='on') AS
+ SELECT "id",
+    "created",
+    "avatar",
+    "bio",
+    "username",
+    "displayname",
+    (EXISTS ( SELECT "f"."authorId"
+           FROM "public"."followers" "f"
+          WHERE (("f"."authorId" = "auth"."uid"()) AND ("f"."followerId" = "p"."id")))) AS "isFollowing",
+    (EXISTS ( SELECT "f"."followerId"
+           FROM "public"."followers" "f"
+          WHERE (("f"."followerId" = "auth"."uid"()) AND ("f"."authorId" = "p"."id")))) AS "isFollower",
+    ( SELECT "count"(1) AS "count"
+           FROM "public"."followers" "f"
+          WHERE ("f"."followerId" = "p"."id")) AS "followersCount",
+    ( SELECT "count"(1) AS "count"
+           FROM "public"."followers" "f"
+          WHERE ("f"."authorId" = "p"."id")) AS "followingsCount",
+    ( SELECT "count"(1) AS "count"
+           FROM "public"."favorites" "f"
+          WHERE ("f"."authorId" = "auth"."uid"())) AS "favoritesCount",
+    ( SELECT "count"(1) AS "count"
+           FROM "public"."messages" "m"
+          WHERE ("m"."authorId" = "p"."id")) AS "messagesCount"
+   FROM "public"."profiles" "p";
+
+
+ALTER VIEW "public"."profiles_view" OWNER TO "supabase_admin";
 
 
 CREATE TABLE IF NOT EXISTS "public"."reports" (
@@ -419,8 +483,23 @@ ALTER TABLE "public"."reports" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDE
 
 
 
+ALTER TABLE ONLY "public"."favorites"
+    ADD CONSTRAINT "favorites_pkey" PRIMARY KEY ("authorId", "messageId");
+
+
+
 ALTER TABLE ONLY "public"."followers"
     ADD CONSTRAINT "followers_pkey" PRIMARY KEY ("authorId", "followerId");
+
+
+
+ALTER TABLE ONLY "public"."hashtags"
+    ADD CONSTRAINT "hashtags_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."likes"
+    ADD CONSTRAINT "likes_pkey" PRIMARY KEY ("authorId", "messageId");
 
 
 
@@ -451,6 +530,14 @@ ALTER TABLE ONLY "public"."profiles"
 
 ALTER TABLE ONLY "public"."reports"
     ADD CONSTRAINT "reports_pkey" PRIMARY KEY ("id");
+
+
+
+CREATE INDEX "likes_messageId_idx" ON "public"."likes" USING "btree" ("messageId");
+
+
+
+CREATE OR REPLACE TRIGGER "on_message_created" AFTER INSERT ON "public"."messages" FOR EACH ROW EXECUTE FUNCTION "utils"."handle_new_message"();
 
 
 
@@ -540,6 +627,14 @@ CREATE POLICY "Enable insert for authors only" ON "public"."messages" FOR INSERT
 
 
 
+CREATE POLICY "Enable read access for all users" ON "public"."hashtags" FOR SELECT USING (true);
+
+
+
+CREATE POLICY "Enable read access for all users" ON "public"."likes" FOR SELECT USING (true);
+
+
+
 CREATE POLICY "Enable read access for all users" ON "public"."messages" FOR SELECT USING (true);
 
 
@@ -564,6 +659,9 @@ ALTER TABLE "public"."favorites" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."followers" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."hashtags" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."likes" ENABLE ROW LEVEL SECURITY;
@@ -785,96 +883,6 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
-GRANT ALL ON FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."calculate_lexical_text_length"("lexical_node" "jsonb", "result_length" integer) TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."profiles" TO "anon";
-GRANT ALL ON TABLE "public"."profiles" TO "authenticated";
-GRANT ALL ON TABLE "public"."profiles" TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."favorites_count"("public"."profiles") TO "anon";
-GRANT ALL ON FUNCTION "public"."favorites_count"("public"."profiles") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."favorites_count"("public"."profiles") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."followers_count"("public"."profiles") TO "anon";
-GRANT ALL ON FUNCTION "public"."followers_count"("public"."profiles") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."followers_count"("public"."profiles") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."followings_count"("public"."profiles") TO "anon";
-GRANT ALL ON FUNCTION "public"."followings_count"("public"."profiles") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."followings_count"("public"."profiles") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "anon";
-GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."handle_new_user"() TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."is_follower"("public"."profiles") TO "anon";
-GRANT ALL ON FUNCTION "public"."is_follower"("public"."profiles") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."is_follower"("public"."profiles") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."is_following"("public"."profiles") TO "anon";
-GRANT ALL ON FUNCTION "public"."is_following"("public"."profiles") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."is_following"("public"."profiles") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."validate_message_body"("message_body" "jsonb") TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."messages" TO "anon";
-GRANT ALL ON TABLE "public"."messages" TO "authenticated";
-GRANT ALL ON TABLE "public"."messages" TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."message_has_liked"("public"."messages") TO "anon";
-GRANT ALL ON FUNCTION "public"."message_has_liked"("public"."messages") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."message_has_liked"("public"."messages") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."message_in_favorite"("public"."messages") TO "anon";
-GRANT ALL ON FUNCTION "public"."message_in_favorite"("public"."messages") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."message_in_favorite"("public"."messages") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."message_likes_count"("public"."messages") TO "anon";
-GRANT ALL ON FUNCTION "public"."message_likes_count"("public"."messages") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."message_likes_count"("public"."messages") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."messages_count"("public"."profiles") TO "anon";
-GRANT ALL ON FUNCTION "public"."messages_count"("public"."profiles") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."messages_count"("public"."profiles") TO "service_role";
-
-
-
-GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."process_lexical_node_with_children"("lexical_node" "jsonb", "result_length" integer) TO "service_role";
-
-
-
 
 
 
@@ -908,9 +916,70 @@ GRANT ALL ON TABLE "public"."followers" TO "service_role";
 
 
 
+GRANT ALL ON TABLE "public"."profiles" TO "anon";
+GRANT ALL ON TABLE "public"."profiles" TO "authenticated";
+GRANT ALL ON TABLE "public"."profiles" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."followers_view" TO "postgres";
+GRANT ALL ON TABLE "public"."followers_view" TO "anon";
+GRANT ALL ON TABLE "public"."followers_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."followers_view" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."hashtags" TO "postgres";
+GRANT ALL ON TABLE "public"."hashtags" TO "anon";
+GRANT ALL ON TABLE "public"."hashtags" TO "authenticated";
+GRANT ALL ON TABLE "public"."hashtags" TO "service_role";
+
+
+
+GRANT ALL ON SEQUENCE "public"."hashtags_id_seq" TO "postgres";
+GRANT ALL ON SEQUENCE "public"."hashtags_id_seq" TO "anon";
+GRANT ALL ON SEQUENCE "public"."hashtags_id_seq" TO "authenticated";
+GRANT ALL ON SEQUENCE "public"."hashtags_id_seq" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."hashtags_month_top_view" TO "postgres";
+GRANT ALL ON TABLE "public"."hashtags_month_top_view" TO "anon";
+GRANT ALL ON TABLE "public"."hashtags_month_top_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."hashtags_month_top_view" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."hashtags_week_top_view" TO "postgres";
+GRANT ALL ON TABLE "public"."hashtags_week_top_view" TO "anon";
+GRANT ALL ON TABLE "public"."hashtags_week_top_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."hashtags_week_top_view" TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."likes" TO "anon";
 GRANT ALL ON TABLE "public"."likes" TO "authenticated";
 GRANT ALL ON TABLE "public"."likes" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."messages" TO "anon";
+GRANT ALL ON TABLE "public"."messages" TO "authenticated";
+GRANT ALL ON TABLE "public"."messages" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."messages_view" TO "postgres";
+GRANT ALL ON TABLE "public"."messages_view" TO "anon";
+GRANT ALL ON TABLE "public"."messages_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."messages_view" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."profiles_view" TO "postgres";
+GRANT ALL ON TABLE "public"."profiles_view" TO "anon";
+GRANT ALL ON TABLE "public"."profiles_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."profiles_view" TO "service_role";
 
 
 
