@@ -1,4 +1,6 @@
-create or replace function "public"."calculate_lexical_text_length" (lexical_node jsonb) returns int language plpgsql as $$
+create or replace function utils.calculate_lexical_text_length (lexical_node jsonb) returns int language plpgsql
+set
+  "search_path" to '' as $$
 DECLARE
   acc int = 0;
   lexical_node_child jsonb;
@@ -6,7 +8,7 @@ DECLARE
 BEGIN
   if type = 'root' or type = 'paragraph' or type = 'link' or type = 'autolink' then
     for lexical_node_child IN select * from jsonb_array_elements((lexical_node -> 'children'))
-    LOOP acc := acc + calculate_lexical_text_length(lexical_node_child);
+    LOOP acc := acc + utils.calculate_lexical_text_length(lexical_node_child);
     end LOOP;
 
     return acc;

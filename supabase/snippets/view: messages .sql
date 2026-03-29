@@ -1,5 +1,3 @@
-  -- drop view messages_view;
-
 create or replace view messages_view
 with
   (security_invoker = on) as
@@ -14,6 +12,7 @@ select
   m.updated,
   p.username,
   p.avatar,
+  
   exists(select "messageId" from likes where likes."messageId" = m.id and likes."authorId" = auth.uid()) as "hasLiked",
   exists(select "messageId" from favorites where favorites."messageId" = m.id and favorites."authorId" = auth.uid()) as "isFavorite",
   (select count(1) from likes as l where l."messageId" = m.id) as "likesCount",
