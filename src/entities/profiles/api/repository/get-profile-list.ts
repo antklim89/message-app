@@ -7,10 +7,10 @@ export async function getProfileList({ search }: { search: string }): PromiseRes
   const supabase = await createSupabaseClient();
 
   const query = supabase
-    .from('profiles')
-    .select('id, username, avatar, displayname, isFollower:is_follower, isFollowing:is_following')
-    .order('is_following', { ascending: true })
-    .order('is_follower', { ascending: true })
+    .from('profiles_view')
+    .select('*')
+    .order('isFollowing', { ascending: true })
+    .order('isFollower', { ascending: true })
     .order('id', { ascending: true })
     .limit(10);
 

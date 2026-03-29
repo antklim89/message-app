@@ -9,13 +9,7 @@ export async function getProfile({ profileId }: { profileId: string }): PromiseR
   const id = profileId ? profileId : await supabase.auth.getSession().then(({ data }) => data.session?.user.id);
   if (id == null) return errAuthentication();
 
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select(
-      '*, isFollowing:is_following, followersCount:followers_count, followingsCount:followings_count, favoritesCount:favorites_count, messagesCount:messages_count',
-    )
-    .eq('id', id)
-    .single();
+  const { data: profile, error } = await supabase.from('profiles_view').select('*').eq('id', id).single();
 
   if (error) return errNotFound('Failed to load profile. Try again later');
 
