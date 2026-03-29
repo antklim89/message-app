@@ -56,6 +56,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "favorites_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "favorites_messageId_fkey"
             columns: ["messageId"]
             isOneToOne: false
@@ -93,10 +100,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "subscribe_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "subscribe_subscribeId_fkey"
             columns: ["followerId"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscribe_subscribeId_fkey"
+            columns: ["followerId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
             referencedColumns: ["id"]
           },
         ]
@@ -141,6 +162,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "likes_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "likes_messageId_fkey"
             columns: ["messageId"]
             isOneToOne: false
@@ -166,9 +194,6 @@ export type Database = {
           embeddedType: string | null
           id: string
           updated: string
-          message_has_liked: boolean | null
-          message_in_favorite: boolean | null
-          message_likes_count: number | null
         }
         Insert: {
           answerId?: string | null
@@ -212,6 +237,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "Messages_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -222,12 +254,6 @@ export type Database = {
           displayname: string
           id: string
           username: string
-          favorites_count: number | null
-          followers_count: number | null
-          followings_count: number | null
-          is_follower: boolean | null
-          is_following: boolean | null
-          messages_count: number | null
         }
         Insert: {
           avatar?: string | null
@@ -285,6 +311,45 @@ export type Database = {
       }
     }
     Views: {
+      followers_view: {
+        Row: {
+          authorId: string | null
+          avatar: string | null
+          followerId: string | null
+          isFollowing: boolean | null
+          username: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscribe_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscribe_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscribe_subscribeId_fkey"
+            columns: ["followerId"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscribe_subscribeId_fkey"
+            columns: ["followerId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hashtags_month_top_view: {
         Row: {
           count: number | null
@@ -338,74 +403,63 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "Messages_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "profiles_view"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      profiles_view: {
+        Row: {
+          avatar: string | null
+          bio: string | null
+          created: string | null
+          displayname: string | null
+          favoritesCount: number | null
+          followersCount: number | null
+          followingsCount: number | null
+          id: string | null
+          isFollower: boolean | null
+          isFollowing: boolean | null
+          messagesCount: number | null
+          username: string | null
+        }
+        Insert: {
+          avatar?: string | null
+          bio?: string | null
+          created?: string | null
+          displayname?: string | null
+          favoritesCount?: never
+          followersCount?: never
+          followingsCount?: never
+          id?: string | null
+          isFollower?: never
+          isFollowing?: never
+          messagesCount?: never
+          username?: string | null
+        }
+        Update: {
+          avatar?: string | null
+          bio?: string | null
+          created?: string | null
+          displayname?: string | null
+          favoritesCount?: never
+          followersCount?: never
+          followingsCount?: never
+          id?: string | null
+          isFollower?: never
+          isFollowing?: never
+          messagesCount?: never
+          username?: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
-      calculate_lexical_text_length: {
-        Args: { lexical_node: Json }
-        Returns: number
-      }
-      extract_and_insert_hashtags: {
-        Args: { lexical_node: Json }
-        Returns: undefined
-      }
-      favorites_count: {
-        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.favorites_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      followers_count: {
-        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.followers_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      followings_count: {
-        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.followings_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      handle_new_message: { Args: { lexical_node: Json }; Returns: undefined }
-      is_follower: {
-        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.is_follower with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      is_following: {
-        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.is_following with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      message_has_liked: {
-        Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.message_has_liked with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      message_in_favorite: {
-        Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.message_in_favorite with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      message_likes_count: {
-        Args: { "": Database["public"]["Tables"]["messages"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.message_likes_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      messages_count: {
-        Args: { "": Database["public"]["Tables"]["profiles"]["Row"] }
-        Returns: {
-          error: true
-        } & "the function public.messages_count with parameter or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache"
-      }
-      validate_message_body: { Args: { message_body: Json }; Returns: boolean }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
