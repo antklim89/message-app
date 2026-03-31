@@ -103,7 +103,7 @@ export interface FileRoutesByFullPath {
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
-  '/profile/$profileId': typeof ProfileProfileIdIndexRoute
+  '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -151,7 +151,7 @@ export interface FileRouteTypes {
     | '/hashtag/$hashtag'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
-    | '/profile/$profileId'
+    | '/profile/$profileId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -272,7 +272,7 @@ declare module '@tanstack/react-router' {
     '/profile/$profileId/': {
       id: '/profile/$profileId/'
       path: '/$profileId'
-      fullPath: '/profile/$profileId'
+      fullPath: '/profile/$profileId/'
       preLoaderRoute: typeof ProfileProfileIdIndexRouteImport
       parentRoute: typeof ProfileRoute
     }
