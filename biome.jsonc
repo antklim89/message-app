@@ -83,6 +83,11 @@
         "useMediaCaption": "off"
       },
       "complexity": {
+        "useMaxParams": {
+          "level": "error",
+          "options": { "max": 4 }
+        },
+        "noUselessUndefined": "error",
         "noExcessiveCognitiveComplexity": "error",
         "noExcessiveLinesPerFunction": {
           "level": "error",
@@ -105,17 +110,11 @@
       },
       "nursery": {
         "noFloatingPromises": "error",
-        "noImportCycles": "error",
         "noMisusedPromises": "error",
         "noShadow": "error",
-        "noUselessUndefined": "error",
 
         "useExhaustiveSwitchCases": "error",
         "useExplicitType": "off",
-        "useMaxParams": {
-          "level": "error",
-          "options": { "max": 4 }
-        },
         "useSortedClasses": "warn"
       },
       "performance": {
@@ -194,6 +193,7 @@
         "useSelfClosingElements": "error"
       },
       "suspicious": {
+        "noImportCycles": "error",
         "noAlert": "error",
         "noArrayIndexKey": "error",
         "noAssignInExpressions": "error",
