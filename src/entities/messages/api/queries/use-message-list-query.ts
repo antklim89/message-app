@@ -41,7 +41,7 @@ export function messageListQueryOptions({
         authorId,
         embeddedType,
       });
-      if (fail) throw error;
+      if (fail) throw new Error(error.message);
 
       result.items.flat().forEach(message => {
         client.setQueryData(messageQueryOptions({ id: message.id }).queryKey, message);

@@ -14,7 +14,7 @@ export function getHashtagsQueryOptions({ period }: { period: HashtagsPeriod }) 
     queryKey: [HashtagsQueryOptionsBaseKey, period],
     async queryFn() {
       const { fail, error, result } = await getHashtags({ period });
-      if (fail) throw error;
+      if (fail) throw new Error(error.message);
       return result;
     },
   });

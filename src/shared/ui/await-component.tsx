@@ -1,32 +1,39 @@
 import { Suspense, use } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Spinner } from '@chakra-ui/react';
-import { ErrorComponent } from '@tanstack/react-router';
+
+import { ErrorComponent } from './error-component';
 
 export function AwaitComponent<T>({
   fallback = <Spinner />,
-  ...props
+  children,
+  promise,
 }: {
   fallback?: React.ReactNode;
   children: (result: T) => React.ReactNode;
   promise: Promise<T>;
 }) {
+  if (promise == null) return children(promise);
   return (
-    <ErrorBoundary fallbackRender={ErrorComponent}>
+    <ErrorBoundary
+      FallbackComponent={({ error }) => (
+        <ErrorComponent error={error instanceof Error ? error : new Error('Unexpected error. Try again later.')} />
+      )}
+    >
       <Suspense fallback={fallback}>
-        <AwaitComponentChildren {...props} />
+        <AwaitComponentChild promise={promise}>{children}</AwaitComponentChild>
       </Suspense>
     </ErrorBoundary>
   );
 }
 
-export function AwaitComponentChildren<T>({
+function AwaitComponentChild<T>({
   children,
   promise,
 }: {
   children: (result: T) => React.ReactNode;
   promise: Promise<T>;
 }) {
-  const resolved = promise != null ? use(promise) : promise;
-  return children(resolved);
+  const result = use(promise);
+  return children(result);
 }

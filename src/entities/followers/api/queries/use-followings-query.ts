@@ -13,7 +13,7 @@ export function getFollowingsQueryOptions() {
     queryKey: [FollowingsQueryOptionsBaseKey],
     async queryFn() {
       const { fail, error, result } = await getFollowings();
-      if (fail) throw error;
+      if (fail) throw new Error(error.message);
       return result;
     },
   });

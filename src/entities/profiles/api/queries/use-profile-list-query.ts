@@ -14,7 +14,7 @@ export function getProfileListQueryOptions({ search }: { search: string }) {
     placeholderData: keepPreviousData,
     async queryFn() {
       const { fail, error, result } = await getProfileList({ search });
-      if (fail) throw error;
+      if (fail) throw new Error(error.message);
       return result;
     },
   });

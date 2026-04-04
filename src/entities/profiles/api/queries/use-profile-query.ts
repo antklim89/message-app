@@ -13,7 +13,7 @@ export function getProfileQueryOptions({ profileId }: { profileId: string }) {
     queryKey: [ProfileQueryOptionsBaseKey, { profileId }],
     async queryFn() {
       const { fail, error, result } = await getProfile({ profileId });
-      if (fail) throw error;
+      if (fail) throw new Error(error.message);
       return result;
     },
   });
