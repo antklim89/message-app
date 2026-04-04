@@ -1,4 +1,4 @@
-create or replace function utils.calculate_lexical_text_length (lexical_node jsonb) returns int language plpgsql
+create or replace function utils.calculate_lexical_text_length (lexical_node jsonb) returns int language plpgsql STABLE SECURITY DEFINER
 set
   "search_path" to '' as $$
 DECLARE

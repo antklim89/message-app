@@ -81,6 +81,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE OR REPLACE FUNCTION "utils"."calculate_lexical_text_length"("lexical_node" "jsonb") RETURNS integer
     LANGUAGE "plpgsql"
+    STABLE SECURITY DEFINER
     SET "search_path" TO ''
     AS $$
 DECLARE
