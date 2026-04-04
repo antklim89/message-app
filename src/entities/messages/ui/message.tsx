@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { Box, Card, Flex, HStack, IconButton, Span } from '@chakra-ui/react';
+import { Box, Card, Flex, HStack, Span } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { FaCircleCheck, FaComment } from 'react-icons/fa6';
+import { FaCircleCheck } from 'react-icons/fa6';
 
 import { MessageEmbeddedType } from '@/shared/model/message-embedded-type';
 import { EmbeddedSite } from '@/shared/ui/embedded-site';
@@ -60,14 +60,7 @@ export function Message({ message, footer, menu }: { message: MessageType; foote
           </Box>
         </Card.Body>
       </Card.Body>
-      <Card.Footer css={{ '& > *': { flex: '1 0 auto' } }} display="flex" p={0}>
-        {footer}
-        <IconButton aria-label="answers for this message" asChild variant="ghost">
-          <Link params={{ answerId: message.id }} to="/answers/$answerId">
-            <FaComment /> {message.answersCount}
-          </Link>
-        </IconButton>
-      </Card.Footer>
+      {footer}
     </Card.Root>
   );
 }
