@@ -34,7 +34,7 @@ export async function getMessageList({
   if (isFavorites) query.eq('isFavorite', true);
   if (embeddedType) query.eq('embeddedType', embeddedType);
   if (authorId) query.eq('authorId', authorId);
-  if (search) query.textSearch('body', search);
+  if (search) query.textSearch('body_tsvector', search);
   if (lastMessage != null) query.lt('created', lastMessage.created);
 
   const { data, error } = await query;

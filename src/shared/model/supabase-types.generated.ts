@@ -189,6 +189,7 @@ export type Database = {
           answerId: string | null
           authorId: string
           body: Json
+          body_tsvector: unknown
           created: string
           embeddedItems: string[] | null
           embeddedType: string | null
@@ -199,6 +200,7 @@ export type Database = {
           answerId?: string | null
           authorId?: string
           body: Json
+          body_tsvector: unknown
           created?: string
           embeddedItems?: string[] | null
           embeddedType?: string | null
@@ -209,6 +211,7 @@ export type Database = {
           answerId?: string | null
           authorId?: string
           body?: Json
+          body_tsvector?: unknown
           created?: string
           embeddedItems?: string[] | null
           embeddedType?: string | null
@@ -371,6 +374,7 @@ export type Database = {
           authorId: string | null
           avatar: string | null
           body: Json | null
+          body_tsvector: unknown
           created: string | null
           embeddedItems: string[] | null
           embeddedType: string | null

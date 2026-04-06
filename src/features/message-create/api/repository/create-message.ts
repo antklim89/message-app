@@ -34,6 +34,7 @@ export async function createMessage(answerId: MessageType['answerId'], input: Me
       body: input.body as unknown as Json,
       answerId,
       authorId: user.id,
+      body_tsvector: '',
     })
     .select('id')
     .single();

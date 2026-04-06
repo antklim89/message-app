@@ -9,7 +9,9 @@ import type { SerializedParagraphNode, SerializedRootNode, SerializedTextNode } 
 import { calculateLexicalTextLength } from '../src/shared/lib/lexical/utils';
 import type { Database, Json } from '../src/shared/model/supabase-types.generated';
 
+//@ts-expect-error
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+//@ts-expect-error
 const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE;
 
 if (!(SUPABASE_URL && SUPABASE_SERVICE_ROLE)) throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE are required.');
@@ -18,7 +20,7 @@ const sb = createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 const PASSWORD = 'qwer1234';
 const USERS_QTY = 0;
 const MESSAGES_QTY = 5000;
-const MESSAGES_LOOP_QTY = 5;
+const MESSAGES_LOOP_QTY = 3;
 
 const hashtags = Array.from({ length: 50 }, () => `#${faker.lorem.word()}`);
 
@@ -171,6 +173,7 @@ async function getMessages(answers?: { id: string }[]) {
       updated,
       created: faker.date.recent({ days: 600, refDate: updated }).toISOString(),
       answerId: answers?.[faker.number.int({ min: 0, max: answers.length - 1 })]?.id,
+      body_tsvector: '',
     });
 
     if (messages.length === 500) {
@@ -186,7 +189,7 @@ async function getMessages(answers?: { id: string }[]) {
 /** LIKES */
 async function getLikes() {
   console.log('Creating likes');
-  await sb.from('likes').delete({ count: 'exact' }).neq('id', 'x');
+  await sb.from('likes').delete({ count: 'exact' }).neq('authorId', 'x');
   const users = await sb.from('profiles').select('id').throwOnError();
   const messages = await sb.from('messages').select('id').throwOnError();
 
@@ -212,7 +215,7 @@ async function getLikes() {
 /** FAVORITES */
 async function getFavorites() {
   console.log('Creating favorites');
-  await sb.from('favorites').delete().neq('id', 'x');
+  await sb.from('favorites').delete().neq('authorId', 'x');
   const users = await sb.from('profiles').select('id').throwOnError();
   const messages = await sb.from('messages').select('id').throwOnError();
 
