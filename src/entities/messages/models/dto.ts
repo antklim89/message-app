@@ -7,7 +7,7 @@ export function messageDto(data: Database['public']['Views']['messages_view']['R
     answersCount: data.answersCount ?? 0,
     author: {
       avatar: data.avatar ?? undefined,
-      id: data.answerId as string,
+      id: data.authorId as string,
       username: data.username as string,
     },
     authorId: data.authorId as string,
