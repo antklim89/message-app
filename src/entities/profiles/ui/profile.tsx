@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactNode } from 'react';
 import { Card, FormatNumber, SimpleGrid, Span, Stack, Stat, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
@@ -7,7 +7,15 @@ import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
 import type { ProfileType } from '../models/types';
 
-export function Profile({ profile, followToggleButton }: { profile: ProfileType; followToggleButton: ReactElement }) {
+export function Profile({
+  profile,
+  titleSlot,
+  footerSlot,
+}: {
+  profile: ProfileType;
+  titleSlot?: ReactNode;
+  footerSlot?: ReactNode;
+}) {
   return (
     <Card.Root>
       <Card.Header asChild>
@@ -15,7 +23,7 @@ export function Profile({ profile, followToggleButton }: { profile: ProfileType;
           <UserAvatar w="12rem" h="12rem" fontSize="8rem" username={profile.username} src={profile.avatar} />
           <Stack w="full" gap={8}>
             <Card.Title fontSize="4xl">
-              {profile.username} {followToggleButton}
+              {profile.username} {titleSlot}
             </Card.Title>
             <Span color="fg/80" fontWeight="normal">
               Created: <FromNowDate fontSize="sm" date={profile.created} />
@@ -98,6 +106,7 @@ export function Profile({ profile, followToggleButton }: { profile: ProfileType;
           {profile.bio}
         </Text>
       </Card.Body>
+      <Card.Footer justifyContent="flex-end">{footerSlot}</Card.Footer>
     </Card.Root>
   );
 }
