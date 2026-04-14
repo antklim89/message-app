@@ -30,7 +30,6 @@ function MessageCardMenuCopyUserPlugin({ id, username }: { id: string; username:
       as="button"
       value="copy-user"
       onClick={async () => {
-        // @ts-expect-error package error
         await copyToClipboard(editor, null, {
           'text/plain': username,
           'application/x-lexical-editor': JSON.stringify({

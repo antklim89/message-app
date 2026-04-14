@@ -30,7 +30,6 @@ function MessageCardMenuCopyUrlPlugin({ message }: { message: MessageType }) {
   const fullPath = `${location.origin}${href}`;
 
   async function handleCopy() {
-    // @ts-expect-error package error
     await copyToClipboard(editor, null, {
       'text/plain': fullPath,
       'application/x-lexical-editor': JSON.stringify({
