@@ -1,5 +1,6 @@
 import { Heading } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
+import { FaUsersSlash } from 'react-icons/fa6';
 
 import {
   FollowersList,
@@ -9,6 +10,7 @@ import {
 } from '@/entities/followers';
 import { FollowToggleButton } from '@/features/follow-toggle';
 import { AwaitComponent } from '@/shared/ui/await-component';
+import { Empty } from '@/shared/ui/empty';
 
 export function FollowingsPage() {
   const followingsQuery = useQuery(getFollowingsQueryOptions());
@@ -20,6 +22,13 @@ export function FollowingsPage() {
           <Heading fontSize="4xl" textAlign="center" mb={8}>
             Followings
           </Heading>
+          {followings.length === 0 && (
+            <Empty
+              title="Followings list is empty"
+              message="You are not following anyone yet"
+              icon={<FaUsersSlash />}
+            />
+          )}
           {followings.map(following => (
             <FollowersListItem
               key={following.id}

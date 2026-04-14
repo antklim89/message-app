@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { EmptyState, VStack } from '@chakra-ui/react';
 import { FaCommentSlash } from 'react-icons/fa6';
 
 import { useInfiniteScroll } from '@/shared/hooks/use-infinity-scroll';
+import { Empty } from '@/shared/ui/empty';
 import { MessageListFallback } from './message-list-fallback';
 
 export const MessageList = ({
@@ -26,17 +26,7 @@ export const MessageList = ({
   return (
     <>
       {children.length === 0 && (
-        <EmptyState.Root>
-          <EmptyState.Content>
-            <EmptyState.Indicator>
-              <FaCommentSlash />
-            </EmptyState.Indicator>
-            <VStack textAlign="center">
-              <EmptyState.Title>The messages list is empty</EmptyState.Title>
-              <EmptyState.Description>{emptyMessage}</EmptyState.Description>
-            </VStack>
-          </EmptyState.Content>
-        </EmptyState.Root>
+        <Empty title="The messages list is empty" message={emptyMessage} icon={<FaCommentSlash />} />
       )}
       {children}
       {isFetchingNextPage && <MessageListFallback />}
