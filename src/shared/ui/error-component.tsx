@@ -1,34 +1,28 @@
-import { Alert, AlertIndicator, Button, Text } from '@chakra-ui/react';
-import { Link, Navigate } from '@tanstack/react-router';
-import { FaTriangleExclamation } from 'react-icons/fa6';
+import { Alert, AlertIndicator, Button, HStack } from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
+import { FaArrowsRotate, FaHouse, FaTriangleExclamation } from 'react-icons/fa6';
 
-import { ErrType, type ErrVariant, isErr } from '@/shared/lib/result';
-
-export const ErrorComponent = ({ error }: { error: Error | ErrVariant }) => {
-  const type = isErr(error) ? error.type : ErrType.UNEXPECTED;
-
-  if (type === ErrType.AUTHENTICATION) return <Navigate to="/" />;
-
+export const ErrorComponent = ({ error }: { error: Error }) => {
   return (
-    <Alert.Root status="error" border="sm" minH="40rem">
-      <Alert.Content h="full" gap={8} display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-        <AlertIndicator fontSize="7xl">
+    <Alert.Root status="error">
+      <Alert.Content display="flex" gap={4} flexDirection="column" alignItems="center">
+        <AlertIndicator fontSize="5xl">
           <FaTriangleExclamation />
         </AlertIndicator>
-        <Alert.Title fontSize="4xl" mb={2} as="h3" textTransform="uppercase">
-          {type === ErrType.NOT_FOUND && 'Not Found '}
-          {type === ErrType.UNEXPECTED && 'Unexpected '}
-          {type === ErrType.AUTHENTICATION && ' Unauthenticated '}
-          Error
-        </Alert.Title>
-        <Alert.Description fontSize="xl" asChild>
-          <Text whiteSpace="pre-wrap">{error.message}</Text>
+        <Alert.Title fontSize="xl">Unexpected Error</Alert.Title>
+        <Alert.Description fontSize="md" whiteSpace="pre-wrap">
+          {error.message}
         </Alert.Description>
-        <Button asChild>
-          <Link reloadDocument to="/">
-            Reload
-          </Link>
-        </Button>
+        <HStack>
+          <Button onClick={() => location.reload()}>
+            <FaArrowsRotate /> Reload
+          </Button>
+          <Button asChild>
+            <Link reloadDocument to="/">
+              <FaHouse /> Home
+            </Link>
+          </Button>
+        </HStack>
       </Alert.Content>
     </Alert.Root>
   );
