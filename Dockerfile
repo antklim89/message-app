@@ -12,5 +12,6 @@ RUN --mount=type=secret,id=VITE_SUPABASE_ANON_KEY,env=VITE_SUPABASE_ANON_KEY \
 
 FROM caddy:2.11.2-alpine
 COPY --from=install /app/dist /usr/share/caddy/
+COPY Caddyfile /etc/caddy/
 EXPOSE 80 443
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

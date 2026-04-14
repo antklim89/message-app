@@ -18,7 +18,8 @@
     "pull": "bunx supabase db pull --local",
     "docker:up": "docker compose up",
     "docker:start": "docker compose start",
-    "docker:build": "docker compose build"
+    "docker:build": "docker compose build",
+    "docker:push": "docker compose push"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.34.0",
