@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
-import { Card, FormatNumber, SimpleGrid, Span, Stack, Stat, Text } from '@chakra-ui/react';
+import { Card, SimpleGrid, Span, Stack, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { FromNowDate } from '@/shared/ui/from-now-date';
 import { Protected } from '@/shared/ui/protected';
 import { UserAvatar } from '@/shared/ui/user-avatar';
+import { ProfileStat } from './profile-stat';
 import type { ProfileType } from '../models/types';
 
 export function Profile({
@@ -33,67 +34,36 @@ export function Profile({
                 authorId={profile.id}
                 publicElement={
                   <>
-                    <Stat.Root>
-                      <Stat.Label>Followers</Stat.Label>
-                      <Stat.ValueText>
-                        <FormatNumber value={profile.followersCount} style="decimal" />
-                      </Stat.ValueText>
-                    </Stat.Root>
+                    <ProfileStat title="Followers" value={profile.followersCount} />
 
-                    <Stat.Root>
-                      <Stat.Label>Followings</Stat.Label>
-                      <Stat.ValueText>
-                        <FormatNumber value={profile.followingsCount} style="decimal" />
-                      </Stat.ValueText>
-                    </Stat.Root>
+                    <ProfileStat title="Followings" value={profile.followingsCount} />
 
-                    <Stat.Root>
-                      <Stat.Label>Messages</Stat.Label>
-                      <Stat.ValueText asChild>
-                        <Link to="/profile/$profileId/messages" params={{ profileId: profile.id }}>
-                          <FormatNumber value={profile.messagesCount} style="decimal" />
-                        </Link>
-                      </Stat.ValueText>
-                    </Stat.Root>
+                    <ProfileStat
+                      title="Messages"
+                      value={profile.messagesCount}
+                      linkSlot={Link}
+                      to="/profile/$profileId/messages"
+                      params={{ profileId: profile.id }}
+                    />
                   </>
                 }
                 privateElement={
                   <>
-                    <Stat.Root>
-                      <Stat.Label>Followers</Stat.Label>
-                      <Stat.ValueText asChild>
-                        <Link to="/followers">
-                          <FormatNumber value={profile.followersCount} style="decimal" />
-                        </Link>
-                      </Stat.ValueText>
-                    </Stat.Root>
-
-                    <Stat.Root>
-                      <Stat.Label>Followings</Stat.Label>
-                      <Stat.ValueText asChild>
-                        <Link to="/followings">
-                          <FormatNumber value={profile.followingsCount} style="decimal" />
-                        </Link>
-                      </Stat.ValueText>
-                    </Stat.Root>
-
-                    <Stat.Root>
-                      <Stat.Label>Messages</Stat.Label>
-                      <Stat.ValueText asChild>
-                        <Link to="/profile/$profileId/messages" params={{ profileId: profile.id }}>
-                          <FormatNumber value={profile.messagesCount} style="decimal" />
-                        </Link>
-                      </Stat.ValueText>
-                    </Stat.Root>
-
-                    <Stat.Root>
-                      <Stat.Label>Favorites</Stat.Label>
-                      <Stat.ValueText asChild>
-                        <Link to="/favorite-messages">
-                          <FormatNumber value={profile.favoritesCount} style="decimal" />
-                        </Link>
-                      </Stat.ValueText>
-                    </Stat.Root>
+                    <ProfileStat title="Followings" value={profile.followingsCount} linkSlot={Link} to="/followings" />
+                    <ProfileStat title="Followers" value={profile.followersCount} linkSlot={Link} to="/followers" />
+                    <ProfileStat
+                      title="Messages"
+                      value={profile.messagesCount}
+                      linkSlot={Link}
+                      to="/profile/$profileId/messages"
+                      params={{ profileId: profile.id }}
+                    />
+                    <ProfileStat
+                      title="Favorites"
+                      value={profile.favoritesCount}
+                      linkSlot={Link}
+                      to="/favorite-messages"
+                    />
                   </>
                 }
               />
