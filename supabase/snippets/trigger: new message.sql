@@ -37,8 +37,3 @@ create
 or replace trigger on_message_created
 before insert on public.messages for each row
 execute procedure utils.handle_new_message ();
-
--- DROP FUNCTION utils.extract_and_insert_hashtags(jsonb)
-
--- create index body_tsvector_idx on messages using gin (body_tsvector); 
--- alter table public.messages add column body_tsvector tsvector;
