@@ -6,6 +6,7 @@ import { LogoutDialog } from '@/features/auth';
 import { FollowToggleButton } from '@/features/follow-toggle';
 import { AwaitComponent } from '@/shared/ui/await-component';
 import { Dialog } from '@/shared/ui/dialog';
+import { Protected } from '@/shared/ui/protected';
 
 export function ProfilePage({ params }: { params: { profileId: string } }) {
   const logoutDialog = useDialog();
@@ -18,12 +19,17 @@ export function ProfilePage({ params }: { params: { profileId: string } }) {
           profile={profile}
           titleSlot={<FollowToggleButton followerId={profile.id} isFollowing={profile.isFollowing} />}
           footerSlot={
-            <>
-              <LogoutDialog dialog={logoutDialog} />
-              <Dialog.Trigger dialog={logoutDialog} colorPalette="red">
-                Logout
-              </Dialog.Trigger>
-            </>
+            <Protected
+              authorId={profile.id}
+              privateElement={
+                <>
+                  <LogoutDialog dialog={logoutDialog} />
+                  <Dialog.Trigger dialog={logoutDialog} colorPalette="red">
+                    Logout
+                  </Dialog.Trigger>
+                </>
+              }
+            />
           }
         />
       )}
