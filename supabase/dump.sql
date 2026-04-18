@@ -135,7 +135,7 @@ END;
 $$;
 
 
-ALTER FUNCTION "utils"."extract_and_insert_hashtags"("lexical_node" "jsonb", "result" "text") OWNER TO "supabase_admin";
+ALTER FUNCTION "utils"."extract_and_insert_hashtags"("lexical_node" "jsonb", "result" "text") OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "utils"."handle_new_message"() RETURNS "trigger"
@@ -440,12 +440,12 @@ ALTER VIEW "public"."messages_view" OWNER TO "postgres";
 
 
 CREATE OR REPLACE VIEW "public"."profiles_view" WITH ("security_invoker"='on') AS
- SELECT "p"."id",
-    "p"."created",
-    "p"."avatar",
-    "p"."bio",
-    "p"."username",
-    "p"."displayname",
+ SELECT "id",
+    "created",
+    "avatar",
+    "bio",
+    "username",
+    "displayname",
     (EXISTS ( SELECT "f"."authorId"
            FROM "public"."followers" "f"
           WHERE (("f"."authorId" = "auth"."uid"()) AND ("f"."followerId" = "p"."id")))) AS "isFollowing",
@@ -463,10 +463,8 @@ CREATE OR REPLACE VIEW "public"."profiles_view" WITH ("security_invoker"='on') A
           WHERE ("f"."authorId" = "auth"."uid"())) AS "favoritesCount",
     ( SELECT "count"(1) AS "count"
            FROM "public"."messages" "m"
-          WHERE ("m"."authorId" = "p"."id")) AS "messagesCount",
-    "x".*::"public"."followers" AS "x"
-   FROM ("public"."profiles" "p"
-     JOIN "public"."followers" "x" ON (("x"."authorId" = "p"."id")));
+          WHERE ("m"."authorId" = "p"."id")) AS "messagesCount"
+   FROM "public"."profiles" "p";
 
 
 ALTER VIEW "public"."profiles_view" OWNER TO "postgres";
@@ -476,7 +474,9 @@ CREATE TABLE IF NOT EXISTS "public"."reports" (
     "id" bigint NOT NULL,
     "created" timestamp with time zone DEFAULT "now"() NOT NULL,
     "body" "text" DEFAULT ''::"text" NOT NULL,
-    "messageId" "uuid"
+    "messageId" "uuid",
+    "category" "text" NOT NULL,
+    CONSTRAINT "reports_category_check" CHECK (("length"("category") <= 100))
 );
 
 

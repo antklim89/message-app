@@ -18,3 +18,4 @@ select
 from
   profiles as p
 
+-- drop view profiles_view
