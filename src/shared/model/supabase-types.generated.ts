@@ -279,18 +279,21 @@ export type Database = {
       reports: {
         Row: {
           body: string
+          category: string
           created: string
           id: number
           messageId: string | null
         }
         Insert: {
           body?: string
+          category: string
           created?: string
           id?: number
           messageId?: string | null
         }
         Update: {
           body?: string
+          category?: string
           created?: string
           id?: number
           messageId?: string | null
