@@ -8,17 +8,16 @@ import { RightSide } from './right-side';
 import { RightSideDrawer } from './right-side-drawer';
 import { SideLayout } from './side-layout';
 
-const BREAKPOINTS = ['md', 'lg', 'xl'] as const;
 const SIDE_WIDTH = '20rem';
 const GAP = 4;
 const BOTTOM_SIDE_HEIGHT = 12;
 
 export function MainLayout({ children }: { children: ReactNode }) {
   const breakpoint = useBreakpoint({
-    breakpoints: BREAKPOINTS as unknown as string[],
-    fallback: BREAKPOINTS[0],
+    breakpoints: ['md', 'lg', 'xl'],
+    fallback: "md",
     ssr: false,
-  }) as (typeof BREAKPOINTS)[number];
+  });
 
   if (breakpoint === 'md') {
     return (
