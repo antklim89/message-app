@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { FollowersQueryOptionsBaseKey, FollowingsQueryOptionsBaseKey } from '@/entities/followers';
-import { getProfileQueryOptions, type ProfileType } from '@/entities/profiles';
+import { ProfileQueryOptionsBaseKey, type ProfileType } from '@/entities/profiles';
 import { ErrType } from '@/shared/lib/result';
 import { toaster } from '@/shared/lib/toaster';
 import { follow } from '../repository/follow';
@@ -34,10 +34,7 @@ export function useFollowToggleMutation({
       return result;
     },
     onSuccess() {
-      queryClient.setQueryData(
-        getProfileQueryOptions({ profileId: followerId }).queryKey,
-        oldData => oldData && { ...oldData, isFollowing: !isFollowing },
-      );
+      queryClient.invalidateQueries({ queryKey: [ProfileQueryOptionsBaseKey] });
       queryClient.invalidateQueries({ queryKey: [FollowersQueryOptionsBaseKey] });
       queryClient.invalidateQueries({ queryKey: [FollowingsQueryOptionsBaseKey] });
     },
