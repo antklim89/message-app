@@ -12,8 +12,6 @@ import { Route as rootRouteImport } from './../../app/routes/__root'
 import { Route as SearchRouteImport } from './../../app/routes/search'
 import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile-settings'
 import { Route as ProfileRouteImport } from './../../app/routes/profile'
-import { Route as FollowingsRouteImport } from './../../app/routes/followings'
-import { Route as FollowersRouteImport } from './../../app/routes/followers'
 import { Route as FavoriteMessagesRouteImport } from './../../app/routes/favorite-messages'
 import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
@@ -22,6 +20,8 @@ import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.
 import { Route as ProfileProfileIdIndexRouteImport } from './../../app/routes/profile.$profileId.index'
 import { Route as ProfileProfileIdMessagesRouteImport } from './../../app/routes/profile.$profileId.messages'
 import { Route as ProfileProfileIdImagesRouteImport } from './../../app/routes/profile.$profileId.images'
+import { Route as ProfileProfileIdFollowingsRouteImport } from './../../app/routes/profile.$profileId.followings'
+import { Route as ProfileProfileIdFollowersRouteImport } from './../../app/routes/profile.$profileId.followers'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -36,16 +36,6 @@ const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FollowingsRoute = FollowingsRouteImport.update({
-  id: '/followings',
-  path: '/followings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FollowersRoute = FollowersRouteImport.update({
-  id: '/followers',
-  path: '/followers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoriteMessagesRoute = FavoriteMessagesRouteImport.update({
@@ -89,18 +79,30 @@ const ProfileProfileIdImagesRoute = ProfileProfileIdImagesRouteImport.update({
   path: '/$profileId/images',
   getParentRoute: () => ProfileRoute,
 } as any)
+const ProfileProfileIdFollowingsRoute =
+  ProfileProfileIdFollowingsRouteImport.update({
+    id: '/$profileId/followings',
+    path: '/$profileId/followings',
+    getParentRoute: () => ProfileRoute,
+  } as any)
+const ProfileProfileIdFollowersRoute =
+  ProfileProfileIdFollowersRouteImport.update({
+    id: '/$profileId/followers',
+    path: '/$profileId/followers',
+    getParentRoute: () => ProfileRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/favorite-messages': typeof FavoriteMessagesRoute
-  '/followers': typeof FollowersRoute
-  '/followings': typeof FollowingsRoute
   '/profile': typeof ProfileRouteWithChildren
   '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
+  '/profile/$profileId/followers': typeof ProfileProfileIdFollowersRoute
+  '/profile/$profileId/followings': typeof ProfileProfileIdFollowingsRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
@@ -109,13 +111,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/favorite-messages': typeof FavoriteMessagesRoute
-  '/followers': typeof FollowersRoute
-  '/followings': typeof FollowingsRoute
   '/profile': typeof ProfileRouteWithChildren
   '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
+  '/profile/$profileId/followers': typeof ProfileProfileIdFollowersRoute
+  '/profile/$profileId/followings': typeof ProfileProfileIdFollowingsRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexRoute
@@ -125,13 +127,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/favorite-messages': typeof FavoriteMessagesRoute
-  '/followers': typeof FollowersRoute
-  '/followings': typeof FollowingsRoute
   '/profile': typeof ProfileRouteWithChildren
   '/profile-settings': typeof ProfileSettingsRoute
   '/search': typeof SearchRoute
   '/answers/$answerId': typeof AnswersAnswerIdRoute
   '/hashtag/$hashtag': typeof HashtagHashtagRoute
+  '/profile/$profileId/followers': typeof ProfileProfileIdFollowersRoute
+  '/profile/$profileId/followings': typeof ProfileProfileIdFollowingsRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
@@ -142,13 +144,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/favorite-messages'
-    | '/followers'
-    | '/followings'
     | '/profile'
     | '/profile-settings'
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/followers'
+    | '/profile/$profileId/followings'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
     | '/profile/$profileId/'
@@ -157,13 +159,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/favorite-messages'
-    | '/followers'
-    | '/followings'
     | '/profile'
     | '/profile-settings'
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/followers'
+    | '/profile/$profileId/followings'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
     | '/profile/$profileId'
@@ -172,13 +174,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/favorite-messages'
-    | '/followers'
-    | '/followings'
     | '/profile'
     | '/profile-settings'
     | '/search'
     | '/answers/$answerId'
     | '/hashtag/$hashtag'
+    | '/profile/$profileId/followers'
+    | '/profile/$profileId/followings'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
     | '/profile/$profileId/'
@@ -188,8 +190,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   FavoriteMessagesRoute: typeof FavoriteMessagesRoute
-  FollowersRoute: typeof FollowersRoute
-  FollowingsRoute: typeof FollowingsRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   SearchRoute: typeof SearchRoute
@@ -218,20 +218,6 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/followings': {
-      id: '/followings'
-      path: '/followings'
-      fullPath: '/followings'
-      preLoaderRoute: typeof FollowingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/followers': {
-      id: '/followers'
-      path: '/followers'
-      fullPath: '/followers'
-      preLoaderRoute: typeof FollowersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorite-messages': {
@@ -290,16 +276,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdImagesRouteImport
       parentRoute: typeof ProfileRoute
     }
+    '/profile/$profileId/followings': {
+      id: '/profile/$profileId/followings'
+      path: '/$profileId/followings'
+      fullPath: '/profile/$profileId/followings'
+      preLoaderRoute: typeof ProfileProfileIdFollowingsRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/$profileId/followers': {
+      id: '/profile/$profileId/followers'
+      path: '/$profileId/followers'
+      fullPath: '/profile/$profileId/followers'
+      preLoaderRoute: typeof ProfileProfileIdFollowersRouteImport
+      parentRoute: typeof ProfileRoute
+    }
   }
 }
 
 interface ProfileRouteChildren {
+  ProfileProfileIdFollowersRoute: typeof ProfileProfileIdFollowersRoute
+  ProfileProfileIdFollowingsRoute: typeof ProfileProfileIdFollowingsRoute
   ProfileProfileIdImagesRoute: typeof ProfileProfileIdImagesRoute
   ProfileProfileIdMessagesRoute: typeof ProfileProfileIdMessagesRoute
   ProfileProfileIdIndexRoute: typeof ProfileProfileIdIndexRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileProfileIdFollowersRoute: ProfileProfileIdFollowersRoute,
+  ProfileProfileIdFollowingsRoute: ProfileProfileIdFollowingsRoute,
   ProfileProfileIdImagesRoute: ProfileProfileIdImagesRoute,
   ProfileProfileIdMessagesRoute: ProfileProfileIdMessagesRoute,
   ProfileProfileIdIndexRoute: ProfileProfileIdIndexRoute,
@@ -312,8 +316,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   FavoriteMessagesRoute: FavoriteMessagesRoute,
-  FollowersRoute: FollowersRoute,
-  FollowingsRoute: FollowingsRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ProfileSettingsRoute: ProfileSettingsRoute,
   SearchRoute: SearchRoute,

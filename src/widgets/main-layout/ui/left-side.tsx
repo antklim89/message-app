@@ -36,10 +36,14 @@ export function LeftSide(props: StackProps) {
                 <Link to="/favorite-messages">Favorites</Link>
               </Button>
               <Button width="full" asChild variant="solid">
-                <Link to="/followers">Followers</Link>
+                <Link params={{ profileId: user.id }} to="/profile/$profileId/followers">
+                  Followers
+                </Link>
               </Button>
               <Button width="full" asChild variant="solid">
-                <Link to="/followings">Followings</Link>
+                <Link params={{ profileId: user.id }} to="/profile/$profileId/followings">
+                  Followings
+                </Link>
               </Button>
               <Button width="full" asChild variant="solid">
                 <Link to="/profile-settings">Settings</Link>

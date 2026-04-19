@@ -13,4 +13,12 @@ export const tabs = [
     to: '/profile/$profileId/images',
     label: 'Images',
   },
+  {
+    to: '/profile/$profileId/followers',
+    label: 'Followers',
+  },
+  {
+    to: '/profile/$profileId/followings',
+    label: 'Followings',
+  },
 ] as const satisfies { label: string; to: keyof FileRoutesByTo }[];

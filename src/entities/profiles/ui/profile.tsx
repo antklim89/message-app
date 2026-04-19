@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Card, SimpleGrid, Span, Stack, Text } from '@chakra-ui/react';
+import { Card, HStack, SimpleGrid, Span, Stack, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 
 import { FromNowDate } from '@/shared/ui/from-now-date';
@@ -20,51 +20,48 @@ export function Profile({
   return (
     <Card.Root>
       <Card.Header asChild>
-        <Stack gap={4} flexDirection={{ base: 'column', md: 'row' }}>
+        <Stack gap={2} flexDirection={{ base: 'column', md: 'row' }}>
           <UserAvatar w="12rem" h="12rem" fontSize="8rem" username={profile.username} src={profile.avatar} />
           <Stack w="full" gap={8}>
-            <Card.Title fontSize="4xl">
-              {profile.username} {titleSlot}
-            </Card.Title>
+            <HStack justifyContent="space-between" flexWrap="wrap">
+              <Card.Title fontSize="4xl">{profile.username}</Card.Title>
+              <div> {titleSlot}</div>
+            </HStack>
             <Span color="fg/80" fontWeight="normal">
               Created: <FromNowDate fontSize="sm" date={profile.created} />
             </Span>
             <SimpleGrid gap={2} columns={2}>
+              <ProfileStat
+                title="Followings"
+                params={{ profileId: profile.id }}
+                value={profile.followingsCount}
+                linkSlot={Link}
+                to="/profile/$profileId/followings"
+              />
+              <ProfileStat
+                title="Followers"
+                params={{ profileId: profile.id }}
+                value={profile.followersCount}
+                linkSlot={Link}
+                to="/profile/$profileId/followers"
+              />
+              <ProfileStat
+                title="Messages"
+                value={profile.messagesCount}
+                linkSlot={Link}
+                to="/profile/$profileId/messages"
+                params={{ profileId: profile.id }}
+              />
+
               <Protected
                 authorId={profile.id}
-                publicElement={
-                  <>
-                    <ProfileStat title="Followers" value={profile.followersCount} />
-
-                    <ProfileStat title="Followings" value={profile.followingsCount} />
-
-                    <ProfileStat
-                      title="Messages"
-                      value={profile.messagesCount}
-                      linkSlot={Link}
-                      to="/profile/$profileId/messages"
-                      params={{ profileId: profile.id }}
-                    />
-                  </>
-                }
                 privateElement={
-                  <>
-                    <ProfileStat title="Followings" value={profile.followingsCount} linkSlot={Link} to="/followings" />
-                    <ProfileStat title="Followers" value={profile.followersCount} linkSlot={Link} to="/followers" />
-                    <ProfileStat
-                      title="Messages"
-                      value={profile.messagesCount}
-                      linkSlot={Link}
-                      to="/profile/$profileId/messages"
-                      params={{ profileId: profile.id }}
-                    />
-                    <ProfileStat
-                      title="Favorites"
-                      value={profile.favoritesCount}
-                      linkSlot={Link}
-                      to="/favorite-messages"
-                    />
-                  </>
+                  <ProfileStat
+                    title="Favorites"
+                    value={profile.favoritesCount}
+                    linkSlot={Link}
+                    to="/favorite-messages"
+                  />
                 }
               />
             </SimpleGrid>

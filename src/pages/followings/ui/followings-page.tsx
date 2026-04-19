@@ -12,8 +12,8 @@ import { FollowToggleButton } from '@/features/follow-toggle';
 import { AwaitComponent } from '@/shared/ui/await-component';
 import { Empty } from '@/shared/ui/empty';
 
-export function FollowingsPage() {
-  const followingsQuery = useQuery(getFollowingsQueryOptions());
+export function FollowingsPage({ params }: { params: { profileId: string } }) {
+  const followingsQuery = useQuery(getFollowingsQueryOptions({ userId: params.profileId }));
 
   return (
     <AwaitComponent fallback={<FollowersListFallback />} promise={followingsQuery.promise}>

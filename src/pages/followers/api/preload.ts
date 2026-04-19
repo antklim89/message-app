@@ -1,13 +1,13 @@
 import type { QueryClient } from '@tanstack/react-query';
 
-import { getFollowingsQueryOptions } from '@/entities/followers';
+import { getFollowersQueryOptions } from '@/entities/followers';
 
-export function preloadFollowingsPage({
+export function preloadFollowersPage({
   context: { queryClient },
   params: { profileId },
 }: {
   context: { queryClient: QueryClient };
   params: { profileId: string };
 }) {
-  queryClient.ensureQueryData(getFollowingsQueryOptions({ userId: profileId }));
+  queryClient.ensureQueryData(getFollowersQueryOptions({ userId: profileId }));
 }

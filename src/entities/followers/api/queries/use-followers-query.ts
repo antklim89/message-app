@@ -8,11 +8,11 @@ export type FollowersQueryOptionsReturnType = InferDataFromTag<
   ReturnType<typeof getFollowersQueryOptions>['queryKey']
 >;
 
-export function getFollowersQueryOptions() {
+export function getFollowersQueryOptions({ userId }: { userId: string }) {
   return queryOptions({
-    queryKey: [FollowersQueryOptionsBaseKey],
+    queryKey: [FollowersQueryOptionsBaseKey, { userId }],
     async queryFn() {
-      const { fail, error, result } = await getFollowers();
+      const { fail, error, result } = await getFollowers({ userId });
       if (fail) throw new Error(error.message);
       return result;
     },
