@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './../../app/routes/index'
 import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
 import { Route as ProfileProfileIdIndexRouteImport } from './../../app/routes/profile.$profileId.index'
+import { Route as ProfileProfileIdVideosRouteImport } from './../../app/routes/profile.$profileId.videos'
 import { Route as ProfileProfileIdMessagesRouteImport } from './../../app/routes/profile.$profileId.messages'
 import { Route as ProfileProfileIdImagesRouteImport } from './../../app/routes/profile.$profileId.images'
 import { Route as ProfileProfileIdFollowingsRouteImport } from './../../app/routes/profile.$profileId.followings'
@@ -68,6 +69,11 @@ const ProfileProfileIdIndexRoute = ProfileProfileIdIndexRouteImport.update({
   path: '/$profileId/',
   getParentRoute: () => ProfileRoute,
 } as any)
+const ProfileProfileIdVideosRoute = ProfileProfileIdVideosRouteImport.update({
+  id: '/$profileId/videos',
+  path: '/$profileId/videos',
+  getParentRoute: () => ProfileRoute,
+} as any)
 const ProfileProfileIdMessagesRoute =
   ProfileProfileIdMessagesRouteImport.update({
     id: '/$profileId/messages',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/profile/$profileId/followings': typeof ProfileProfileIdFollowingsRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
+  '/profile/$profileId/videos': typeof ProfileProfileIdVideosRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/profile/$profileId/followings': typeof ProfileProfileIdFollowingsRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
+  '/profile/$profileId/videos': typeof ProfileProfileIdVideosRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRoutesById {
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/profile/$profileId/followings': typeof ProfileProfileIdFollowingsRoute
   '/profile/$profileId/images': typeof ProfileProfileIdImagesRoute
   '/profile/$profileId/messages': typeof ProfileProfileIdMessagesRoute
+  '/profile/$profileId/videos': typeof ProfileProfileIdVideosRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId/followings'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
+    | '/profile/$profileId/videos'
     | '/profile/$profileId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId/followings'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
+    | '/profile/$profileId/videos'
     | '/profile/$profileId'
   id:
     | '__root__'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId/followings'
     | '/profile/$profileId/images'
     | '/profile/$profileId/messages'
+    | '/profile/$profileId/videos'
     | '/profile/$profileId/'
   fileRoutesById: FileRoutesById
 }
@@ -262,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdIndexRouteImport
       parentRoute: typeof ProfileRoute
     }
+    '/profile/$profileId/videos': {
+      id: '/profile/$profileId/videos'
+      path: '/$profileId/videos'
+      fullPath: '/profile/$profileId/videos'
+      preLoaderRoute: typeof ProfileProfileIdVideosRouteImport
+      parentRoute: typeof ProfileRoute
+    }
     '/profile/$profileId/messages': {
       id: '/profile/$profileId/messages'
       path: '/$profileId/messages'
@@ -298,6 +317,7 @@ interface ProfileRouteChildren {
   ProfileProfileIdFollowingsRoute: typeof ProfileProfileIdFollowingsRoute
   ProfileProfileIdImagesRoute: typeof ProfileProfileIdImagesRoute
   ProfileProfileIdMessagesRoute: typeof ProfileProfileIdMessagesRoute
+  ProfileProfileIdVideosRoute: typeof ProfileProfileIdVideosRoute
   ProfileProfileIdIndexRoute: typeof ProfileProfileIdIndexRoute
 }
 
@@ -306,6 +326,7 @@ const ProfileRouteChildren: ProfileRouteChildren = {
   ProfileProfileIdFollowingsRoute: ProfileProfileIdFollowingsRoute,
   ProfileProfileIdImagesRoute: ProfileProfileIdImagesRoute,
   ProfileProfileIdMessagesRoute: ProfileProfileIdMessagesRoute,
+  ProfileProfileIdVideosRoute: ProfileProfileIdVideosRoute,
   ProfileProfileIdIndexRoute: ProfileProfileIdIndexRoute,
 }
 

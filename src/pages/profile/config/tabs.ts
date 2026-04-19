@@ -14,6 +14,10 @@ export const tabs = [
     label: 'Images',
   },
   {
+    to: '/profile/$profileId/videos',
+    label: 'Video',
+  },
+  {
     to: '/profile/$profileId/followers',
     label: 'Followers',
   },
