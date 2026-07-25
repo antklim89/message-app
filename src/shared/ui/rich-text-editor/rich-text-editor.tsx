@@ -49,7 +49,6 @@ export function RichTextEditor({
             bold: 'editor-text-bold',
             italic: 'editor-text-italic',
             underline: 'editor-text-underline',
-            // biome-ignore lint/security/noSecrets: this is not a secret
             underlineStrikethrough: 'editor-text-underlineStrikethrough',
             strikethrough: 'editor-text-strikethrough',
           },

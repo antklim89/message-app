@@ -5,7 +5,6 @@ export function HashtagsFallback() {
     <Flex flexWrap="wrap" gap={2}>
       {Array.from({ length: 20 }, (_, idx) => (
         <Skeleton
-          // biome-ignore lint/suspicious/noArrayIndexKey: ok
           key={idx}
           w="12"
           css={{

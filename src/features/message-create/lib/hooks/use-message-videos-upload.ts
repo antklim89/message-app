@@ -11,19 +11,18 @@ export function useMessageVideosUpload({ onUpload }: { onUpload: (files: File[])
     maxFileSize: MAX_VIDEO_SIZE_IN_BYTES,
 
     onFileAccept({ files }) {
-      console.log('🚀 ~ files: \n', files[0]?.size);
       onUpload(files);
     },
     onFileReject({ files }) {
-      files.forEach(({ file, errors }) => {
-        errors.forEach(error => {
+      for (const { file, errors } of files) {
+        for (const error of errors) {
           toaster.error({
             title: 'Video upload error.',
             description: fileUploadErrorMap(error, file, MAX_UPLOADED_VIDEOS),
             id: error,
           });
-        });
-      });
+        }
+      }
     },
   });
   return fileUpload;

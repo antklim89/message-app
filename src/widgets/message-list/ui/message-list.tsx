@@ -5,7 +5,7 @@ import { useInfiniteScroll } from '@/shared/hooks/use-infinity-scroll';
 import { Empty } from '@/shared/ui/empty';
 import { MessageListFallback } from './message-list-fallback';
 
-export const MessageList = ({
+export function MessageList({
   children,
   fetchNextPage,
   hasNextPage = false,
@@ -17,7 +17,7 @@ export const MessageList = ({
   isFetchingNextPage?: boolean;
   emptyMessage?: string;
   fetchNextPage?: () => Promise<unknown>;
-}) => {
+}) {
   const ref = useInfiniteScroll({
     loadMore: hasNextPage ? fetchNextPage : undefined,
     rootMargin: '2000px',
@@ -33,4 +33,4 @@ export const MessageList = ({
       {hasNextPage && <div ref={ref} />}
     </>
   );
-};
+}

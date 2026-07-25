@@ -12,6 +12,7 @@ export function EmbeddedYoutube({ videoId, ...props }: { videoId: string } & Box
   return (
     <Box asChild w="full" {...props}>
       <iframe
+        sandbox=""
         width="560"
         height="315"
         src={`https://www.youtube.com/embed/${videoId}`}

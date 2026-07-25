@@ -4,7 +4,7 @@ import { AnswersPage, AnswersPageParamsSchema, preloadAnswersPage } from '@/page
 import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/answers/$answerId')({
-  component() {
+  component: () => {
     const params = Route.useParams();
     return <AnswersPage params={params} />;
   },

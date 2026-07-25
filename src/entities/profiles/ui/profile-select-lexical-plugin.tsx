@@ -39,7 +39,7 @@ export function ProfileSelectLexicalPlugin() {
   });
 
   const options = useMemo(
-    () => (profileListQuery.data != null ? profileListQuery.data.map(profile => new ProfileOption(profile)) : []),
+    () => (profileListQuery.data == null ? [] : profileListQuery.data.map(profile => new ProfileOption(profile))),
     [profileListQuery.data],
   );
 
@@ -47,7 +47,7 @@ export function ProfileSelectLexicalPlugin() {
     (selectedOption: ProfileOption, nodeToRemove: TextNode | null, closeMenu: () => void) => {
       editor.update(() => {
         const selection = $getSelection();
-        if (!$isRangeSelection(selection) || selectedOption == null) return;
+        if (!$isRangeSelection(selection)) return;
         if (nodeToRemove) nodeToRemove.remove();
         const newUserNode = $createUserNode({ id: selectedOption.id, username: selectedOption.username });
         selection.insertNodes([newUserNode]);

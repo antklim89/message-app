@@ -4,7 +4,7 @@ import { ProfilePage, preloadProfilePage } from '@/pages/profile';
 import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/profile/$profileId/')({
-  component() {
+  component: () => {
     const params = Route.useParams();
     return <ProfilePage params={params} />;
   },

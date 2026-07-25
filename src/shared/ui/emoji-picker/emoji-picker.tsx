@@ -46,7 +46,7 @@ export function EmojiPicker({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji) =
   return (
     <Tabs.Root
       orientation="vertical"
-      onValueChange={() => startTransition(() => {})}
+      onValueChange={() => startTransition(() => undefined)}
       defaultValue={emojiGroups[0]?.label}
       lazyMount
       asChild

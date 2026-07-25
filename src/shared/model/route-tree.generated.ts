@@ -9,39 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './../../app/routes/__root'
-import { Route as SearchRouteImport } from './../../app/routes/search'
-import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile-settings'
-import { Route as ProfileRouteImport } from './../../app/routes/profile'
-import { Route as FavoriteMessagesRouteImport } from './../../app/routes/favorite-messages'
-import { Route as AboutRouteImport } from './../../app/routes/about'
 import { Route as IndexRouteImport } from './../../app/routes/index'
-import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
+import { Route as AboutRouteImport } from './../../app/routes/about'
+import { Route as FavoriteMessagesRouteImport } from './../../app/routes/favorite-messages'
+import { Route as ProfileRouteImport } from './../../app/routes/profile'
+import { Route as ProfileSettingsRouteImport } from './../../app/routes/profile-settings'
+import { Route as SearchRouteImport } from './../../app/routes/search'
 import { Route as AnswersAnswerIdRouteImport } from './../../app/routes/answers.$answerId'
+import { Route as HashtagHashtagRouteImport } from './../../app/routes/hashtag.$hashtag'
 import { Route as ProfileProfileIdIndexRouteImport } from './../../app/routes/profile.$profileId.index'
-import { Route as ProfileProfileIdVideosRouteImport } from './../../app/routes/profile.$profileId.videos'
-import { Route as ProfileProfileIdMessagesRouteImport } from './../../app/routes/profile.$profileId.messages'
-import { Route as ProfileProfileIdImagesRouteImport } from './../../app/routes/profile.$profileId.images'
-import { Route as ProfileProfileIdFollowingsRouteImport } from './../../app/routes/profile.$profileId.followings'
 import { Route as ProfileProfileIdFollowersRouteImport } from './../../app/routes/profile.$profileId.followers'
+import { Route as ProfileProfileIdFollowingsRouteImport } from './../../app/routes/profile.$profileId.followings'
+import { Route as ProfileProfileIdImagesRouteImport } from './../../app/routes/profile.$profileId.images'
+import { Route as ProfileProfileIdMessagesRouteImport } from './../../app/routes/profile.$profileId.messages'
+import { Route as ProfileProfileIdVideosRouteImport } from './../../app/routes/profile.$profileId.videos'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
-  id: '/profile-settings',
-  path: '/profile-settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FavoriteMessagesRoute = FavoriteMessagesRouteImport.update({
-  id: '/favorite-messages',
-  path: '/favorite-messages',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -49,14 +34,24 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const FavoriteMessagesRoute = FavoriteMessagesRouteImport.update({
+  id: '/favorite-messages',
+  path: '/favorite-messages',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HashtagHashtagRoute = HashtagHashtagRouteImport.update({
-  id: '/hashtag/$hashtag',
-  path: '/hashtag/$hashtag',
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
+  id: '/profile-settings',
+  path: '/profile-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
@@ -64,14 +59,31 @@ const AnswersAnswerIdRoute = AnswersAnswerIdRouteImport.update({
   path: '/answers/$answerId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HashtagHashtagRoute = HashtagHashtagRouteImport.update({
+  id: '/hashtag/$hashtag',
+  path: '/hashtag/$hashtag',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileProfileIdIndexRoute = ProfileProfileIdIndexRouteImport.update({
   id: '/$profileId/',
   path: '/$profileId/',
   getParentRoute: () => ProfileRoute,
 } as any)
-const ProfileProfileIdVideosRoute = ProfileProfileIdVideosRouteImport.update({
-  id: '/$profileId/videos',
-  path: '/$profileId/videos',
+const ProfileProfileIdFollowersRoute =
+  ProfileProfileIdFollowersRouteImport.update({
+    id: '/$profileId/followers',
+    path: '/$profileId/followers',
+    getParentRoute: () => ProfileRoute,
+  } as any)
+const ProfileProfileIdFollowingsRoute =
+  ProfileProfileIdFollowingsRouteImport.update({
+    id: '/$profileId/followings',
+    path: '/$profileId/followings',
+    getParentRoute: () => ProfileRoute,
+  } as any)
+const ProfileProfileIdImagesRoute = ProfileProfileIdImagesRouteImport.update({
+  id: '/$profileId/images',
+  path: '/$profileId/images',
   getParentRoute: () => ProfileRoute,
 } as any)
 const ProfileProfileIdMessagesRoute =
@@ -80,23 +92,11 @@ const ProfileProfileIdMessagesRoute =
     path: '/$profileId/messages',
     getParentRoute: () => ProfileRoute,
   } as any)
-const ProfileProfileIdImagesRoute = ProfileProfileIdImagesRouteImport.update({
-  id: '/$profileId/images',
-  path: '/$profileId/images',
+const ProfileProfileIdVideosRoute = ProfileProfileIdVideosRouteImport.update({
+  id: '/$profileId/videos',
+  path: '/$profileId/videos',
   getParentRoute: () => ProfileRoute,
 } as any)
-const ProfileProfileIdFollowingsRoute =
-  ProfileProfileIdFollowingsRouteImport.update({
-    id: '/$profileId/followings',
-    path: '/$profileId/followings',
-    getParentRoute: () => ProfileRoute,
-  } as any)
-const ProfileProfileIdFollowersRoute =
-  ProfileProfileIdFollowersRouteImport.update({
-    id: '/$profileId/followers',
-    path: '/$profileId/followers',
-    getParentRoute: () => ProfileRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -211,32 +211,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile-settings': {
-      id: '/profile-settings'
-      path: '/profile-settings'
-      fullPath: '/profile-settings'
-      preLoaderRoute: typeof ProfileSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/favorite-messages': {
-      id: '/favorite-messages'
-      path: '/favorite-messages'
-      fullPath: '/favorite-messages'
-      preLoaderRoute: typeof FavoriteMessagesRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -246,18 +225,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/favorite-messages': {
+      id: '/favorite-messages'
+      path: '/favorite-messages'
+      fullPath: '/favorite-messages'
+      preLoaderRoute: typeof FavoriteMessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hashtag/$hashtag': {
-      id: '/hashtag/$hashtag'
-      path: '/hashtag/$hashtag'
-      fullPath: '/hashtag/$hashtag'
-      preLoaderRoute: typeof HashtagHashtagRouteImport
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile-settings': {
+      id: '/profile-settings'
+      path: '/profile-settings'
+      fullPath: '/profile-settings'
+      preLoaderRoute: typeof ProfileSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/answers/$answerId': {
@@ -267,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnswersAnswerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hashtag/$hashtag': {
+      id: '/hashtag/$hashtag'
+      path: '/hashtag/$hashtag'
+      fullPath: '/hashtag/$hashtag'
+      preLoaderRoute: typeof HashtagHashtagRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile/$profileId/': {
       id: '/profile/$profileId/'
       path: '/$profileId'
@@ -274,25 +274,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdIndexRouteImport
       parentRoute: typeof ProfileRoute
     }
-    '/profile/$profileId/videos': {
-      id: '/profile/$profileId/videos'
-      path: '/$profileId/videos'
-      fullPath: '/profile/$profileId/videos'
-      preLoaderRoute: typeof ProfileProfileIdVideosRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/$profileId/messages': {
-      id: '/profile/$profileId/messages'
-      path: '/$profileId/messages'
-      fullPath: '/profile/$profileId/messages'
-      preLoaderRoute: typeof ProfileProfileIdMessagesRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/$profileId/images': {
-      id: '/profile/$profileId/images'
-      path: '/$profileId/images'
-      fullPath: '/profile/$profileId/images'
-      preLoaderRoute: typeof ProfileProfileIdImagesRouteImport
+    '/profile/$profileId/followers': {
+      id: '/profile/$profileId/followers'
+      path: '/$profileId/followers'
+      fullPath: '/profile/$profileId/followers'
+      preLoaderRoute: typeof ProfileProfileIdFollowersRouteImport
       parentRoute: typeof ProfileRoute
     }
     '/profile/$profileId/followings': {
@@ -302,11 +288,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdFollowingsRouteImport
       parentRoute: typeof ProfileRoute
     }
-    '/profile/$profileId/followers': {
-      id: '/profile/$profileId/followers'
-      path: '/$profileId/followers'
-      fullPath: '/profile/$profileId/followers'
-      preLoaderRoute: typeof ProfileProfileIdFollowersRouteImport
+    '/profile/$profileId/images': {
+      id: '/profile/$profileId/images'
+      path: '/$profileId/images'
+      fullPath: '/profile/$profileId/images'
+      preLoaderRoute: typeof ProfileProfileIdImagesRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/$profileId/messages': {
+      id: '/profile/$profileId/messages'
+      path: '/$profileId/messages'
+      fullPath: '/profile/$profileId/messages'
+      preLoaderRoute: typeof ProfileProfileIdMessagesRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/$profileId/videos': {
+      id: '/profile/$profileId/videos'
+      path: '/$profileId/videos'
+      fullPath: '/profile/$profileId/videos'
+      preLoaderRoute: typeof ProfileProfileIdVideosRouteImport
       parentRoute: typeof ProfileRoute
     }
   }

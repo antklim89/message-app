@@ -21,6 +21,5 @@ export default z.config({
     if (code === 'invalid_type') {
       if (typeof input === 'undefined' || input === null) return 'Field is required.';
     }
-    return;
   },
 });

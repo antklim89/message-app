@@ -1,6 +1,6 @@
 import { type BoxProps, Button, Card, HStack, IconButton, Skeleton, SkeletonText } from '@chakra-ui/react';
 
-export const MessageEditFormFallback = (props: BoxProps) => {
+export function MessageEditFormFallback(props: BoxProps) {
   return (
     <Card.Root {...props}>
       <Card.Header justifyContent="center">
@@ -36,4 +36,4 @@ export const MessageEditFormFallback = (props: BoxProps) => {
       </Card.Footer>
     </Card.Root>
   );
-};
+}

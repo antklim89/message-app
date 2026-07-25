@@ -4,7 +4,7 @@ import { HashtagPage, HashtagPageParamsSchema, preloadHashtagPage } from '@/page
 import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/hashtag/$hashtag')({
-  component() {
+  component: () => {
     const params = Route.useParams();
     return <HashtagPage params={params} />;
   },

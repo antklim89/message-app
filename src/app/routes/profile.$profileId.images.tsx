@@ -4,7 +4,7 @@ import { ProfileImagesPage } from '@/pages/profile-images';
 import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/profile/$profileId/images')({
-  component() {
+  component: () => {
     const params = Route.useParams();
     return <ProfileImagesPage params={params} />;
   },

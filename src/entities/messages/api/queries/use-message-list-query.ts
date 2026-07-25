@@ -43,9 +43,9 @@ export function messageListQueryOptions({
       });
       if (fail) throw new Error(error.message);
 
-      result.items.flat().forEach(message => {
+      for (const message of result.items) {
         client.setQueryData(messageQueryOptions({ id: message.id }).queryKey, message);
-      });
+      }
 
       return result.items;
     },

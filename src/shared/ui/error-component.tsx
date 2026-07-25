@@ -2,7 +2,7 @@ import { Alert, AlertIndicator, Button, HStack } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
 import { FaArrowsRotate, FaHouse, FaTriangleExclamation } from 'react-icons/fa6';
 
-export const ErrorComponent = ({ error }: { error: Error }) => {
+export function ErrorComponent({ error }: { error: Error }) {
   return (
     <Alert.Root status="error">
       <Alert.Content display="flex" gap={4} flexDirection="column" alignItems="center">
@@ -26,4 +26,4 @@ export const ErrorComponent = ({ error }: { error: Error }) => {
       </Alert.Content>
     </Alert.Root>
   );
-};
+}

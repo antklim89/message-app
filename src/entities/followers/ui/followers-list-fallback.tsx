@@ -8,7 +8,6 @@ export function FollowersListFallback() {
       <Card.Body asChild>
         <Stack>
           {Array.from({ length: FOLLOWERS_LENGTH }, (_, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: it is just a fallback
             <Fragment key={index}>
               <HStack>
                 <SkeletonCircle w={12} h={12} />

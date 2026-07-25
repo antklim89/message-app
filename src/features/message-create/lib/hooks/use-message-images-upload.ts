@@ -14,28 +14,28 @@ export function useMessageImagesUpload({ onUpload }: { onUpload: (files: File[])
     async transformFiles(files) {
       const transformedFiles = await Promise.all(
         files.map(async file => {
-          const { fail, error, result } = await resizeImage({
+          const { success, error, result } = await resizeImage({
             maxImageSize: MAX_IMAGE_SIZE_IN_BYTES,
             file,
             maxWidth: 1280,
             maxHeight: 1024,
           });
-          if (fail) return void toaster.error({ description: error.message });
-          return result;
+          if (success) return result;
+          toaster.error({ description: error.message });
         }),
       );
       return transformedFiles.filter(file => file != null);
     },
     onFileReject({ files }) {
-      files.forEach(({ file, errors }) => {
-        errors.forEach(error => {
+      for (const { file, errors } of files) {
+        for (const error of errors) {
           toaster.error({
             title: 'Image upload error.',
             description: fileUploadErrorMap(error, file, MAX_UPLOADED_IMAGES),
             id: error,
           });
-        });
-      });
+        }
+      }
     },
   });
   return fileUpload;

@@ -34,8 +34,8 @@ export async function resizeImage({
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         blob => {
-          if (blob) void resolve(ok(new File([blob], crypto.randomUUID(), { type: 'image/webp' })));
-          else void resolve(errUnexpected('Failed to transform image.'));
+          if (blob) resolve(ok(new File([blob], crypto.randomUUID(), { type: 'image/webp' })));
+          else resolve(errUnexpected('Failed to transform image.'));
         },
         'image/webp',
         quality,

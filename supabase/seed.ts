@@ -1,6 +1,8 @@
 /** biome-ignore-all lint/performance/noAwaitInLoops: <ok> */
 /** biome-ignore-all lint/suspicious/noConsole: <ok> */
 /** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: <ok> */
+
+import process from 'node:process';
 import { faker } from '@faker-js/faker';
 import type { SerializedLinkNode } from '@lexical/link';
 import { createClient } from '@supabase/supabase-js';
@@ -9,9 +11,7 @@ import type { SerializedParagraphNode, SerializedRootNode, SerializedTextNode } 
 import { calculateLexicalTextLength } from '../src/shared/lib/lexical/utils';
 import type { Database, Json } from '../src/shared/model/supabase-types.generated';
 
-//@ts-expect-error
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-//@ts-expect-error
 const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE;
 
 if (!(SUPABASE_URL && SUPABASE_SERVICE_ROLE)) throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE are required.');

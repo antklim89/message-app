@@ -43,7 +43,6 @@ export function MessageUploadSection({
       ))}
 
       {Array.from({ length: maxUploadedFiles - upload.acceptedFiles.length }, (_, idx) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: ok
         <FileUpload.RootProvider key={idx} value={upload}>
           <FileUpload.HiddenInput multiple />
           <FileUpload.Dropzone w="full" minHeight="auto" aspectRatio="wide">

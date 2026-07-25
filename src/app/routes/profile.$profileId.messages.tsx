@@ -4,7 +4,7 @@ import { ProfileMessagesPage, preloadMessagesPage } from '@/pages/profile-messag
 import { ErrorComponent } from '@/shared/ui/error-component';
 
 export const Route = createFileRoute('/profile/$profileId/messages')({
-  component() {
+  component: () => {
     const params = Route.useParams();
     return <ProfileMessagesPage params={params} />;
   },

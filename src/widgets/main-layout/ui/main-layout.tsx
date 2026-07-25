@@ -15,7 +15,7 @@ const BOTTOM_SIDE_HEIGHT = 12;
 export function MainLayout({ children }: { children: ReactNode }) {
   const breakpoint = useBreakpoint({
     breakpoints: ['md', 'lg', 'xl'],
-    fallback: "md",
+    fallback: 'md',
     ssr: false,
   });
 
