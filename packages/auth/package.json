@@ -1,0 +1,20 @@
+{
+  "name": "@message-app/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@message-app/db": "workspace:*",
+    "@message-app/env": "workspace:*",
+    "better-auth": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

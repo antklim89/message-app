@@ -1,0 +1,34 @@
+{
+  "name": "@message-app/api",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts",
+    "./test": "./test/index.ts",
+    "./test/*": "./test/*.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@faker-js/faker": "^10.6.0",
+    "@message-app/auth": "workspace:*",
+    "@message-app/db": "workspace:*",
+    "@message-app/entities": "workspace:*",
+    "@message-app/env": "workspace:*",
+    "@message-app/rich-text": "workspace:*",
+    "@message-app/s3": "workspace:*",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "drizzle-orm": "catalog:",
+    "ffmpeg-static": "^5.3.0",
+    "parse5": "^8.1.0",
+    "sharp": "^0.35.5",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "@testcontainers/postgresql": "^12.2.1",
+    "hono": "catalog:",
+    "testcontainers": "^12.2.1",
+    "typescript": "catalog:"
+  }
+}

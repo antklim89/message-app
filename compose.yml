@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:18.4-alpine3.24
+    restart: unless-stopped
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    volumes:
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+          size: 134217728
+      - database:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: postgres
+  
+  rustfs:
+    image: rustfs/rustfs:1.0.4
+    container_name: rustfs
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - RUSTFS_ROOT_USER=admin
+      - RUSTFS_ROOT_PASSWORD=supersecretpassword
+    volumes:
+      - rustfs_data:/data
+    restart: unless-stopped
+
+volumes:
+  database:
+  rustfs_data:

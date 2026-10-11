@@ -1,0 +1,38 @@
+{
+  "name": "@message-app/rich-text",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "catalog:",
+    "@emotion/react": "catalog:",
+    "@lexical/clipboard": "^0.53.0",
+    "@lexical/extension": "^0.53.0",
+    "@lexical/hashtag": "^0.53.0",
+    "@lexical/headless": "^0.53.0",
+    "@lexical/history": "^0.53.0",
+    "@lexical/html": "^0.53.0",
+    "@lexical/link": "^0.53.0",
+    "@lexical/react": "^0.53.0",
+    "@lexical/rich-text": "^0.53.0",
+    "@lexical/utils": "^0.53.0",
+    "@message-app/api": "workspace:*",
+    "@message-app/ui": "workspace:*",
+    "lexical": "^0.53.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

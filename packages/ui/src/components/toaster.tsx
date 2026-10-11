@@ -1,0 +1,25 @@
+import { Toaster as ChakraToaster, Portal, Spinner, Stack, Toast } from '@chakra-ui/react';
+
+import { toaster } from '../lib/toaster';
+
+export function Toaster() {
+  return (
+    <Portal>
+      <ChakraToaster insetInline={{ mdDown: '4' }} toaster={toaster}>
+        {toast => (
+          <Toast.Root alignItems="center" width={{ md: 'sm' }}>
+            {toast.type === 'loading' ? <Spinner color="blue.solid" size="sm" /> : <Toast.Indicator />}
+            <Stack flex="1" gap="1" maxWidth="100%">
+              <Toast.Title fontSize="lg" textTransform="capitalize">
+                {toast.title ?? toast.type}
+              </Toast.Title>
+              {toast.description != null && <Toast.Description>{toast.description}</Toast.Description>}
+            </Stack>
+            {toast.action && <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>}
+            {<Toast.CloseTrigger />}
+          </Toast.Root>
+        )}
+      </ChakraToaster>
+    </Portal>
+  );
+}
