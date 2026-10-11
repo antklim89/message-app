@@ -1,0 +1,16 @@
+{
+  "extends": "@message-app/config/tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "types": ["vite/client"],
+    "rootDirs": ["."],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@message-app/ui/*": ["../../packages/ui/src/*"]
+    }
+  }
+}

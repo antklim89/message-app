@@ -1,0 +1,29 @@
+{
+  "name": "@message-app/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@message-app/auth": "workspace:*",
+    "@message-app/db": "workspace:*",
+    "@message-app/entities": "workspace:*",
+    "@message-app/env": "workspace:*",
+    "@message-app/rich-text": "workspace:*",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "parse5": "^8.1.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "hono": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "run-s build:**",
+    "build:check-types": "bun check-types",
+    "build:vite": "vite build",
+    "dev": "run-p dev:**",
+    "dev:check-types": "bun check-types -w",
+    "dev:vite": "vite dev --host 0.0.0.0",
+    "serve": "vite preview",
+    "start": "vite",
+    "check-types": "bun --bun tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "catalog:",
+    "@emotion/react": "catalog:",
+    "@message-app/api": "workspace:*",
+    "@message-app/auth": "workspace:*",
+    "@message-app/entities": "workspace:*",
+    "@message-app/env": "workspace:*",
+    "@message-app/rich-text": "workspace:*",
+    "@message-app/ui": "workspace:*",
+    "@tanstack/react-form": "^1.33.2",
+    "@tanstack/react-query": "^5.105.2",
+    "@tanstack/react-router": "^1.170.46",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "@trpc/tanstack-react-query": "^11.22.1",
+    "better-auth": "catalog:",
+    "next-themes": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "@tanstack/react-query-devtools": "^5.105.2",
+    "@tanstack/react-router-devtools": "^1.167.2",
+    "@tanstack/router-plugin": "^1.168.48",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "^6.2.1",
+    "npm-run-all2": "catalog:",
+    "typescript": "catalog:",
+    "vite": "^8.3.5"
+  }
+}

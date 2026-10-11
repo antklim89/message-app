@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "check-types": "bun --bun tsc -p tsconfig.json",
+    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+    "dev": "run-p dev:**",
+    "dev:app": "bun run --hot src/index.ts",
+    "dev:check-types": "bun check-types -w",
+    "lint": "biome check",
+    "start": "bun run src/index.ts",
+    "test": "bun run --bun vitest"
+  },
+  "dependencies": {
+    "@hono/trpc-server": "^0.4.2",
+    "@message-app/api": "workspace:*",
+    "@message-app/auth": "workspace:*",
+    "@message-app/db": "workspace:*",
+    "@message-app/env": "workspace:*",
+    "@trpc/server": "catalog:",
+    "better-auth": "catalog:",
+    "hono": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "npm-run-all2": "catalog:",
+    "typescript": "catalog:"
+  }
+}

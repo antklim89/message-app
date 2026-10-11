@@ -1,0 +1,18 @@
+{
+  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+  "root": false,
+  "extends": "//",
+  "linter": {
+    "domains": {
+      "drizzle": "all"
+    },
+
+    "enabled": true,
+    "rules": {
+      "performance": {
+        "noNamespaceImport": "off",
+        "noReExportAll": "off"
+      }
+    }
+  }
+}

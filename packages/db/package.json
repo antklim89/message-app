@@ -1,0 +1,28 @@
+{
+  "name": "@message-app/db",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "db:generate": "bun --env-file=../../apps/server/.env --bun drizzle-kit generate",
+    "db:migrate": "bun --env-file=../../apps/server/.env --bun drizzle-kit migrate",
+    "db:push": "bun --env-file=../../apps/server/.env --bun drizzle-kit push",
+    "db:studio": "bun --env-file=../../apps/server/.env --bun drizzle-kit studio"
+  },
+  "dependencies": {
+    "@message-app/entities": "workspace:*",
+    "@message-app/env": "workspace:*",
+    "drizzle-orm": "^1.0.0-rc.4",
+    "pg": "^8.23.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^1.0.0-rc.4",
+    "typescript": "catalog:"
+  }
+}

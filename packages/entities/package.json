@@ -1,0 +1,13 @@
+{
+  "name": "@message-app/entities",
+  "type": "module",
+  "exports": {
+    "./*": {
+      "default": "./src/*/index.ts"
+    }
+  },
+  "dependencies": {
+    "@message-app/rich-text": "workspace:*",
+    "zod": "catalog:"
+  }
+}

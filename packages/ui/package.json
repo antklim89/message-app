@@ -1,0 +1,31 @@
+{
+  "name": "@message-app/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "catalog:",
+    "@emotion/react": "catalog:",
+    "@tanstack/react-form": "^1.33.5",
+    "@teispace/next-themes": "^3.1.0",
+    "date-fns": "^4.4.0",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:"
+  },
+  "devDependencies": {
+    "@message-app/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
