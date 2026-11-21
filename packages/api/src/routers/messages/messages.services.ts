@@ -1,8 +1,14 @@
 import { db, messageDraftTable, messageTable } from '@message-app/db';
-import type { MessageCreateType, MessageDraftUpdateType } from '@message-app/entities/messages';
-import { s3Client } from '@message-app/s3';
+import {
+  MAX_IMAGE_HEIGHT,
+  MAX_IMAGE_WIDTH,
+  type MessageCreateType,
+  type MessageDraftUpdateType,
+} from '@message-app/entities/messages';
+import { s3Client, uploadTempImage } from '@message-app/s3';
 import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
+import sharp from 'sharp';
 
 import { convertImage, convertVideo } from './messages.utils';
 
@@ -66,12 +72,16 @@ export async function messageUploadImageService({
   imageStream: ReadableStream;
   authorId: string;
 }) {
-  const pathId = `${authorId}/images/${crypto.randomUUID()}`;
+  const key = `${authorId}/images/${crypto.randomUUID()}`;
 
   try {
-    await convertImage(imageStream, pathId);
-    return pathId;
-  } catch {
+    const resizeStream = sharp().resize({ width: MAX_IMAGE_WIDTH, height: MAX_IMAGE_HEIGHT, fit: 'cover' }).webp();
+    await uploadTempImage(key, imageStream, resizeStream);
+
+    return key;
+  } catch (error) {
+    // TODO: delete file
+    console.error('Error: \n%o\n', error);
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Failed to upload image.',

@@ -10,7 +10,7 @@ import {
   MIN_MESSAGE_BODY_LENGTH,
 } from '@message-app/entities/messages';
 import { $getRoot, AppExtension, createHeadlessEditor } from '@message-app/rich-text';
-import { s3Client } from '@message-app/s3';
+import { s3Client, uploadTempImage } from '@message-app/s3';
 import { TRPCError } from '@trpc/server';
 import ffmpegPath from 'ffmpeg-static';
 import sharp from 'sharp';
@@ -43,23 +43,28 @@ export async function validateMessageBody(body: MessageCreateType['body']) {
   }
 }
 
-export async function convertImage(imageStream: ReadableStream, pathId: string) {
-  const s3FileWriter = s3Client.file(pathId, { bucket: 'temp' }).writer();
-  try {
-    const resizeStream = sharp().resize({ width: MAX_IMAGE_WIDTH, height: MAX_IMAGE_HEIGHT, fit: 'cover' }).webp();
+// export async function convertImage(imageStream: ReadableStream, pathId: string) {
+//   const s3FileWriter = s3Client.file(pathId, { bucket: 'temp' }).writer();
+//   try {
+//     const resizeStream = sharp().resize({ width: MAX_IMAGE_WIDTH, height: MAX_IMAGE_HEIGHT, fit: 'cover' }).webp();
 
-    await pipeline(imageStream, resizeStream, async function* (source) {
-      for await (const chunk of source) yield await s3FileWriter.write(chunk);
-    });
+//     const { passThrough, upload } = uploadTempImage();
+//     await Promise.all([pipeline(imageStream, resizeStream, passThrough), upload.done()]);
+//     // await pipeline(imageStream, resizeStream, async function* (source) {
+//     //   for await (const chunk of source) yield await s3FileWriter.write(chunk);
+//     // });
 
-    return pathId;
-  } catch (error) {
-    await fs.rm(pathId, { force: true, recursive: true }).catch(() => null);
-    throw error;
-  } finally {
-    await s3FileWriter.end();
-  }
-}
+//     return pathId;
+//   } catch (error) {
+//     console.log('🚀 ~ error: \n%o\n', error);
+
+//     await fs.rm(pathId, { force: true, recursive: true }).catch(() => null);
+//     throw error;
+//   } finally {
+//     const x = await s3FileWriter.end();
+//     console.log('🚀 ~ x: \n%o\n', x);
+//   }
+// }
 
 export async function convertVideo(videoStream: ReadableStream, pathId: string) {
   const tmpPath = path.resolve(os.tmpdir(), 'message_app', 'temp', pathId);

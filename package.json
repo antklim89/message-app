@@ -42,7 +42,7 @@
     "@message-app/env": "workspace:*"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.4",
+    "@biomejs/biome": "^2.6.8",
     "@message-app/config": "workspace:*",
     "@types/bun": "catalog:",
     "turbo": "^2.11.10",
