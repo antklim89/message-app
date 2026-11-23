@@ -5,10 +5,9 @@ import { z } from 'zod/v4-mini';
 
 import {
   messageGetDraftService,
-  messagePublishDraftService,
+  // messagePublishDraftService,
   messageUpdateDraftService,
-  messageUploadImageService,
-  messageUploadVideoService,
+  messageUploadTempFileService,
 } from './messages.services';
 
 export const messagesRoute = router({
@@ -25,20 +24,16 @@ export const messagesRoute = router({
       const result = await messageUpdateDraftService({ id, authorId: user.id, input });
       return result;
     }),
-  uploadImage: protectedProcedure.input(octetInputParser).mutation(async ({ ctx: { user }, input }) => {
-    const imageId = await messageUploadImageService({ imageStream: input, authorId: user.id });
+  uploadTempFile: protectedProcedure.input(octetInputParser).mutation(async ({ ctx: { user }, input }) => {
+    const imageId = await messageUploadTempFileService({ fileStream: input, authorId: user.id });
     return imageId;
   }),
-  uploadVideo: protectedProcedure.input(octetInputParser).mutation(async ({ ctx: { user }, input }) => {
-    const videoId = await messageUploadVideoService({ videoStream: input, authorId: user.id });
-    return videoId;
-  }),
-  publishDraft: protectedProcedure
-    .input(z.object({ answerId: z.optional(z.uuid()) }))
-    .mutation(async ({ ctx: { user }, input: { answerId } }) => {
-      const result = await messagePublishDraftService({ authorId: user.id, answerId });
-      return result;
-    }),
+  // publishDraft: protectedProcedure
+  //   .input(z.object({ answerId: z.optional(z.uuid()) }))
+  //   .mutation(async ({ ctx: { user }, input: { answerId } }) => {
+  //     const result = await messagePublishDraftService({ authorId: user.id, answerId });
+  //     return result;
+  //   }),
 });
 
 export type AppRouter = typeof messagesRoute;

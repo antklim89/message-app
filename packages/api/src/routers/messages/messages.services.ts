@@ -1,3 +1,6 @@
+import * as fs from 'node:fs/promises';
+import * as os from 'node:os';
+import * as path from 'node:path';
 import { db, messageDraftTable, messageTable } from '@message-app/db';
 import {
   MAX_IMAGE_HEIGHT,
@@ -5,12 +8,11 @@ import {
   type MessageCreateType,
   type MessageDraftUpdateType,
 } from '@message-app/entities/messages';
-import { s3Client, uploadTempImage } from '@message-app/s3';
+import { deleteFile, uploadFileStream } from '@message-app/s3';
 import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
+import ffmpegPath from 'ffmpeg-static';
 import sharp from 'sharp';
-
-import { convertImage, convertVideo } from './messages.utils';
 
 export async function messageGetDraftService({ authorId, answerId }: { authorId: string; answerId?: string }) {
   const foundDraft = await db.query.messageDraftTable.findFirst({
@@ -65,49 +67,92 @@ export async function messageUpdateDraftService({
   return updatedDraft;
 }
 
-export async function messageUploadImageService({
-  imageStream,
+export async function messageUploadTempFileService({
+  fileStream,
   authorId,
 }: {
-  imageStream: ReadableStream;
+  fileStream: ReadableStream;
   authorId: string;
 }) {
-  const key = `${authorId}/images/${crypto.randomUUID()}`;
+  const key = `temp/${authorId}/${crypto.randomUUID()}`;
 
   try {
-    const resizeStream = sharp().resize({ width: MAX_IMAGE_WIDTH, height: MAX_IMAGE_HEIGHT, fit: 'cover' }).webp();
-    await uploadTempImage(key, imageStream, resizeStream);
-
+    await uploadFileStream(key, fileStream);
     return key;
-  } catch (error) {
-    // TODO: delete file
-    console.error('Error: \n%o\n', error);
+  } catch {
+    await deleteFile(key);
     throw new TRPCError({
-      code: 'BAD_REQUEST',
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Failed to upload image.',
     });
   }
 }
 
-export async function messageUploadVideoService({
-  videoStream,
-  authorId,
-}: {
-  videoStream: ReadableStream;
-  authorId: string;
-}) {
-  const pathId = `${authorId}/videos/${crypto.randomUUID()}.webm`;
+// export async function messageUploadImageService({
+//   imageStream,
+//   authorId,
+// }: {
+//   imageStream: ReadableStream;
+//   authorId: string;
+// }) {
+//   const key = `${authorId}/images/${crypto.randomUUID()}`;
 
-  try {
-    await convertVideo(videoStream, pathId);
-    return pathId;
-  } catch {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Failed to upload video.',
-    });
-  }
-}
+//   try {
+//     const resizeStream = sharp().resize({ width: MAX_IMAGE_WIDTH, height: MAX_IMAGE_HEIGHT, fit: 'cover' }).webp();
+//     await uploadFileStream(key, imageStream, resizeStream);
+
+//     return key;
+//   } catch {
+//     await deleteFile(key);
+//     throw new TRPCError({
+//       code: 'BAD_REQUEST',
+//       message: 'Failed to upload image.',
+//     });
+//   }
+// }
+
+// export async function messageUploadVideoService({
+//   videoStream,
+//   authorId,
+// }: {
+//   videoStream: ReadableStream;
+//   authorId: string;
+// }) {
+//   const key = `${authorId}/videos/${crypto.randomUUID()}.webm`;
+//   const tmpPath = path.resolve(os.tmpdir(), 'message_app', 'temp', key);
+
+//   try {
+//     await Bun.write(tmpPath, videoStream);
+
+//     if (!ffmpegPath) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: "Can't convert video." });
+//     const { stdout, exited } = Bun.spawn(
+//       [ffmpegPath, '-i', tmpPath, '-f', 'webm', '-c:v', 'libvpx-vp9', '-c:a', 'libopus', 'pipe:1'],
+//       {
+//         stdout: 'pipe',
+//         stderr: 'pipe',
+//       },
+//     );
+
+//     await uploadFileStream(key, stdout);
+
+//     if ((await exited) !== 0) {
+//       throw new TRPCError({
+//         code: 'INTERNAL_SERVER_ERROR',
+//         message: 'Failed to upload video.',
+//       });
+//     }
+
+//     return key;
+//   } catch {
+//     await deleteFile(key);
+//     throw new TRPCError({
+//       code: 'BAD_REQUEST',
+//       message: 'Failed to upload video.',
+//     });
+//   } finally {
+//     void fs.rm(tmpPath, { force: true, recursive: true });
+//   }
+// }
 
 export async function messagePublishDraftService({
   authorId,

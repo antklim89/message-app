@@ -192,6 +192,9 @@
         "@aws-sdk/lib-storage": "^3.1175.0",
         "@message-app/env": "workspace:*",
       },
+      "devDependencies": {
+        "testcontainers": "^12.2.1",
+      },
     },
     "packages/ui": {
       "name": "@message-app/ui",

@@ -10,6 +10,7 @@ export const env = createEnv({
     S3_ENDPOINT: z.url(),
     S3_ACCESS_KEY_ID: z.string().check(z.minLength(1)),
     S3_SECRET_ACCESS_KEY: z.string().check(z.minLength(1)),
+    S3_BUCKET: z.string().check(z.minLength(1)),
   },
   shared: {
     NODE_ENV: z._default(z.enum(['development', 'production', 'test']), 'development'),

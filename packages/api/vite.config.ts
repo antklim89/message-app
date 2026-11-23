@@ -18,5 +18,6 @@ export default defineConfig({
       createRequire(import.meta.url).resolve('@message-app/db/test/init-db'),
       createRequire(import.meta.url).resolve('@message-app/s3/test/mock-s3'),
     ],
+    globalSetup: [createRequire(import.meta.url).resolve('@message-app/s3/test/global-setup')],
   },
 });

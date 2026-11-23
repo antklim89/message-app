@@ -36,7 +36,15 @@ export const trpcClient = createTRPCClient<AppRouter>({
   links: [
     splitLink({
       condition: op => isNonJsonSerializable(op.input),
-      true: httpLink(linkOptions),
+      true: httpLink({
+        ...linkOptions,
+        headers(opts) {
+          console.log(opts.op.input);
+          return {
+            'x-filename': 'opts.op.input',
+          };
+        },
+      }),
       false: httpBatchLink(linkOptions),
     }),
   ],

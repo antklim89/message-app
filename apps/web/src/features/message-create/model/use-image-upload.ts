@@ -9,7 +9,7 @@ import { useMessageCreateContext } from './use-message-create-context';
 
 export function useImageUpload() {
   const context = useMessageCreateContext();
-  const { mutateAsync } = useMutation(trpc.messages.uploadMedia.mutationOptions());
+  const { mutateAsync } = useMutation(trpc.messages.uploadTempFile.mutationOptions());
 
   const upload = useFileUpload({
     accept: ACCEPT_IMAGES,

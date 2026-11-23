@@ -1,25 +1,14 @@
-import { mkdirSync } from 'node:fs';
-import { rm } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { beforeAll, vi } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import { CreateBucketCommand } from '@aws-sdk/client-s3';
+import { env } from '@message-app/env/server';
+import { beforeEach } from 'vitest';
 
-import { tmpPath } from './constants';
+import { s3Client } from '../src/client';
 
-beforeAll(async () => {
-  await rm(tmpPath, { force: true, recursive: true });
-});
-
-vi.mock('@message-app/s3', async importOriginal => {
-  const actual = (await importOriginal()) as typeof import('@message-app/s3');
-  return {
-    ...actual,
-    // s3Client: {
-    //   file: vi.fn(path => {
-    //     const fileTmpPath = join(tmpPath, path);
-    //     mkdirSync(dirname(fileTmpPath), { recursive: true });
-    //     const file = Bun.file(fileTmpPath);
-    //     return file;
-    //   }),
-    // },
-  };
+beforeEach(async () => {
+  const bucket = randomUUID();
+  await s3Client.send(new CreateBucketCommand({ Bucket: bucket })).catch(() => null);
+  process.env.S3_BUCKET = bucket;
+  // @ts-expect-error testing
+  env.S3_BUCKET = bucket;
 });
